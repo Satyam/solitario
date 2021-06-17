@@ -1,4 +1,5 @@
 import k from './k.js';
+import { cartas, ROJO, NEGRO, HUECO, REVERSO } from './datos.js';
 
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 export const palos = 'CDHS';
@@ -11,9 +12,17 @@ export const numCartas = numPalos * numValores;
 
 for (let p = 0; p < numPalos; p++) {
   for (let v = 0; v < numValores; v++) {
-    const name = valores[v] + palos[p];
+    const palo = palos[p];
+    const name = valores[v] + palo;
     k.loadSprite(name, `cards/${name}.svg`);
+    cartas[name] = {
+      name,
+      palo,
+      valor: v,
+      color: palo === 'D' || palo === 'H' ? ROJO : NEGRO,
+    };
   }
 }
 
-k.loadSprite('reverso', 'cards/2B.svg');
+k.loadSprite(REVERSO, 'cards/2B.svg');
+k.loadSprite(HUECO, 'src/hueco.svg');

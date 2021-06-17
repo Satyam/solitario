@@ -3,6 +3,8 @@ import kaboom from '../public/kaboom.mjs';
 const k = kaboom({
   scale: 1 / 2,
   fullscreen: true,
+  clearColor: [0, 0.7, 0, 1],
+  debug: true,
 });
 
 export default k;
