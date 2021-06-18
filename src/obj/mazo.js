@@ -18,7 +18,7 @@ export function mazoComp() {
       this.barajar();
       this.clicks(() => {
         if (baraja.length) {
-          this.trigger('popped', this.popTop());
+          this.trigger('popped', this.sacar());
         } else {
           baraja = k.get(VISTA)[0].vuelta();
         }
@@ -42,7 +42,7 @@ export function mazoComp() {
       let v = Math.floor(k.rand(0, numValores));
       return valores[v] + palos[p];
     },
-    popTop() {
+    sacar() {
       return baraja.pop();
     },
   };
