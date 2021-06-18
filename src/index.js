@@ -3,23 +3,14 @@ import './loadSprites.js';
 
 import mazo from './obj/mazo.js';
 import vista from './obj/vista.js';
+import juego from './obj/juego.js';
 
 k.scene('main', () => {
-  k.layers(['bg', 'game', 'ui'], 'game');
+  // k.layers(['bg', 'game', 'ui'], 'game');
 
   mazo();
   vista();
-
-  // mazo.on('popped', (id) => {
-  //   console.log(id, cartas[id]);
-  //   const carta = k.add([
-  //     k.sprite(id),
-  //     k.pos(300, 100),
-  //     draggable(true),
-  //     k.color(),
-  //     { name: id },
-  //   ]);
-  // });
+  juego();
 });
 
 k.start('main');
