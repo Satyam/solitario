@@ -1,38 +1,42 @@
 import k from '../k.js';
+
+import grilla from '../comp/grilla.js';
+
 import {
   palos,
   valores,
   numCartas,
   numPalos,
   numValores,
-} from '../loadSprites.js';
-
-import grilla from '../comp/grilla.js';
-
-import { cartas, MAZO, VISTA, REVERSO, HUECO } from '../datos.js';
+  baraja,
+  MAZO,
+  VISTA,
+  REVERSO,
+  HUECO,
+} from '../datos.js';
 
 export function mazoComp() {
-  let baraja = [];
+  let cartas = [];
   return {
     add() {
       this.barajar();
       this.clicks(() => {
-        if (baraja.length) {
+        if (cartas.length) {
           this.trigger('popped', this.sacar());
         } else {
-          baraja = k.get(VISTA)[0].vuelta();
+          cartas = k.get(VISTA)[0].vuelta();
         }
-        this.changeSprite(baraja.length ? REVERSO : HUECO);
+        this.changeSprite(cartas.length ? REVERSO : HUECO);
       });
     },
     barajar() {
-      baraja.length = 0;
-      while (baraja.length < numCartas) {
+      cartas.length = 0;
+      while (cartas.length < numCartas) {
         const carta = this.unaCarta();
-        if (!baraja.includes(carta)) {
-          baraja.push(carta);
-          cartas[carta].donde = MAZO;
-          cartas[carta].pos = baraja.length;
+        if (!cartas.includes(carta)) {
+          cartas.push(carta);
+          baraja[carta].donde = MAZO;
+          baraja[carta].pos = cartas.length;
         }
       }
     },
@@ -43,7 +47,7 @@ export function mazoComp() {
       return valores[v] + palos[p];
     },
     sacar() {
-      return baraja.pop();
+      return cartas.pop();
     },
   };
 }
