@@ -4,7 +4,6 @@ import draggable from '../comp/draggable.js';
 import { JUEGO, HUECO, MAZO } from '../datos.js';
 
 function juegoComp() {
-  let cardId = null;
   return {
     add() {
       this.hidden = true;
@@ -14,6 +13,7 @@ function juegoComp() {
         k.every(HUECO, (h) => {
           if (this.isOverlapped(h)) {
             console.log('j soltado sobre hueco', h.slot(), this.cardId);
+            console.log('drop', h.drop(this.cardId));
           }
         });
       });
