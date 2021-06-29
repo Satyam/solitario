@@ -8,8 +8,8 @@ export function vistaComp() {
 
   return {
     add() {
-      k.on('popped', MAZO, (_, id) => {
-        this.push(id);
+      k.on('popped', MAZO, (_, cardId) => {
+        this.push(cardId);
       });
       k.mouseDown(() => {
         if (dragSensed || cartas.length === 0 || !this.hasPt(k.mousePos()))
@@ -25,9 +25,9 @@ export function vistaComp() {
         dragSensed = false;
       });
     },
-    push(id) {
-      cartas.push(id);
-      this.changeSprite(id);
+    push(cardId) {
+      cartas.push(cardId);
+      this.changeSprite(cardId);
     },
     vuelta() {
       const ret = Array.from(cartas).reverse();
