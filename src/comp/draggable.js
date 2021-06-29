@@ -1,23 +1,20 @@
 import k from '../k.js';
 
-export function draggable(id = false) {
-  // private states
-  let idDrag = id;
+export function draggable(cardId = false) {
+  let idDrag = cardId;
 
   return {
-    // called when the object is add()-ed
     add() {
       k.mouseRelease(() => {
+        if (idDrag) this.trigger('dragEnd', idDrag);
         idDrag = false;
-        this.trigger('dragEnd', idDrag);
       });
     },
 
-    drag(id) {
-      idDrag = id;
+    drag(cardId) {
+      idDrag = cardId;
     },
 
-    // called every frame
     update() {
       if (idDrag) {
         this.pos = k.mousePos();
