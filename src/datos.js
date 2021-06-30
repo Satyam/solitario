@@ -10,6 +10,8 @@ export const PILA = 'pila';
 export const VISTA = 'vista';
 export const REVERSO = 'reverso';
 
+export const OFFSET_PILA = 80;
+
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 export const palos = 'CDHS';
 export const valores = 'A23456789TJQK';

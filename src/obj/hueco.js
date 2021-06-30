@@ -1,10 +1,11 @@
 import k from '../k.js';
 import grilla from '../comp/grilla.js';
-import { HUECO, MAZO, baraja } from '../datos.js';
+import { HUECO, MAZO, OFFSET_PILA, baraja } from '../datos.js';
 
 export function huecoComp(slot) {
   const cartas = [];
   let top = null;
+  const rendered = [];
   return {
     add() {
       const mazo = k.get(MAZO)[0];
@@ -16,7 +17,8 @@ export function huecoComp(slot) {
     push(cardId) {
       cartas.push(cardId);
       top = cardId;
-      this.changeSprite(cardId);
+      // this.changeSprite(cardId);
+      this.render();
     },
 
     drop(cardId) {
@@ -39,6 +41,19 @@ export function huecoComp(slot) {
         }
       }
       return false;
+    },
+    render() {
+      console.log('rendering');
+      rendered.forEach((c) => k.destroy(c));
+      rendered.length = 0;
+      cartas.forEach((cardId, index) => {
+        rendered.push(
+          k.add([
+            k.sprite(cardId),
+            k.pos(this.pos.x, this.pos.y + OFFSET_PILA * index),
+          ])
+        );
+      });
     },
   };
 }
