@@ -1,7 +1,7 @@
 import k from '../k.js';
 import grilla from '../comp/grilla.js';
 import draggable from '../comp/draggable.js';
-import { JUEGO, HUECO, PILA, VISTA } from '../datos.js';
+import { JUEGO, HUECO, PILA, VISTA, EN_HUECO } from '../datos.js';
 
 function juegoComp() {
   return {
@@ -10,8 +10,9 @@ function juegoComp() {
       this.on('dragEnd', () => {
         let dropped = false;
         console.log('soltado');
-        k.every(HUECO, (h) => {
-          if (!dropped && this.isOverlapped(h)) {
+        k.every(EN_HUECO, (eh) => {
+          if (!dropped && this.isOverlapped(eh)) {
+            const h = eh.is(HUECO) ? eh : eh.parent;
             console.log('Soltado sobre hueco', h.slot(), this.cardId);
             console.log('drop', (dropped = h.drop(this.cardId)));
           }

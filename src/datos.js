@@ -5,6 +5,7 @@ export const ROJO = 'rojo';
 export const NEGRO = 'negro';
 export const MAZO = 'mazo';
 export const HUECO = 'hueco';
+export const EN_HUECO = 'en hueco';
 export const JUEGO = 'juego';
 export const PILA = 'pila';
 export const VISTA = 'vista';
