@@ -23,9 +23,7 @@ function juegoComp() {
           }
         });
         if (!dropped) {
-          k.every(VISTA, (v) => {
-            v.push(this.cardId);
-          });
+          k.getFirst(VISTA).push(this.cardId);
         }
         this.hidden = true;
       });

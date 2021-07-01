@@ -15,7 +15,7 @@ export function vistaComp() {
         if (dragSensed || cartas.length === 0 || !this.hasPt(k.mousePos()))
           return;
         dragSensed = true;
-        const j = k.get(JUEGO)[0];
+        const j = k.getFirst(JUEGO);
         if (j.grab(this.getTop())) {
           cartas.pop();
           this.changeSprite(this.getTop() || HUECO);

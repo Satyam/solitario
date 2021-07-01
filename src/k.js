@@ -7,4 +7,5 @@ const k = kaboom({
   debug: true,
 });
 
+k.getFirst = (tag) => k.get(tag)[0];
 export default k;

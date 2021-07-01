@@ -9,7 +9,7 @@ export function huecoComp(slot) {
   let lastHidden = slot - 1;
   return {
     add() {
-      const mazo = k.get(MAZO)[0];
+      const mazo = k.getFirst(MAZO);
       for (let i = 0; i <= slot; i++) {
         this.push(mazo.sacar());
       }

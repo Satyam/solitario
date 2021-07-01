@@ -24,7 +24,7 @@ export function mazoComp() {
         if (cartas.length) {
           this.trigger('popped', this.sacar());
         } else {
-          cartas = k.get(VISTA)[0].vuelta();
+          cartas = k.getFirst(VISTA).vuelta();
         }
         this.changeSprite(cartas.length ? REVERSO : HUECO);
       });
