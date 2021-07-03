@@ -14,12 +14,23 @@ export function huecoComp(slot) {
   let top = null;
   const rendered = [];
   let lastHidden = slot - 1;
+  let dragSensed = false;
   return {
     add() {
       const mazo = k.getFirst(MAZO);
       for (let i = 0; i <= slot; i++) {
         this.push(mazo.sacar());
       }
+      k.mouseDown(() => {
+        if (dragSensed || cartas.length === 0) return;
+        const top = rendered.filter((which) => which.hasPt(k.mousePos())).pop();
+        if (!top || top.index <= lastHidden) return;
+        dragSensed = true;
+        console.log('mouseDown', slot, top.index, lastHidden);
+      });
+      k.mouseRelease(() => {
+        dragSensed = false;
+      });
     },
     slot() {
       return slot;
@@ -52,20 +63,23 @@ export function huecoComp(slot) {
       return false;
     },
     render() {
-      console.log('rendering');
-      rendered.forEach((c) => k.destroy(c));
-      rendered.length = 0;
+      console.log('rendering', slot);
       cartas.forEach((cardId, index) => {
-        rendered.push(
-          k.add([
-            k.sprite(index > lastHidden ? cardId : REVERSO),
-            k.pos(this.pos.x, this.pos.y + OFFSET_PILA * index),
-            EN_HUECO,
-            {
-              parent: this,
-            },
-          ])
-        );
+        const r = rendered[index];
+        if (r && r.cardId === cardId && r.visible === index > lastHidden)
+          return;
+        if (r) k.destroy(r);
+        rendered[index] = k.add([
+          k.sprite(index > lastHidden ? cardId : REVERSO),
+          k.pos(this.pos.x, this.pos.y + OFFSET_PILA * index),
+          EN_HUECO,
+          {
+            parent: this,
+            index,
+            cardId,
+            visible: index > lastHidden,
+          },
+        ]);
       });
     },
   };
