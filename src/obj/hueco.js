@@ -1,5 +1,6 @@
 import k from '../k.js';
 import grilla from '../comp/grilla.js';
+import enViaje from './enViaje.js';
 import {
   HUECO,
   MAZO,
@@ -14,7 +15,7 @@ export function huecoComp(slot) {
   let top = null;
   const rendered = [];
   let lastHidden = slot - 1;
-  let dragSensed = false;
+  let dragging = null;
   return {
     add() {
       const mazo = k.getFirst(MAZO);
@@ -22,14 +23,22 @@ export function huecoComp(slot) {
         this.push(mazo.sacar());
       }
       k.mouseDown(() => {
-        if (dragSensed || cartas.length === 0) return;
+        if (k.isDragging || dragging || cartas.length === 0) return;
         const top = rendered.filter((which) => which.hasPt(k.mousePos())).pop();
         if (!top || top.index <= lastHidden) return;
-        dragSensed = true;
         console.log('mouseDown', slot, top.index, lastHidden);
+        dragging = k.add([enViaje(cartas.slice(top.index), top)]);
+        k.isDragging = true;
+        cartas.length = top.index;
+        lastHidden = cartas.length - 2;
+        this.render();
       });
       k.mouseRelease(() => {
-        dragSensed = false;
+        if (dragging) {
+          k.destroy(dragging);
+          dragging = null;
+          k.isDragging = false;
+        }
       });
     },
     slot() {
@@ -64,6 +73,14 @@ export function huecoComp(slot) {
     },
     render() {
       console.log('rendering', slot);
+
+      if (rendered.length && cartas.length < rendered.length) {
+        for (let ri = cartas.length; ri < rendered.length; ri++) {
+          k.destroy(rendered[ri]);
+        }
+        rendered.length = cartas.length;
+      }
+
       cartas.forEach((cardId, index) => {
         const r = rendered[index];
         if (r && r.cardId === cardId && r.visible === index > lastHidden)
