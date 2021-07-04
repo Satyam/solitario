@@ -1,5 +1,4 @@
 import k from '../k.js';
-import grilla from '../comp/grilla.js';
 import draggable from '../comp/draggable.js';
 import { JUEGO, HUECO, PILA, VISTA, EN_HUECO } from '../datos.js';
 
@@ -11,6 +10,8 @@ function juegoComp() {
         let dropped = false;
         console.log('soltado');
         k.every(EN_HUECO, (eh) => {
+          // Ojo!: Ver qué pasa si la pila en HUECO está vacía
+          // Puede que deba hacer otro loop sobre HUECO mismo, además de EN_HUECO
           if (!dropped && this.isOverlapped(eh)) {
             const h = eh.is(HUECO) ? eh : eh.parent;
             console.log('Soltado sobre hueco', h.slot(), this.cardId);
@@ -39,5 +40,5 @@ function juegoComp() {
   };
 }
 export default function () {
-  k.add([k.sprite(HUECO), grilla(1, 0), draggable(), juegoComp(), JUEGO]);
+  k.add([k.sprite(HUECO), draggable(), juegoComp(), JUEGO]);
 }
