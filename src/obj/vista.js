@@ -12,9 +12,14 @@ export function vistaComp() {
         this.push(cardId);
       });
       k.mouseDown(() => {
-        if (dragSensed || cartas.length === 0 || !this.hasPt(k.mousePos()))
+        if (
+          k.isDragging ||
+          dragSensed ||
+          cartas.length === 0 ||
+          !this.hasPt(k.mousePos())
+        )
           return;
-        dragSensed = true;
+        k.isDragging = dragSensed = true;
         const j = k.getFirst(JUEGO);
         if (j.grab(this.getTop())) {
           cartas.pop();
@@ -22,7 +27,9 @@ export function vistaComp() {
         }
       });
       k.mouseRelease(() => {
-        dragSensed = false;
+        if (dragSensed) {
+          k.isDragging = dragSensed = false;
+        }
       });
     },
     push(cardId) {
