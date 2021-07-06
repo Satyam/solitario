@@ -36,15 +36,19 @@ export function enViajeComp(cartas) {
         // });
         k.every(PILA, (p) => {
           if (!dropped && cartas.length === 1 && p.hasPt(k.mousePos())) {
-            console.log('Soltado sobre pila', p.slot(), this.cardId);
+            console.log('Soltado sobre pila', p.slot(), cartas[0]);
             console.log('drop', (dropped = p.drop(cartas[0])));
           }
         });
+        if (dropped) {
+          cartas.length = 0;
+        }
         // if (!dropped) {
         //   k.getFirst(VISTA).push(this.cardId);
         // }
       });
       this.on('destroy', () => {
+        console.log('on destroy');
         k.every(CARTA_EN_VIAJE, (c) => k.destroy(c));
       });
     },

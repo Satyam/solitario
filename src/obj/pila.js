@@ -11,6 +11,7 @@ export function pilaComp(slot) {
       return slot;
     },
     push(cardId) {
+      console.log('push into pila', slot, cardId);
       cartas.push(cardId);
       top = cardId;
       this.changeSprite(cardId);
@@ -22,7 +23,10 @@ export function pilaComp(slot) {
       if (top) {
         const cartaTop = baraja[top];
         console.log('cartaTop', cartaTop);
-        if (carta.palo == cartaTop.palo && carta.valor === cartaTop.valor + 1) {
+        if (
+          carta.palo === cartaTop.palo &&
+          carta.valor === cartaTop.valor + 1
+        ) {
           this.push(cardId);
           return true;
         }
