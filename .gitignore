@@ -13,8 +13,8 @@ node_modules/
 /npm-debug.log
 
 #Satyam
-assets/cards
 oldsrc
 
+dist/assets/cards/
 dist/game.js
 dist/game.js.map
