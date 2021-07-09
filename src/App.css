@@ -5,4 +5,13 @@
 .sprite {
   width: 120px;
   height: 168px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.celda {
+  position: relative;
+  height: 200px;
+  padding: 1rem;
 }

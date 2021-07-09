@@ -27,7 +27,10 @@ export const palos = ['C', 'D', 'H', 'S'] as const;
 
 export type PALO = typeof palos[number];
 
-export type CardId = `${VALOR}${PALO}`;
+export const REVERSO = '2B';
+export const HUECO = 'hueco';
+
+export type CardId = `${VALOR}${PALO}` | '2B' | 'hueco';
 
 export type cartaType = {
   name: CardId;
@@ -38,17 +41,15 @@ export type cartaType = {
 };
 
 // Constantes
-export const MAZO = 'mazo';
-export const HUECO = 'hueco';
-export const EN_HUECO = 'en hueco';
-export const JUEGO = 'juego';
-export const CARTAS_EN_VIAJE = 'cartas en viaje';
-export const CARTA_EN_VIAJE = 'carta en viaje';
-export const PILA = 'pila';
-export const VISTA = 'vista';
-export const REVERSO = 'reverso';
+// export const MAZO = 'mazo';
+// export const EN_HUECO = 'en hueco';
+// export const JUEGO = 'juego';
+// export const CARTAS_EN_VIAJE = 'cartas en viaje';
+// export const CARTA_EN_VIAJE = 'carta en viaje';
+// export const PILA = 'pila';
+// export const VISTA = 'vista';
 
-export const OFFSET_PILA = 80;
+export const OFFSET_PILA = 40;
 
 export const numPalos = palos.length;
 export const numValores = valores.length;
