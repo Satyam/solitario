@@ -20,23 +20,31 @@ function App() {
       </header>
       <main>
         <div className="columns">
-          <div className="column celda">
-            <Mazo />
+          <div className="column">
+            <div className="celda">
+              <Mazo />
+            </div>
           </div>
-          <div className="column celda">
-            <Vista />
+          <div className="column">
+            <div className="celda">
+              <Vista />
+            </div>
           </div>
-          <div className="column celda"></div>
+          <div className="column"></div>
           {[0, 1, 2, 3].map((slot) => (
-            <div key={slot} className="column celda">
-              <Pila slot={slot} />
+            <div key={slot} className="column">
+              <div className="celda">
+                <Pila slot={slot} />
+              </div>
             </div>
           ))}
         </div>
         <div className="columns">
           {[0, 1, 2, 3, 4, 5, 6].map((slot) => (
-            <div key={slot} className="column celda">
-              <Hueco slot={slot} />
+            <div key={slot} className="column">
+              <div className="celda">
+                <Hueco slot={slot} />
+              </div>
             </div>
           ))}
         </div>

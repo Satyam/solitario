@@ -15,9 +15,9 @@
 
 .cardStack {
   position: relative;
-  height: 200px;
   padding: 1rem;
 }
 
 .celda {
+  margin: 1rem;
 }

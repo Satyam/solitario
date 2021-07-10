@@ -49,6 +49,8 @@ export type cartaType = {
 // export const PILA = 'pila';
 // export const VISTA = 'vista';
 
+export const CARTA_HEIGHT = 168;
+export const CARTA_WIDTH = 120;
 export const OFFSET_PILA = 40;
 
 export const numPalos = palos.length;

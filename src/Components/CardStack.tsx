@@ -1,4 +1,4 @@
-import { HUECO, OFFSET_PILA, REVERSO, CardId } from 'datos';
+import { HUECO, OFFSET_PILA, REVERSO, CardId, CARTA_HEIGHT } from 'datos';
 import Sprite from './Sprite';
 
 const CardStack = ({
@@ -8,8 +8,12 @@ const CardStack = ({
   cartas: CardId[];
   firstShown: number;
 }) => {
-  return cartas.length ? (
-    <div className="cardStack">
+  const l = cartas.length;
+  return l ? (
+    <div
+      className="cardStack"
+      style={{ height: OFFSET_PILA * l + CARTA_HEIGHT }}
+    >
       {cartas.map((cardId, index) => (
         <Sprite
           key={index}
