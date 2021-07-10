@@ -11,9 +11,9 @@ const Mazo = () => {
   const sacar = () => {
     const l = cartas.length;
     if (l) {
-      const cardId = cartas[l - 1];
-      setVista([...vista, cardId]);
-      setCartas(cartas.slice(0, -1));
+      const [cardId, ...resto] = cartas;
+      setVista([cardId, ...vista]);
+      setCartas(resto);
     } else {
       setCartas([...vista].reverse());
       setVista([]);

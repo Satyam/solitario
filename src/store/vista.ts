@@ -8,7 +8,6 @@ export const vistaState = atom<vistaType>({ key: 'vistaState', default: [] });
 export const vistaTop = selector({
   key: 'vistaTop',
   get: ({ get }) => {
-    const cartas = get(vistaState);
-    return cartas[cartas.length - 1];
+    return get(vistaState)[0];
   },
 });

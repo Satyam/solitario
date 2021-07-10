@@ -17,12 +17,14 @@ export const mazoSize = selector({
 export const mazoTop = selector({
   key: 'mazoTop',
   get: ({ get }) => {
-    const cartas = get(mazoState);
-    return cartas[cartas.length - 1];
+    return get(mazoState)[0];
   },
 });
 
-function getRandomInt(min: number, max: number): number {
+function getRandomInt(min: number, max?: number): number {
+  if (typeof max === 'undefined') {
+    return Math.floor(Math.random() * (min + 1));
+  }
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,8 +36,8 @@ export const mazoBarajar = selector<void>({
   set: ({ set }) => {
     const cartas: CardId[] = [];
     while (cartas.length < numCartas) {
-      let p = getRandomInt(0, numPalos - 1);
-      let v = getRandomInt(0, numValores - 1);
+      let p = getRandomInt(numPalos - 1);
+      let v = getRandomInt(numValores - 1);
       const cardId = `${valores[v]}${palos[p]}` as CardId;
       if (!cartas.includes(cardId)) {
         cartas.push(cardId);
