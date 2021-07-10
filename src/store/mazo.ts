@@ -1,5 +1,6 @@
 import { atom, selector } from 'recoil';
 import { numCartas, numPalos, numValores, valores, palos } from 'datos';
+import { getRandomInt } from 'utils';
 import type { CardId } from 'datos';
 
 export type mazoType = CardId[];
@@ -20,15 +21,6 @@ export const mazoTop = selector({
     return get(mazoState)[0];
   },
 });
-
-function getRandomInt(min: number, max?: number): number {
-  if (typeof max === 'undefined') {
-    return Math.floor(Math.random() * (min + 1));
-  }
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 export const mazoBarajar = selector<void>({
   key: 'mazoBarajar',
