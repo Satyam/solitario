@@ -1,19 +1,23 @@
 import type { CardId } from 'datos';
-import { OFFSET_PILA } from 'datos';
+import { ImgHTMLAttributes } from 'react';
 
-type spriteParams = {
+type spriteParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   cardId: CardId;
   index?: number;
-  onClick?: React.MouseEventHandler<HTMLImageElement>;
 };
 
-const Sprite = ({ cardId, index = 0, onClick }: spriteParams) => (
+const Sprite = ({
+  cardId,
+  index = 0,
+  className,
+  alt,
+  ...params
+}: spriteParams) => (
   <img
-    className="sprite"
-    style={{ marginTop: OFFSET_PILA * index, zIndex: 10 + index }}
+    className={`${className} sprite`}
     src={`assets/cards/${cardId}.svg`}
-    alt={cardId}
-    onClick={onClick}
+    alt={alt || cardId}
+    {...params}
   />
 );
 

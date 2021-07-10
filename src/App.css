@@ -5,13 +5,19 @@
 .sprite {
   width: 120px;
   height: 168px;
+}
+
+.stackedSprite {
   position: absolute;
   top: 0;
   left: 0;
 }
 
-.celda {
+.cardStack {
   position: relative;
   height: 200px;
   padding: 1rem;
+}
+
+.celda {
 }

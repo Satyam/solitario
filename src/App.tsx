@@ -2,10 +2,12 @@ import React from 'react';
 import './App.css';
 import 'bulma/css/bulma.min.css';
 import Navbar from './Navbar';
-import { baraja } from './datos';
+import { baraja, HUECO } from './datos';
 import Sprite from 'Components/Sprite';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
+import CardStack from 'Components/CardStack';
+
 function App() {
   // Image preload
   Object.keys(baraja).forEach((cardId) => {
@@ -25,20 +27,18 @@ function App() {
           <div className="column celda">
             <Vista />
           </div>
+          <div className="column celda"></div>
           <div className="column celda">
-            <Sprite cardId="3C" />
+            <Sprite cardId={HUECO} />
           </div>
           <div className="column celda">
-            <Sprite cardId="4C" />
+            <Sprite cardId={HUECO} />
           </div>
           <div className="column celda">
-            <Sprite cardId="5C" />
+            <Sprite cardId={HUECO} />
           </div>
           <div className="column celda">
-            <Sprite cardId="6C" />
-          </div>
-          <div className="column celda">
-            <Sprite cardId="7C" />
+            <Sprite cardId={HUECO} />
           </div>
         </div>
         <div className="columns">
@@ -46,7 +46,7 @@ function App() {
             <Sprite cardId="AD" />
           </div>
           <div className="column celda" style={{ position: 'relative' }}>
-            <Sprite cardId="2D" />
+            <CardStack />
           </div>
           <div className="column celda">
             {[0, 1, 2, 3].map((index) => (
