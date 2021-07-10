@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 import 'bulma/css/bulma.min.css';
 import Navbar from './Navbar';
@@ -7,9 +6,13 @@ import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
 import useInit from 'useInit';
 import Pila from 'Components/Pila';
-function App() {
-  useInit();
+import { useEffect } from 'react';
 
+function App() {
+  const init = useInit();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(init, []);
   return (
     <div className="App">
       <header>

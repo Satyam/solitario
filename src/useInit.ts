@@ -37,31 +37,34 @@ const useInit = () => {
     useSetRecoilState(firstShownState(6)),
   ];
 
-  useResetRecoilState(vistaState)();
+  const resetVista = useResetRecoilState(vistaState);
 
-  if (firstTime) {
-    setFirstTime(false);
-    // Image preload
-    Object.keys(baraja).forEach((cardId) => {
-      new Image().src = `assets/cards/${cardId}.svg`;
-    });
-  }
-
-  const cartas: CardId[] = [];
-  while (cartas.length < numCartas) {
-    let p = getRandomInt(numPalos - 1);
-    let v = getRandomInt(numValores - 1);
-    const cardId = `${valores[v]}${palos[p]}` as CardId;
-    if (!cartas.includes(cardId)) {
-      cartas.push(cardId);
+  return () => {
+    if (firstTime) {
+      setFirstTime(false);
+      // Image preload
+      Object.keys(baraja).forEach((cardId) => {
+        new Image().src = `assets/cards/${cardId}.svg`;
+      });
     }
-  }
 
-  for (let slot = 0; slot < 7; slot++) {
-    setFirstShown[slot](slot);
-    setHueco[slot](cartas.splice(0, slot + 1));
-  }
-  setMazo(cartas);
+    resetVista();
+    const cartas: CardId[] = [];
+    while (cartas.length < numCartas) {
+      let p = getRandomInt(numPalos - 1);
+      let v = getRandomInt(numValores - 1);
+      const cardId = `${valores[v]}${palos[p]}` as CardId;
+      if (!cartas.includes(cardId)) {
+        cartas.push(cardId);
+      }
+    }
+
+    for (let slot = 0; slot < 7; slot++) {
+      setFirstShown[slot](slot);
+      setHueco[slot](cartas.splice(0, slot + 1));
+    }
+    setMazo(cartas);
+  };
 };
 
 export default useInit;
