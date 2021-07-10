@@ -1,11 +1,13 @@
-import { HUECO, OFFSET_PILA, REVERSO } from 'datos';
-import { useRecoilValue } from 'recoil';
-import { cardStackState, lastHiddenState } from 'store/cardStack';
+import { HUECO, OFFSET_PILA, REVERSO, CardId } from 'datos';
 import Sprite from './Sprite';
 
-const CardStack = () => {
-  const cartas = useRecoilValue(cardStackState);
-  const lastHidden = useRecoilValue(lastHiddenState);
+const CardStack = ({
+  cartas,
+  lastHidden,
+}: {
+  cartas: CardId[];
+  lastHidden: number;
+}) => {
   return cartas.length ? (
     <div className="cardStack">
       {cartas.map((cardId, index) => (

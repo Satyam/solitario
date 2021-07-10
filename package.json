@@ -11,6 +11,7 @@
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "bulma": "^0.9.3",
+    "nano-memoize": "^1.2.1",
     "react": "^17.0.2",
     "react-dnd": "^14.0.2",
     "react-dom": "^17.0.2",

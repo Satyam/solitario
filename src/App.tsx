@@ -6,7 +6,7 @@ import { baraja, HUECO } from './datos';
 import Sprite from 'Components/Sprite';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
-import CardStack from 'Components/CardStack';
+import Hueco from 'Components/Hueco';
 
 function App() {
   // Image preload
@@ -42,29 +42,11 @@ function App() {
           </div>
         </div>
         <div className="columns">
-          <div className="column celda">
-            <Sprite cardId="AD" />
-          </div>
-          <div className="column celda" style={{ position: 'relative' }}>
-            <CardStack />
-          </div>
-          <div className="column celda">
-            {[0, 1, 2, 3].map((index) => (
-              <Sprite key={index} cardId={'3H'} index={index} />
-            ))}
-          </div>
-          <div className="column celda">
-            <Sprite cardId="4D" />
-          </div>
-          <div className="column celda">
-            <Sprite cardId="5D" />
-          </div>
-          <div className="column celda">
-            <Sprite cardId="6D" />
-          </div>
-          <div className="column celda">
-            <Sprite cardId="7D" />
-          </div>
+          {[0, 1, 2, 3, 4, 5, 6].map((slot) => (
+            <div className="column celda">
+              <Hueco slot={slot} />
+            </div>
+          ))}
         </div>
       </main>
     </div>
