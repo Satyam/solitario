@@ -1,5 +1,5 @@
 import { mazoState } from 'store/mazo';
-import { huecoState, lastHiddenState } from 'store/huecos';
+import { huecoState, firstShownState } from 'store/huecos';
 import { vistaState } from 'store/vista';
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { getRandomInt } from 'utils';
@@ -27,14 +27,14 @@ const useInit = () => {
     useSetRecoilState(huecoState(6)),
   ];
 
-  const setLastHidden = [
-    useSetRecoilState(lastHiddenState(0)),
-    useSetRecoilState(lastHiddenState(1)),
-    useSetRecoilState(lastHiddenState(2)),
-    useSetRecoilState(lastHiddenState(3)),
-    useSetRecoilState(lastHiddenState(4)),
-    useSetRecoilState(lastHiddenState(5)),
-    useSetRecoilState(lastHiddenState(6)),
+  const setFirstShown = [
+    useSetRecoilState(firstShownState(0)),
+    useSetRecoilState(firstShownState(1)),
+    useSetRecoilState(firstShownState(2)),
+    useSetRecoilState(firstShownState(3)),
+    useSetRecoilState(firstShownState(4)),
+    useSetRecoilState(firstShownState(5)),
+    useSetRecoilState(firstShownState(6)),
   ];
 
   useResetRecoilState(vistaState)();
@@ -58,7 +58,7 @@ const useInit = () => {
   }
 
   for (let slot = 0; slot < 7; slot++) {
-    setLastHidden[slot](slot - 1);
+    setFirstShown[slot](slot);
     setHueco[slot](cartas.splice(0, slot + 1));
   }
   setMazo(cartas);

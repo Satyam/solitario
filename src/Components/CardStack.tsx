@@ -3,17 +3,17 @@ import Sprite from './Sprite';
 
 const CardStack = ({
   cartas,
-  lastHidden,
+  firstShown,
 }: {
   cartas: CardId[];
-  lastHidden: number;
+  firstShown: number;
 }) => {
   return cartas.length ? (
     <div className="cardStack">
       {cartas.map((cardId, index) => (
         <Sprite
           key={index}
-          cardId={index > lastHidden ? cardId : REVERSO}
+          cardId={index >= firstShown ? cardId : REVERSO}
           index={index}
           className="stackedSprite"
           style={{

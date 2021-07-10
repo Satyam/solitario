@@ -9,9 +9,9 @@ export const huecoState = memoize((slot: number) =>
   })
 );
 
-export const lastHiddenState = memoize((slot: number) =>
+export const firstShownState = memoize((slot: number) =>
   atom<number>({
-    key: `lastHiddenState-${slot}`,
+    key: `firstShownState-${slot}`,
     default: 0,
   })
 );

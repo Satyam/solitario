@@ -1,11 +1,11 @@
 import { useRecoilValue } from 'recoil';
-import { huecoState, lastHiddenState } from 'store/huecos';
+import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from './CardStack';
 
 const Hueco = ({ slot }: { slot: number }) => {
   const cartas = useRecoilValue(huecoState(slot));
-  const lastHidden = useRecoilValue(lastHiddenState(slot));
-  return <CardStack cartas={cartas} lastHidden={lastHidden} />;
+  const firstShown = useRecoilValue(firstShownState(slot));
+  return <CardStack cartas={cartas} firstShown={firstShown} />;
 };
 
 export default Hueco;
