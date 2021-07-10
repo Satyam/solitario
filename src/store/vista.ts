@@ -1,13 +1,18 @@
-import { atom, selector } from 'recoil';
+import { atom, DefaultValue, selector } from 'recoil';
 import type { CardId } from 'datos';
 
-export type vistaType = CardId[];
+export const vistaState = atom<CardId[]>({ key: 'vistaState', default: [] });
 
-export const vistaState = atom<vistaType>({ key: 'vistaState', default: [] });
-
-export const vistaTop = selector({
+export const vistaTop = selector<CardId>({
   key: 'vistaTop',
-  get: ({ get }) => {
-    return get(vistaState)[0];
-  },
+  get: ({ get }) => get(vistaState)[0],
+});
+
+export const vistaPush = selector<CardId[]>({
+  key: 'vistaPush',
+  get: ({ get }) => get(vistaState),
+  set: ({ set }, cartas) =>
+    set(vistaState, (prev) =>
+      cartas instanceof DefaultValue ? prev : [...cartas, ...prev]
+    ),
 });

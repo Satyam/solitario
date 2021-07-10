@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
 import { mazoBarajar, mazoState } from 'store/mazo';
 import { vistaState } from 'store/vista';
 import { HUECO, REVERSO } from 'datos';
@@ -7,6 +7,7 @@ import Sprite from './Sprite';
 
 const Mazo = () => {
   const [cartas, setCartas] = useRecoilState(mazoState);
+  const resetVista = useResetRecoilState(vistaState);
   const [vista, setVista] = useRecoilState(vistaState);
   const sacar = () => {
     const l = cartas.length;
@@ -16,7 +17,7 @@ const Mazo = () => {
       setCartas(resto);
     } else {
       setCartas([...vista].reverse());
-      setVista([]);
+      resetVista();
     }
   };
 
