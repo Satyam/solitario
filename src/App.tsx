@@ -7,12 +7,10 @@ import Sprite from 'Components/Sprite';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
+import useInit from 'useInit';
 
 function App() {
-  // Image preload
-  Object.keys(baraja).forEach((cardId) => {
-    new Image().src = `assets/cards/${cardId}.svg`;
-  });
+  useInit();
 
   return (
     <div className="App">
