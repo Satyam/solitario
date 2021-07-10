@@ -2,13 +2,11 @@ import React from 'react';
 import './App.css';
 import 'bulma/css/bulma.min.css';
 import Navbar from './Navbar';
-import { baraja, HUECO } from './datos';
-import Sprite from 'Components/Sprite';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
 import useInit from 'useInit';
-
+import Pila from 'Components/Pila';
 function App() {
   useInit();
 
@@ -26,22 +24,15 @@ function App() {
             <Vista />
           </div>
           <div className="column celda"></div>
-          <div className="column celda">
-            <Sprite cardId={HUECO} />
-          </div>
-          <div className="column celda">
-            <Sprite cardId={HUECO} />
-          </div>
-          <div className="column celda">
-            <Sprite cardId={HUECO} />
-          </div>
-          <div className="column celda">
-            <Sprite cardId={HUECO} />
-          </div>
+          {[0, 1, 2, 3].map((slot) => (
+            <div key={slot} className="column celda">
+              <Pila slot={slot} />
+            </div>
+          ))}
         </div>
         <div className="columns">
           {[0, 1, 2, 3, 4, 5, 6].map((slot) => (
-            <div className="column celda">
+            <div key={slot} className="column celda">
               <Hueco slot={slot} />
             </div>
           ))}
