@@ -3,6 +3,11 @@ export enum COLOR {
   NEGRO = 'negro',
 }
 
+export enum DRAG_TYPES {
+  VISTA = 'vista',
+  HUECOS = 'hueco',
+}
+
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 
 export const valores = [
@@ -40,6 +45,13 @@ export type cartaType = {
   color: COLOR;
 };
 
+export type dragItem = {
+  cardId: CardId;
+};
+export type dropResult = {
+  cardId: CardId;
+  slot: number;
+};
 // Constantes
 // export const MAZO = 'mazo';
 // export const EN_HUECO = 'en hueco';

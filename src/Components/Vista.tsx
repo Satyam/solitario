@@ -1,12 +1,40 @@
-import { HUECO } from 'datos';
-import { useRecoilValue } from 'recoil';
-import { vistaTop } from 'store/vista';
+import { HUECO, DRAG_TYPES, dragItem, dropResult } from 'datos';
+import { useRecoilState } from 'recoil';
+import { useDrag } from 'react-dnd';
+import { vistaState } from 'store/vista';
 import Sprite from './Sprite';
 
 const Vista = () => {
-  const cardId = useRecoilValue(vistaTop);
-
-  return <Sprite cardId={cardId || HUECO} />;
+  const [cartas, setCartas] = useRecoilState(vistaState);
+  const cardId = cartas[0];
+  const [{ isDragging }, drag] = useDrag<
+    dragItem,
+    dropResult,
+    { isDragging: boolean }
+  >(
+    () => ({
+      type: DRAG_TYPES.VISTA,
+      item: { cardId },
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
+      end: (item, monitor) => {
+        console.log('useDrag end', item, monitor.getDropResult());
+        if (monitor.didDrop()) {
+          setCartas(cartas.slice(1));
+        }
+      },
+    }),
+    [cardId]
+  );
+  return (
+    <div ref={drag}>
+      <Sprite
+        cardId={cardId || HUECO}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      />
+    </div>
+  );
 };
 
 export default Vista;
