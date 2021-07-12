@@ -11,20 +11,29 @@ const Pila = ({ slot }: { slot: number }) => {
     () => ({
       accept: DRAG_TYPES.VISTA,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),
-      drop: (item, monitor) => ({ ...item, slot }),
-      canDrop: (item, monitor) => {
+      drop: (item) => {
+        setCartas([item.cardId, ...cartas]);
+        return { ...item, slot };
+      },
+      canDrop: (item) => {
+        const dropCarta = baraja[item.cardId];
         if (cardId) {
-          console.log('rejected');
-          return false;
-        } else {
-          if (baraja[item.cardId].index === 0) {
-            console.log('accepted', item);
-            setCartas([item.cardId, ...cartas]);
+          const topCarta = baraja[cardId];
+          if (
+            dropCarta.index === topCarta.index + 1 &&
+            dropCarta.palo === topCarta.palo
+          ) {
+            console.log('accepted 2', { ...item, slot });
             return true;
           }
-          console.log('also rejected');
-          return false;
+        } else {
+          if (dropCarta.index === 0) {
+            console.log('accepted 1', { ...item, slot });
+            return true;
+          }
         }
+        console.log('rejected', { ...item, slot });
+        return false;
       },
     }),
     [cardId]
