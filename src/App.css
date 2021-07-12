@@ -19,5 +19,13 @@
 }
 
 .celda {
-  margin: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  column-gap: 10px;
+  row-gap: 1em;
 }
