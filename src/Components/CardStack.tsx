@@ -14,17 +14,21 @@ const CardStack = ({
       className="cardStack"
       style={{ height: OFFSET_PILA * l + CARTA_HEIGHT }}
     >
-      {cartas.map((cardId, index) => (
-        <Sprite
-          key={index}
-          cardId={index >= firstShown ? cardId : REVERSO}
-          index={index}
-          className="stackedSprite"
-          style={{
-            top: index * OFFSET_PILA,
-          }}
-        />
-      ))}
+      {cartas.map((cardId, index) => {
+        const i = l - index;
+        return (
+          <Sprite
+            key={i}
+            cardId={i > firstShown ? cardId : REVERSO}
+            index={index}
+            className="stackedSprite"
+            style={{
+              top: i * OFFSET_PILA,
+              zIndex: i,
+            }}
+          />
+        );
+      })}
     </div>
   ) : (
     <Sprite cardId={HUECO} />
