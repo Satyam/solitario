@@ -17,7 +17,7 @@ function App() {
         <button>Nuevo Juego</button>
       </header>
       <main>
-        <div className="row">
+        <div className="grid">
           <div className="celda">
             <Mazo />
           </div>
@@ -32,8 +32,6 @@ function App() {
               <Pila slot={slot} />
             </div>
           ))}
-        </div>
-        <div className="row">
           {[0, 1, 2, 3, 4, 5, 6].map((slot) => (
             <div key={slot} className="celda">
               <Hueco slot={slot} />

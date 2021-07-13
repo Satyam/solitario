@@ -8,14 +8,8 @@
 }
 
 .stackedSprite {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.cardStack {
-  position: relative;
-  padding: 1rem;
+  height: 40px;
+  overflow-y: hidden;
 }
 
 .celda {
@@ -23,9 +17,9 @@
   margin-right: auto;
 }
 
-.row {
+.grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  column-gap: 10px;
-  row-gap: 1em;
+  column-gap: 1rem;
+  row-gap: 3rem;
 }

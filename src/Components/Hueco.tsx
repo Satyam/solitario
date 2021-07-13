@@ -1,8 +1,17 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useDrop } from 'react-dnd';
 import { huecoState, firstShownState } from 'store/huecos';
-import CardStack from './CardStack';
-import { DRAG_TYPES, dragItem, dropResult, baraja } from 'datos';
+import CardStack from 'Components/CardStack';
+import Sprite from 'Components/Sprite';
+import {
+  DRAG_TYPES,
+  dragItem,
+  dropResult,
+  baraja,
+  CARTA_HEIGHT,
+  OFFSET_PILA,
+  HUECO,
+} from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
   const [cartas, setCartas] = useRecoilState(huecoState(slot));
@@ -39,15 +48,20 @@ const Hueco = ({ slot }: { slot: number }) => {
     }),
     [cartas]
   );
-  console.log(slot, firstShown, cartas);
+  if (slot === 2) console.log({ firstShown, cartas });
   return (
     <div
       ref={drop}
       style={{
         border: isOver ? 'thin solid yellow' : 'none',
+        height: OFFSET_PILA * cartas.length + CARTA_HEIGHT,
       }}
     >
-      <CardStack cartas={cartas} firstShown={firstShown} />
+      {cartas.length ? (
+        <CardStack cartas={cartas} firstShown={firstShown} />
+      ) : (
+        <Sprite cardId={HUECO} />
+      )}
     </div>
   );
 };
