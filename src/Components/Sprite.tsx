@@ -17,6 +17,7 @@ const Sprite = ({
     className={`${className} sprite`}
     src={`assets/cards/${cardId}.svg`}
     alt={alt || cardId}
+    draggable={false}
     {...params}
   />
 );
