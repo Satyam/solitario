@@ -1,4 +1,4 @@
-import { HUECO, DRAG_TYPES, dragItem, dropResult } from 'datos';
+import { HUECO, DRAG_TYPES, vistaDragItem, vistaDropResult } from 'datos';
 import { useRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
@@ -8,8 +8,8 @@ const Vista = () => {
   const [cartas, setCartas] = useRecoilState(vistaState);
   const cardId = cartas[0];
   const [{ isDragging }, drag] = useDrag<
-    dragItem,
-    dropResult,
+    vistaDragItem,
+    vistaDropResult,
     { isDragging: boolean }
   >(
     () => ({

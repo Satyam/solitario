@@ -2,12 +2,22 @@ import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
 import { pilaState } from 'store/pilas';
 import Sprite from './Sprite';
-import { HUECO, DRAG_TYPES, baraja, dragItem, dropResult } from 'datos';
+import {
+  HUECO,
+  DRAG_TYPES,
+  baraja,
+  vistaDragItem,
+  vistaDropResult,
+} from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
   const [cartas, setCartas] = useRecoilState(pilaState(slot));
   const cardId = cartas[0];
-  const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
+  const [{ isOver }, drop] = useDrop<
+    vistaDragItem,
+    vistaDropResult,
+    { isOver: boolean }
+  >(
     () => ({
       accept: DRAG_TYPES.VISTA,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),

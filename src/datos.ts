@@ -8,6 +8,27 @@ export enum DRAG_TYPES {
   HUECOS = 'hueco',
 }
 
+export type vistaDragItem = {
+  cardId: CardId;
+};
+export type vistaDropResult = {
+  cardId: CardId;
+  slot: number;
+};
+
+export type huecoDragItem = {
+  cartas: CardId[];
+};
+
+export type huecoDropResult = {
+  cartas: CardId[];
+  slot: number;
+  pila?: boolean;
+};
+
+export type dragItem = Partial<vistaDragItem> & Partial<huecoDragItem>;
+
+export type dropResult = Partial<vistaDropResult> & Partial<huecoDropResult>;
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 
 export const valores = [
@@ -45,13 +66,6 @@ export type cartaType = {
   color: COLOR;
 };
 
-export type dragItem = {
-  cardId: CardId;
-};
-export type dropResult = {
-  cardId: CardId;
-  slot: number;
-};
 // Constantes
 // export const MAZO = 'mazo';
 // export const EN_HUECO = 'en hueco';
