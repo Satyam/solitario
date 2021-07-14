@@ -49,21 +49,21 @@ const useInit = () => {
     }
 
     resetVista();
-    const cartas: CardId[] = [];
-    while (cartas.length < numCartas) {
+    const cardIds: CardId[] = [];
+    while (cardIds.length < numCartas) {
       let p = getRandomInt(numPalos - 1);
       let v = getRandomInt(numValores - 1);
       const cardId = `${valores[v]}${palos[p]}` as CardId;
-      if (!cartas.includes(cardId)) {
-        cartas.push(cardId);
+      if (!cardIds.includes(cardId)) {
+        cardIds.push(cardId);
       }
     }
 
     for (let slot = 0; slot < 7; slot++) {
       setFirstShown[slot](slot);
-      setHueco[slot](cartas.splice(0, slot + 1));
+      setHueco[slot](cardIds.splice(0, slot + 1));
     }
-    setMazo(cartas);
+    setMazo(cardIds);
   };
 };
 

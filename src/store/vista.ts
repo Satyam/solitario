@@ -11,8 +11,8 @@ export const vistaTop = selector<CardId>({
 export const vistaPush = selector<CardId[]>({
   key: 'vistaPush',
   get: ({ get }) => get(vistaState),
-  set: ({ set }, cartas) =>
+  set: ({ set }, cardIds) =>
     set(vistaState, (prev) =>
-      cartas instanceof DefaultValue ? prev : [...cartas, ...prev]
+      cardIds instanceof DefaultValue ? prev : [...cardIds, ...prev]
     ),
 });

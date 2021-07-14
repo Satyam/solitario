@@ -15,8 +15,8 @@ import {
 } from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
-  const [cartas, setCartas] = useRecoilState(huecoState(slot));
-  const cardId = cartas[0];
+  const [cardIds, setCardIds] = useRecoilState(huecoState(slot));
+  const cardId = cardIds[0];
   const [firstShown, setFirstShown] = useRecoilState(firstShownState(slot));
 
   const canDropTest = (droppedCardId: CardId): boolean => {
@@ -39,44 +39,45 @@ const Hueco = ({ slot }: { slot: number }) => {
     console.log('rejected', { droppedCardId, cardId, slot });
     return false;
   };
+
   const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
     () => ({
       accept: DRAG_TYPE,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),
       drop: (droppedCartas) => {
-        setCartas([...droppedCartas, ...cartas]);
+        setCardIds([...droppedCartas, ...cardIds]);
         return droppedCartas;
       },
       canDrop: (droppedCartas) => {
         return canDropTest(droppedCartas[droppedCartas.length - 1]);
       },
     }),
-    [cartas]
+    [cardIds]
   );
 
-  const dropCartas = (dropped: CardId[]) => {
-    console.log('dropCartas', { cartas, dropped, firstShown });
-    const newStack = cartas.slice(dropped.length);
-    setCartas(newStack);
+  const dropCardIds = (dropped: CardId[]) => {
+    console.log('dropCardIds', { cardIds, dropped, firstShown });
+    const newStack = cardIds.slice(dropped.length);
+    setCardIds(newStack);
     if (firstShown >= newStack.length) {
       setFirstShown(newStack.length - 1);
     }
   };
 
-  if (slot === 2) console.log({ firstShown, cartas });
+  if (slot === 2) console.log({ firstShown, cardIds });
   return (
     <div
       ref={drop}
       style={{
         border: isOver ? 'thin solid yellow' : 'none',
-        height: OFFSET_PILA * cartas.length + CARTA_HEIGHT,
+        height: OFFSET_PILA * cardIds.length + CARTA_HEIGHT,
       }}
     >
-      {cartas.length ? (
+      {cardIds.length ? (
         <CardStack
-          cartas={cartas}
+          cardIds={cardIds}
           firstShown={firstShown}
-          dropCartas={dropCartas}
+          dropCardIds={dropCardIds}
         />
       ) : (
         <Sprite cardId={HUECO} />

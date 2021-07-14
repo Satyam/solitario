@@ -1,4 +1,4 @@
-export const DRAG_TYPE = 'cartas';
+export const DRAG_TYPE = 'cardIds';
 
 export type dragItem = CardId[];
 

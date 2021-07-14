@@ -5,35 +5,35 @@ import Sprite from './Sprite';
 import { HUECO, DRAG_TYPE, baraja, dragItem, dropResult } from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
-  const [cartas, setCartas] = useRecoilState(pilaState(slot));
-  const cardId = cartas[0];
+  const [cardIds, setCardIds] = useRecoilState(pilaState(slot));
+  const cardId = cardIds[0];
   const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
     () => ({
       accept: DRAG_TYPE,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),
-      drop: (cartas) => {
-        setCartas([cartas[0], ...cartas]);
-        return cartas;
+      drop: (droppedCardIds) => {
+        setCardIds([droppedCardIds[0], ...cardIds]);
+        return droppedCardIds;
       },
-      canDrop: (cartas) => {
-        if (cartas.length !== 1) return false;
-        const dropCarta = baraja[cartas[0]];
+      canDrop: (droppedCardIds) => {
+        if (droppedCardIds.length !== 1) return false;
+        const droppedCarta = baraja[droppedCardIds[0]];
         if (cardId) {
           const topCarta = baraja[cardId];
           if (
-            dropCarta.index === topCarta.index + 1 &&
-            dropCarta.palo === topCarta.palo
+            droppedCarta.index === topCarta.index + 1 &&
+            droppedCarta.palo === topCarta.palo
           ) {
-            console.log('accepted 2', { cartas, slot });
+            console.log('accepted 2', { droppedCardIds, slot });
             return true;
           }
         } else {
-          if (dropCarta.index === 0) {
-            console.log('accepted 1', { cartas, slot });
+          if (droppedCarta.index === 0) {
+            console.log('accepted 1', { droppedCardIds, slot });
             return true;
           }
         }
-        console.log('rejected', { cartas, slot });
+        console.log('rejected', { droppedCardIds, slot });
         return false;
       },
     }),

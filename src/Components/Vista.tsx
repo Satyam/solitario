@@ -5,8 +5,8 @@ import { vistaState } from 'store/vista';
 import Sprite from './Sprite';
 
 const Vista = () => {
-  const [cartas, setCartas] = useRecoilState(vistaState);
-  const cardId = cartas[0];
+  const [cardIds, setCardIds] = useRecoilState(vistaState);
+  const cardId = cardIds[0];
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
@@ -20,7 +20,7 @@ const Vista = () => {
       }),
       end: (item, monitor) => {
         if (monitor.didDrop()) {
-          setCartas(cartas.slice(1));
+          setCardIds(cardIds.slice(1));
         } else {
           console.error('Vista: end got called without didDrop');
         }

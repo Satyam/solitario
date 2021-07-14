@@ -3,17 +3,17 @@ import { REVERSO, CardId, dropResult, dragItem, DRAG_TYPE } from 'datos';
 import Sprite from './Sprite';
 
 const CardStack = ({
-  cartas,
+  cardIds,
   firstShown,
   index = 0,
   total = 0,
-  dropCartas,
+  dropCardIds,
 }: {
-  cartas: CardId[];
+  cardIds: CardId[];
   firstShown: number;
   index?: number;
   total?: number;
-  dropCartas: (cartas: CardId[]) => void;
+  dropCardIds: (cardIds: CardId[]) => void;
 }) => {
   const [{ isDragging }, drag] = useDrag<
     dragItem,
@@ -22,40 +22,34 @@ const CardStack = ({
   >(
     () => ({
       type: DRAG_TYPE,
-      item: cartas,
+      item: cardIds,
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
       canDrag: () => index >= firstShown,
-      end: (item, monitor) => {
-        dropCartas(cartas);
-        console.log(
-          'useDrag end',
-          item,
-          monitor.getDropResult(),
-          monitor.didDrop()
-        );
-      },
+      end: () => dropCardIds(cardIds),
     }),
-    [cartas]
+    [cardIds]
   );
-  const isLast = cartas.length === 1;
-  total = total || cartas.length;
+
+  const isLast = cardIds.length === 1;
+  total = total || cardIds.length;
+
   return (
     <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <div className={isLast ? '' : 'stackedSprite'}>
         <Sprite
-          cardId={index >= firstShown ? cartas[cartas.length - 1] : REVERSO}
+          cardId={index >= firstShown ? cardIds[cardIds.length - 1] : REVERSO}
           index={index}
         />
       </div>
       {isLast ? null : (
         <CardStack
-          cartas={cartas.slice(0, -1)}
+          cardIds={cardIds.slice(0, -1)}
           firstShown={firstShown}
           index={index + 1}
           total={total}
-          dropCartas={dropCartas}
+          dropCardIds={dropCardIds}
         />
       )}
     </div>
