@@ -19,24 +19,6 @@ const Hueco = ({ slot }: { slot: number }) => {
   const cardId = cardIds[0];
   const [firstShown, setFirstShown] = useRecoilState(firstShownState(slot));
 
-  const canDropTest = (droppedCardId: CardId): boolean => {
-    const droppedCarta = baraja[droppedCardId];
-    if (cardId) {
-      const topCarta = baraja[cardId];
-      if (
-        droppedCarta.index === topCarta.index - 1 &&
-        droppedCarta.color !== topCarta.color
-      ) {
-        return true;
-      }
-    } else {
-      if (droppedCarta.index === 12) {
-        return true;
-      }
-    }
-    return false;
-  };
-
   const [{ isOver, canDrop }, drop] = useDrop<
     dragItem,
     dropResult,
@@ -48,12 +30,27 @@ const Hueco = ({ slot }: { slot: number }) => {
         isOver: !!monitor.isOver(),
         canDrop: !!monitor.canDrop(),
       }),
-      drop: (droppedCartas) => {
-        setCardIds([...droppedCartas, ...cardIds]);
-        return droppedCartas;
+      drop: (droppedCardIds) => {
+        setCardIds([...droppedCardIds, ...cardIds]);
+        return droppedCardIds;
       },
-      canDrop: (droppedCartas) => {
-        return canDropTest(droppedCartas[droppedCartas.length - 1]);
+      canDrop: (droppedCardIds) => {
+        const droppedCardId = droppedCardIds[droppedCardIds.length - 1];
+        const droppedCarta = baraja[droppedCardId];
+        if (cardId) {
+          const topCarta = baraja[cardId];
+          if (
+            droppedCarta.index === topCarta.index - 1 &&
+            droppedCarta.color !== topCarta.color
+          ) {
+            return true;
+          }
+        } else {
+          if (droppedCarta.index === 12) {
+            return true;
+          }
+        }
+        return false;
       },
     }),
     [cardIds]
