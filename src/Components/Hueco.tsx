@@ -4,7 +4,7 @@ import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
 import {
-  DRAG_TYPES,
+  DRAG_TYPE,
   dragItem,
   dropResult,
   baraja,
@@ -41,33 +41,14 @@ const Hueco = ({ slot }: { slot: number }) => {
   };
   const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
     () => ({
-      accept: [DRAG_TYPES.VISTA, DRAG_TYPES.HUECOS],
+      accept: DRAG_TYPE,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),
-      drop: (item, monitor) => {
-        switch (monitor.getItemType()) {
-          case DRAG_TYPES.VISTA:
-            const droppedCardId = item.cardId as CardId;
-            setCartas([droppedCardId, ...cartas]);
-            return { ...item, slot };
-          case DRAG_TYPES.HUECOS: {
-            const droppedCartas = item.cartas as CardId[];
-            setCartas([...droppedCartas, ...cartas]);
-            return { ...item, slot, pila: false };
-          }
-        }
+      drop: (droppedCartas) => {
+        setCartas([...droppedCartas, ...cartas]);
+        return droppedCartas;
       },
-      canDrop: (item, monitor) => {
-        switch (monitor.getItemType()) {
-          case DRAG_TYPES.VISTA:
-            return canDropTest(item.cardId as CardId);
-
-          case DRAG_TYPES.HUECOS: {
-            const droppedCartas = item.cartas as CardId[];
-            return canDropTest(droppedCartas[droppedCartas.length - 1]);
-          }
-          default:
-            return false;
-        }
+      canDrop: (droppedCartas) => {
+        return canDropTest(droppedCartas[droppedCartas.length - 1]);
       },
     }),
     [cartas]

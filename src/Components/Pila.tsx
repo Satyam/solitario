@@ -2,47 +2,38 @@ import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
 import { pilaState } from 'store/pilas';
 import Sprite from './Sprite';
-import {
-  HUECO,
-  DRAG_TYPES,
-  baraja,
-  vistaDragItem,
-  vistaDropResult,
-} from 'datos';
+import { HUECO, DRAG_TYPE, baraja, dragItem, dropResult } from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
   const [cartas, setCartas] = useRecoilState(pilaState(slot));
   const cardId = cartas[0];
-  const [{ isOver }, drop] = useDrop<
-    vistaDragItem,
-    vistaDropResult,
-    { isOver: boolean }
-  >(
+  const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
     () => ({
-      accept: DRAG_TYPES.VISTA,
+      accept: DRAG_TYPE,
       collect: (monitor) => ({ isOver: !!monitor.isOver() }),
-      drop: (item) => {
-        setCartas([item.cardId, ...cartas]);
-        return { ...item, slot };
+      drop: (cartas) => {
+        setCartas([cartas[0], ...cartas]);
+        return cartas;
       },
-      canDrop: (item) => {
-        const dropCarta = baraja[item.cardId];
+      canDrop: (cartas) => {
+        if (cartas.length !== 1) return false;
+        const dropCarta = baraja[cartas[0]];
         if (cardId) {
           const topCarta = baraja[cardId];
           if (
             dropCarta.index === topCarta.index + 1 &&
             dropCarta.palo === topCarta.palo
           ) {
-            console.log('accepted 2', { ...item, slot });
+            console.log('accepted 2', { cartas, slot });
             return true;
           }
         } else {
           if (dropCarta.index === 0) {
-            console.log('accepted 1', { ...item, slot });
+            console.log('accepted 1', { cartas, slot });
             return true;
           }
         }
-        console.log('rejected', { ...item, slot });
+        console.log('rejected', { cartas, slot });
         return false;
       },
     }),

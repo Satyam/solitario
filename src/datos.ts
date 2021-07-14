@@ -1,34 +1,14 @@
+export const DRAG_TYPE = 'cartas';
+
+export type dragItem = CardId[];
+
+export type dropResult = CardId[];
+
 export enum COLOR {
   ROJO = 'rojo',
   NEGRO = 'negro',
 }
 
-export enum DRAG_TYPES {
-  VISTA = 'vista',
-  HUECOS = 'hueco',
-}
-
-export type vistaDragItem = {
-  cardId: CardId;
-};
-export type vistaDropResult = {
-  cardId: CardId;
-  slot: number;
-};
-
-export type huecoDragItem = {
-  cartas: CardId[];
-};
-
-export type huecoDropResult = {
-  cartas: CardId[];
-  slot: number;
-  pila?: boolean;
-};
-
-export type dragItem = Partial<vistaDragItem> & Partial<huecoDragItem>;
-
-export type dropResult = Partial<vistaDropResult> & Partial<huecoDropResult>;
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 
 export const valores = [
@@ -65,15 +45,6 @@ export type cartaType = {
   index: number;
   color: COLOR;
 };
-
-// Constantes
-// export const MAZO = 'mazo';
-// export const EN_HUECO = 'en hueco';
-// export const JUEGO = 'juego';
-// export const CARTAS_EN_VIAJE = 'cartas en viaje';
-// export const CARTA_EN_VIAJE = 'carta en viaje';
-// export const PILA = 'pila';
-// export const VISTA = 'vista';
 
 export const CARTA_HEIGHT = 168;
 export const CARTA_WIDTH = 120;

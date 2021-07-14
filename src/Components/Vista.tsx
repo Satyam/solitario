@@ -1,4 +1,4 @@
-import { HUECO, DRAG_TYPES, vistaDragItem, vistaDropResult } from 'datos';
+import { HUECO, DRAG_TYPE, dragItem, dropResult } from 'datos';
 import { useRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
@@ -8,20 +8,21 @@ const Vista = () => {
   const [cartas, setCartas] = useRecoilState(vistaState);
   const cardId = cartas[0];
   const [{ isDragging }, drag] = useDrag<
-    vistaDragItem,
-    vistaDropResult,
+    dragItem,
+    dropResult,
     { isDragging: boolean }
   >(
     () => ({
-      type: DRAG_TYPES.VISTA,
-      item: { cardId },
+      type: DRAG_TYPE,
+      item: [cardId],
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
       end: (item, monitor) => {
-        console.log('useDrag end', item, monitor.getDropResult());
         if (monitor.didDrop()) {
           setCartas(cartas.slice(1));
+        } else {
+          console.error('Vista: end got called without didDrop');
         }
       },
     }),

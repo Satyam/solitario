@@ -1,11 +1,5 @@
 import { useDrag } from 'react-dnd';
-import {
-  REVERSO,
-  CardId,
-  huecoDropResult,
-  huecoDragItem,
-  DRAG_TYPES,
-} from 'datos';
+import { REVERSO, CardId, dropResult, dragItem, DRAG_TYPE } from 'datos';
 import Sprite from './Sprite';
 
 const CardStack = ({
@@ -22,13 +16,13 @@ const CardStack = ({
   dropCartas: (cartas: CardId[]) => void;
 }) => {
   const [{ isDragging }, drag] = useDrag<
-    huecoDragItem,
-    huecoDropResult,
+    dragItem,
+    dropResult,
     { isDragging: boolean }
   >(
     () => ({
-      type: DRAG_TYPES.HUECOS,
-      item: { cartas },
+      type: DRAG_TYPE,
+      item: cartas,
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
