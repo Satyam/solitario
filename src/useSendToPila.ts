@@ -23,7 +23,7 @@ export function useSendToPila(
         if (cardIds.length) {
           const topCarta = baraja[cardIds[0]];
           if (
-            droppedCarta.index > topCarta.index &&
+            droppedCarta.index === topCarta.index + 1 &&
             droppedCarta.palo === topCarta.palo
           ) {
             setCardIds([cardId, ...cardIds]);
