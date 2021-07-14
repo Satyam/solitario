@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
 import Sprite from './Sprite';
+import useSendToPila from 'useSendToPila';
 
 const Vista = () => {
   const [cardIds, setCardIds] = useRecoilState(vistaState);
@@ -26,8 +27,12 @@ const Vista = () => {
     }),
     [cardId]
   );
+
+  const onPointerHandler = useSendToPila(cardId, () =>
+    setCardIds(cardIds.slice(1))
+  );
   return (
-    <div ref={drag}>
+    <div ref={drag} onPointerDown={onPointerHandler}>
       <Sprite
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}

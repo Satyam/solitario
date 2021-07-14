@@ -1,5 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
+import useSendToPila from 'useSendToPila';
 import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
@@ -65,10 +66,11 @@ const Hueco = ({ slot }: { slot: number }) => {
       setFirstShown(newStack.length - 1);
     }
   };
-
+  const onPointerHandler = useSendToPila(cardId, () => dropCardIds([cardId]));
   return (
     <div
       ref={drop}
+      onPointerDown={onPointerHandler}
       className="dropTarget"
       style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
     >
