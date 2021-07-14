@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <button>Nuevo Juego</button>
+        <button onClick={init}>Nuevo Juego</button>
       </header>
       <main>
         <div className="grid">
