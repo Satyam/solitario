@@ -3,7 +3,15 @@ import { useDrop } from 'react-dnd';
 import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
-import { DRAG_TYPE, dragItem, dropResult, baraja, HUECO, CardId } from 'datos';
+import {
+  DRAG_TYPE,
+  dragItem,
+  dropResult,
+  dropCollectedProps,
+  baraja,
+  HUECO,
+  CardId,
+} from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
   const [cardIds, setCardIds] = useRecoilState(huecoState(slot));
@@ -28,10 +36,17 @@ const Hueco = ({ slot }: { slot: number }) => {
     return false;
   };
 
-  const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
+  const [{ isOver, canDrop }, drop] = useDrop<
+    dragItem,
+    dropResult,
+    dropCollectedProps
+  >(
     () => ({
       accept: DRAG_TYPE,
-      collect: (monitor) => ({ isOver: !!monitor.isOver() }),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
       drop: (droppedCartas) => {
         setCardIds([...droppedCartas, ...cardIds]);
         return droppedCartas;
@@ -54,9 +69,8 @@ const Hueco = ({ slot }: { slot: number }) => {
   return (
     <div
       ref={drop}
-      style={{
-        border: isOver ? 'thin solid yellow' : 'none',
-      }}
+      className="dropTarget"
+      style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
     >
       {cardIds.length ? (
         <CardStack

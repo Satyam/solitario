@@ -2,15 +2,29 @@ import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
 import { pilaState } from 'store/pilas';
 import Sprite from './Sprite';
-import { HUECO, DRAG_TYPE, baraja, dragItem, dropResult } from 'datos';
+import {
+  HUECO,
+  DRAG_TYPE,
+  baraja,
+  dragItem,
+  dropResult,
+  dropCollectedProps,
+} from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
   const [cardIds, setCardIds] = useRecoilState(pilaState(slot));
   const cardId = cardIds[0];
-  const [{ isOver }, drop] = useDrop<dragItem, dropResult, { isOver: boolean }>(
+  const [{ isOver, canDrop }, drop] = useDrop<
+    dragItem,
+    dropResult,
+    dropCollectedProps
+  >(
     () => ({
       accept: DRAG_TYPE,
-      collect: (monitor) => ({ isOver: !!monitor.isOver() }),
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver(),
+        canDrop: !!monitor.canDrop(),
+      }),
       drop: (droppedCardIds) => {
         setCardIds([droppedCardIds[0], ...cardIds]);
         return droppedCardIds;
@@ -37,7 +51,11 @@ const Pila = ({ slot }: { slot: number }) => {
     [cardId]
   );
   return (
-    <div ref={drop} style={{ border: isOver ? 'thin solid yellow' : 'none' }}>
+    <div
+      ref={drop}
+      className="dropTarget"
+      style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
+    >
       <Sprite cardId={cardId || HUECO} />
     </div>
   );

@@ -1,7 +1,10 @@
-.App main {
+body {
   background-color: darkgreen;
 }
 
+.App header {
+  margin: 1em;
+}
 .sprite {
   width: 120px;
   height: 168px;
@@ -22,4 +25,8 @@
   grid-template-columns: repeat(7, 1fr);
   column-gap: 1rem;
   row-gap: 3rem;
+}
+
+.dropTarget {
+  border: medium solid darkgreen;
 }

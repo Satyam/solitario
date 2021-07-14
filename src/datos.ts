@@ -4,6 +4,8 @@ export type dragItem = CardId[];
 
 export type dropResult = CardId[];
 
+export type dropCollectedProps = { isOver: boolean; canDrop: boolean };
+
 export enum COLOR {
   ROJO = 'rojo',
   NEGRO = 'negro',
