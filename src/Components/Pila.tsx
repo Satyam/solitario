@@ -24,16 +24,13 @@ const Pila = ({ slot }: { slot: number }) => {
             droppedCarta.index === topCarta.index + 1 &&
             droppedCarta.palo === topCarta.palo
           ) {
-            console.log('accepted 2', { droppedCardIds, slot });
             return true;
           }
         } else {
           if (droppedCarta.index === 0) {
-            console.log('accepted 1', { droppedCardIds, slot });
             return true;
           }
         }
-        console.log('rejected', { droppedCardIds, slot });
         return false;
       },
     }),

@@ -27,16 +27,13 @@ const Hueco = ({ slot }: { slot: number }) => {
         droppedCarta.index === topCarta.index - 1 &&
         droppedCarta.color !== topCarta.color
       ) {
-        console.log('accepted 2', { droppedCardId, cardId, slot });
         return true;
       }
     } else {
       if (droppedCarta.index === 12) {
-        console.log('accepted 1', { droppedCardId, cardId, slot });
         return true;
       }
     }
-    console.log('rejected', { droppedCardId, cardId, slot });
     return false;
   };
 
@@ -56,7 +53,6 @@ const Hueco = ({ slot }: { slot: number }) => {
   );
 
   const dropCardIds = (dropped: CardId[]) => {
-    console.log('dropCardIds', { cardIds, dropped, firstShown });
     const newStack = cardIds.slice(dropped.length);
     setCardIds(newStack);
     if (firstShown >= newStack.length) {
@@ -64,7 +60,6 @@ const Hueco = ({ slot }: { slot: number }) => {
     }
   };
 
-  if (slot === 2) console.log({ firstShown, cardIds });
   return (
     <div
       ref={drop}

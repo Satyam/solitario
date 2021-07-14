@@ -22,7 +22,7 @@ const Vista = () => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
         } else {
-          console.error('Vista: end got called without didDrop');
+          console.error('Vista: end got called without didDrop', cardIds);
         }
       },
     }),
