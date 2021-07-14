@@ -27,7 +27,11 @@ const CardStack = ({
         isDragging: !!monitor.isDragging(),
       }),
       canDrag: () => index >= firstShown,
-      end: () => dropCardIds(cardIds),
+      end: (item, monitor) => {
+        if (monitor.didDrop()) {
+          dropCardIds(cardIds);
+        }
+      },
     }),
     [cardIds]
   );

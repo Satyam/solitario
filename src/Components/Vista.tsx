@@ -21,8 +21,6 @@ const Vista = () => {
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
-        } else {
-          console.error('Vista: end got called without didDrop', cardIds);
         }
       },
     }),
