@@ -1,6 +1,7 @@
 import { mazoState } from 'store/mazo';
 import { huecoState, firstShownState } from 'store/huecos';
 import { vistaState } from 'store/vista';
+import { pilaState } from 'store/pilas';
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { getRandomInt } from 'utils';
 import {
@@ -39,6 +40,13 @@ const useInit = () => {
 
   const resetVista = useResetRecoilState(vistaState);
 
+  const resetPila = [
+    useResetRecoilState(pilaState(0)),
+    useResetRecoilState(pilaState(1)),
+    useResetRecoilState(pilaState(2)),
+    useResetRecoilState(pilaState(3)),
+  ];
+
   return () => {
     if (firstTime) {
       setFirstTime(false);
@@ -49,6 +57,9 @@ const useInit = () => {
     }
 
     resetVista();
+    resetPila.forEach((r) => {
+      r();
+    });
     const cardIds: CardId[] = [];
     while (cardIds.length < numCartas) {
       let p = getRandomInt(numPalos - 1);
