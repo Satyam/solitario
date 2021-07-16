@@ -6,6 +6,9 @@ export type dropResult = CardId[];
 
 export type dropCollectedProps = { isOver: boolean; canDrop: boolean };
 
+export const numPilas = 4;
+export const numHuecos = 7;
+
 export enum COLOR {
   ROJO = 'rojo',
   NEGRO = 'negro',
@@ -38,7 +41,7 @@ export type PALO = typeof palos[number];
 export const REVERSO = '2B';
 export const HUECO = 'hueco';
 
-export type CardId = `${VALOR}${PALO}` | '2B' | 'hueco';
+export type CardId = `${VALOR}${PALO}` | typeof REVERSO | typeof HUECO;
 
 export type cartaType = {
   name: CardId;
@@ -47,10 +50,6 @@ export type cartaType = {
   index: number;
   color: COLOR;
 };
-
-export const CARTA_HEIGHT = 168;
-export const CARTA_WIDTH = 120;
-export const OFFSET_PILA = 40;
 
 export const numPalos = palos.length;
 export const numValores = valores.length;

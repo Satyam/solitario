@@ -7,6 +7,7 @@ import Pila from 'Components/Pila';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isGameWon } from 'store/pilas';
+import { numHuecos, numPilas } from 'datos';
 
 function App() {
   const init = useInit();
@@ -30,16 +31,20 @@ function App() {
           </div>
 
           <div className="celda">&nbsp;</div>
-          {[0, 1, 2, 3].map((slot) => (
-            <div key={slot} className="celda">
-              <Pila slot={slot} />
-            </div>
-          ))}
-          {[0, 1, 2, 3, 4, 5, 6].map((slot) => (
-            <div key={slot} className="celda">
-              <Hueco slot={slot} />
-            </div>
-          ))}
+          {Array(numPilas)
+            .fill(0)
+            .map((_, slot) => (
+              <div key={slot} className="celda">
+                <Pila slot={slot} />
+              </div>
+            ))}
+          {Array(numHuecos)
+            .fill(0)
+            .map((_, slot) => (
+              <div key={slot} className="celda">
+                <Hueco slot={slot} />
+              </div>
+            ))}
         </div>
       </main>
     </div>

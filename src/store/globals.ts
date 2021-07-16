@@ -13,6 +13,8 @@ import {
   palos,
   baraja,
   REVERSO,
+  numPilas,
+  numHuecos,
 } from 'datos';
 
 export const init = selector({
@@ -20,7 +22,7 @@ export const init = selector({
   get: () => undefined,
   set: ({ set, reset }) => {
     reset(vistaState);
-    for (let slot = 0; slot < 4; slot++) {
+    for (let slot = 0; slot < numPilas; slot++) {
       reset(pilaState(slot));
     }
 
@@ -33,7 +35,7 @@ export const init = selector({
         cardIds.push(cardId);
       }
     }
-    for (let slot = 0; slot < 7; slot++) {
+    for (let slot = 0; slot < numHuecos; slot++) {
       set(firstShownState(slot), slot);
       set(huecoState(slot), cardIds.splice(0, slot + 1));
     }

@@ -1,5 +1,5 @@
 import { atomFamily, selector } from 'recoil';
-import { CardId, baraja } from 'datos';
+import { CardId, baraja, numPilas } from 'datos';
 
 export const pilaState = atomFamily<CardId[], number>({
   key: 'pilaState',
@@ -9,7 +9,7 @@ export const pilaState = atomFamily<CardId[], number>({
 export const isGameWon = selector({
   key: 'isGameWon',
   get: ({ get }) => {
-    for (let slot = 0; slot < 4; slot++) {
+    for (let slot = 0; slot < numPilas; slot++) {
       const cardIds = get(pilaState(slot));
       if (cardIds.length === 0) return false;
       const topCarta = baraja[cardIds[0]];
