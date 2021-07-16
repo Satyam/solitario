@@ -2,18 +2,22 @@ import './App.css';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
-import useInit from 'useInit';
+import useInit from 'hooks/useInit';
 import Pila from 'Components/Pila';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { isGameWon } from 'store/pilas';
 import { numHuecos, numPilas } from 'datos';
 
+import { slotsArray } from 'utils';
+
 function App() {
   const init = useInit();
   const isWon = useRecoilValue(isGameWon);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
+
   return (
     <div className="App">
       <header>
@@ -31,20 +35,16 @@ function App() {
           </div>
 
           <div className="celda">&nbsp;</div>
-          {Array(numPilas)
-            .fill(0)
-            .map((_, slot) => (
-              <div key={slot} className="celda">
-                <Pila slot={slot} />
-              </div>
-            ))}
-          {Array(numHuecos)
-            .fill(0)
-            .map((_, slot) => (
-              <div key={slot} className="celda">
-                <Hueco slot={slot} />
-              </div>
-            ))}
+          {slotsArray(numPilas).map((slot) => (
+            <div key={slot} className="celda">
+              <Pila slot={slot} />
+            </div>
+          ))}
+          {slotsArray(numHuecos).map((slot) => (
+            <div key={slot} className="celda">
+              <Hueco slot={slot} />
+            </div>
+          ))}
         </div>
       </main>
     </div>

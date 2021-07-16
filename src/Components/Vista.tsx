@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
 import Sprite from './Sprite';
-import useSendToPila from 'useSendToPila';
+import useSendToPila from 'hooks/useSendToPila';
 
 const Vista = () => {
   const [cardIds, setCardIds] = useRecoilState(vistaState);

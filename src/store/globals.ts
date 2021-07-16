@@ -3,7 +3,7 @@ import { huecoState, firstShownState } from 'store/huecos';
 import { vistaState } from 'store/vista';
 import { pilaState } from 'store/pilas';
 import { DefaultValue, selector } from 'recoil';
-import { getRandomInt } from 'utils';
+import { getRandomInt, slotsArray } from 'utils';
 import {
   CardId,
   numCartas,
@@ -22,9 +22,7 @@ export const init = selector({
   get: () => undefined,
   set: ({ set, reset }) => {
     reset(vistaState);
-    for (let slot = 0; slot < numPilas; slot++) {
-      reset(pilaState(slot));
-    }
+    slotsArray(numPilas).forEach((slot) => reset(pilaState(slot)));
 
     const cardIds: CardId[] = [];
     while (cardIds.length < numCartas) {
@@ -35,10 +33,10 @@ export const init = selector({
         cardIds.push(cardId);
       }
     }
-    for (let slot = 0; slot < numHuecos; slot++) {
+    slotsArray(numHuecos).forEach((slot) => {
       set(firstShownState(slot), slot);
       set(huecoState(slot), cardIds.splice(0, slot + 1));
-    }
+    });
     set(mazoState, cardIds);
   },
 });
@@ -74,4 +72,10 @@ export const sendToPila = selector<CardId>({
       throw new Error('cannot set');
     }
   },
+});
+
+export const saveState = selector({
+  key: 'saveState',
+  get: () => undefined,
+  set: ({ get, set }) => {},
 });

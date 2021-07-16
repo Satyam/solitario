@@ -1,6 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
-import useSendToPila from 'useSendToPila';
+import useSendToPila from 'hooks/useSendToPila';
 import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
