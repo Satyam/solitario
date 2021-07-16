@@ -1,6 +1,8 @@
 import { useDrag } from 'react-dnd';
+import { useSetRecoilState } from 'recoil';
 import { REVERSO, CardId, dropResult, dragItem, DRAG_TYPE } from 'datos';
 import Sprite from './Sprite';
+import { saveSnapshot } from 'store/snapshots';
 
 const CardStack = ({
   cardIds,
@@ -15,6 +17,7 @@ const CardStack = ({
   total?: number;
   dropCardIds: (cardIds: CardId[]) => void;
 }) => {
+  const saveState = useSetRecoilState(saveSnapshot);
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
@@ -30,6 +33,7 @@ const CardStack = ({
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           dropCardIds(cardIds);
+          saveState(undefined);
         }
       },
     }),
