@@ -5,16 +5,19 @@ import Hueco from 'Components/Hueco';
 import useInit from 'useInit';
 import Pila from 'Components/Pila';
 import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { isGameWon } from 'store/pilas';
 
 function App() {
   const init = useInit();
-
+  const isWon = useRecoilValue(isGameWon);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(init, []);
   return (
     <div className="App">
       <header>
         <button onClick={init}>Nuevo Juego</button>
+        {isWon && <h3>Ganamos</h3>}
       </header>
       <main>
         <div className="grid">
