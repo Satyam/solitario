@@ -33,7 +33,6 @@ export const init = selector({
         cardIds.push(cardId);
       }
     }
-    debugger;
     for (let slot = 0; slot < 7; slot++) {
       set(firstShownState(slot), slot);
       set(huecoState(slot), cardIds.splice(0, slot + 1));
@@ -70,7 +69,6 @@ export const sendToPila = selector<CardId>({
       }
     }
     if (!done) {
-      console.error('cannot set');
       throw new Error('cannot set');
     }
   },
