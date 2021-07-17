@@ -3,13 +3,14 @@ import { CardId, numHuecos, numPilas } from 'datos';
 import { mazoState } from './mazo';
 import { vistaState } from './vista';
 import { slotsArray } from 'utils';
-import { huecoState } from './huecos';
+import { huecoState, firstShownState } from './huecos';
 import { pilaState } from './pilas';
 
 type MySnapshot = {
   mazo: CardId[];
   pilas: CardId[][];
   huecos: CardId[][];
+  firstShown: number[];
   vista: CardId[];
 };
 
@@ -61,6 +62,19 @@ export const saveSnapshot = selector<boolean>({
       } else {
         newSnapshot.huecos[slot] = lastSnap.huecos[slot];
       }
+
+      const currentFirstShown = get(firstShownState(slot)) || 0;
+      if (typeof newSnapshot.firstShown === 'undefined')
+        newSnapshot.firstShown = [];
+      if (
+        init ||
+        typeof lastSnap.firstShown === 'undefined' ||
+        currentFirstShown !== lastSnap.firstShown[slot]
+      ) {
+        newSnapshot.firstShown[slot] = currentFirstShown;
+      } else {
+        newSnapshot.firstShown[slot] = lastSnap.firstShown[slot];
+      }
     });
 
     slotsArray(numPilas).forEach((slot) => {
@@ -76,6 +90,7 @@ export const saveSnapshot = selector<boolean>({
         newSnapshot.pilas[slot] = lastSnap.pilas[slot];
       }
     });
+
     set(snapshots, [newSnapshot as MySnapshot, ...storedSnaps]);
   },
 });
@@ -89,6 +104,7 @@ export const undoAction = selector({
     set(vistaState, lastSnap.vista);
     slotsArray(7).forEach((slot) => {
       set(huecoState(slot), lastSnap.huecos[slot]);
+      set(firstShownState(slot), lastSnap.firstShown[slot]);
     });
     slotsArray(4).forEach((slot) => {
       set(pilaState(slot), lastSnap.pilas[slot]);
