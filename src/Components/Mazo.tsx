@@ -22,7 +22,7 @@ const Mazo = () => {
       setCardIds([...vista].reverse());
       resetVista();
     }
-    saveState(undefined);
+    saveState(false);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

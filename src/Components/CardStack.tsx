@@ -33,7 +33,7 @@ const CardStack = ({
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           dropCardIds(cardIds);
-          saveState(undefined);
+          saveState(false);
         }
       },
     }),

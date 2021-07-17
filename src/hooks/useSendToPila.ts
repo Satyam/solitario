@@ -15,7 +15,7 @@ export function useSendToPila(
       try {
         send(cardId);
         dropper();
-        saveState(undefined);
+        saveState(false);
       } catch (err) {}
     }
   };

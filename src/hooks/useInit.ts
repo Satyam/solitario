@@ -11,7 +11,7 @@ const useInit = () => {
 
   return () => {
     resetState(undefined);
-    saveState(undefined);
+    saveState(true);
     if (firstTime) {
       setFirstTime(false);
       // Image preload

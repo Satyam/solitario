@@ -23,7 +23,7 @@ const Vista = () => {
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
-          saveState(undefined);
+          saveState(false);
         }
       },
     }),
