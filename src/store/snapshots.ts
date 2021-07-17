@@ -7,10 +7,10 @@ import { huecoState } from './huecos';
 import { pilaState } from './pilas';
 
 type MySnapshot = {
-  mazo?: CardId[];
-  pilas?: CardId[][];
-  huecos?: CardId[][];
-  vista?: CardId[];
+  mazo: CardId[];
+  pilas: CardId[][];
+  huecos: CardId[][];
+  vista: CardId[];
 };
 
 export const snapshots = atom<MySnapshot[]>({
@@ -18,11 +18,12 @@ export const snapshots = atom<MySnapshot[]>({
   default: [],
 });
 
+//TODO https://github.com/facebookexperimental/Recoil/issues/451#issuecomment-655243901
 export const saveSnapshot = selector<boolean>({
   key: 'saveSnapshot',
   get: () => false,
   set: ({ get, set }, init) => {
-    const newSnapshot: MySnapshot = {};
+    const newSnapshot: Partial<MySnapshot> = {};
     const storedSnaps = get(snapshots);
     const lastSnap = storedSnaps[0] || {};
 
@@ -75,6 +76,23 @@ export const saveSnapshot = selector<boolean>({
         newSnapshot.pilas[slot] = lastSnap.pilas[slot];
       }
     });
-    set(snapshots, [newSnapshot, ...storedSnaps]);
+    set(snapshots, [newSnapshot as MySnapshot, ...storedSnaps]);
+  },
+});
+
+export const undoAction = selector({
+  key: 'undoAction',
+  get: () => undefined,
+  set: ({ get, set }) => {
+    const [, lastSnap, ...prevSnaps] = get(snapshots);
+    set(mazoState, lastSnap.mazo);
+    set(vistaState, lastSnap.vista);
+    slotsArray(7).forEach((slot) => {
+      set(huecoState(slot), lastSnap.huecos[slot]);
+    });
+    slotsArray(4).forEach((slot) => {
+      set(pilaState(slot), lastSnap.pilas[slot]);
+    });
+    set(snapshots, [lastSnap, ...prevSnaps]);
   },
 });

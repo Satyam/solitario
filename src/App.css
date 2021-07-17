@@ -5,6 +5,10 @@ body {
 .App header {
   margin: 1em;
 }
+.App header button {
+  margin: 0 1em;
+}
+
 .sprite {
   width: 120px;
   height: 168px;
