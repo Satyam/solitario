@@ -73,9 +73,3 @@ export const sendToPila = selector<CardId>({
     }
   },
 });
-
-export const saveState = selector({
-  key: 'saveState',
-  get: () => undefined,
-  set: ({ get, set }) => {},
-});

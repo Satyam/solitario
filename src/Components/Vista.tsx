@@ -4,10 +4,10 @@ import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
 import Sprite from './Sprite';
 import useSendToPila from 'hooks/useSendToPila';
-import { saveSnapshot } from 'store/snapshots';
+import { saveState } from 'store/undoStack';
 const Vista = () => {
   const [cardIds, setCardIds] = useRecoilState(vistaState);
-  const saveState = useSetRecoilState(saveSnapshot);
+  const saveStateAction = useSetRecoilState(saveState);
   const cardId = cardIds[0];
   const [{ isDragging }, drag] = useDrag<
     dragItem,
@@ -23,7 +23,7 @@ const Vista = () => {
       end: (item, monitor) => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
-          saveState(false);
+          saveStateAction(false);
         }
       },
     }),

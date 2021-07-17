@@ -1,16 +1,16 @@
 import { MouseEventHandler } from 'react';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { snapshots, undoAction } from 'store/snapshots';
+import { canUndo, undoAction } from 'store/undoStack';
 
 export const UndoButton: React.FC = ({ children }) => {
   const undo = useSetRecoilState(undoAction);
-  const undoStack = useRecoilValue(snapshots);
+  const disabled = !useRecoilValue(canUndo);
   const onClick: MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.preventDefault();
     undo(undefined);
   };
   return (
-    <button disabled={undoStack.length <= 1} onClick={onClick}>
+    <button disabled={disabled} onClick={onClick}>
       {children}
     </button>
   );
