@@ -1,4 +1,10 @@
-import { HUECO, DRAG_TYPE, dragItem, dropResult } from 'datos';
+import {
+  HUECO,
+  DRAG_TYPE,
+  dragItem,
+  dropResult,
+  dragCollectedProps,
+} from 'datos';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
 import { vistaState } from 'store/vista';
@@ -12,7 +18,7 @@ const Vista = () => {
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
-    { isDragging: boolean }
+    dragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,

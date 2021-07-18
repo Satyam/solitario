@@ -1,6 +1,13 @@
 import { useDrag } from 'react-dnd';
 import { useSetRecoilState } from 'recoil';
-import { REVERSO, CardId, dropResult, dragItem, DRAG_TYPE } from 'datos';
+import {
+  REVERSO,
+  CardId,
+  dropResult,
+  dragItem,
+  dragCollectedProps,
+  DRAG_TYPE,
+} from 'datos';
 import Sprite from './Sprite';
 import { saveState } from 'store/undoStack';
 
@@ -21,7 +28,7 @@ const CardStack = ({
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
-    { isDragging: boolean }
+    dragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,

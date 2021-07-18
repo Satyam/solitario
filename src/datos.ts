@@ -5,6 +5,7 @@ export type dragItem = CardId[];
 export type dropResult = CardId[];
 
 export type dropCollectedProps = { isOver: boolean; canDrop: boolean };
+export type dragCollectedProps = { isDragging: boolean };
 
 export const numPilas = 4;
 export const numHuecos = 7;

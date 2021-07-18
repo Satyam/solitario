@@ -10,6 +10,7 @@ import {
   dragItem,
   dropResult,
   dropCollectedProps,
+  dragCollectedProps,
 } from 'datos';
 import React from 'react';
 
@@ -56,7 +57,7 @@ const Pila = ({ slot }: { slot: number }) => {
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
-    { isDragging: boolean }
+    dragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,
