@@ -12,6 +12,7 @@ import {
   baraja,
   HUECO,
   CardId,
+  POS,
 } from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
@@ -32,7 +33,7 @@ const Hueco = ({ slot }: { slot: number }) => {
       }),
       drop: (droppedCardIds) => {
         setCardIds([...droppedCardIds, ...cardIds]);
-        return droppedCardIds;
+        return { pos: POS.HUECO, slot };
       },
       canDrop: (droppedCardIds) => {
         const droppedCardId = droppedCardIds[droppedCardIds.length - 1];

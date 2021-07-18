@@ -11,6 +11,7 @@ import {
   dropResult,
   dropCollectedProps,
   dragCollectedProps,
+  POS,
 } from 'datos';
 import React from 'react';
 
@@ -31,7 +32,7 @@ const Pila = ({ slot }: { slot: number }) => {
       }),
       drop: (droppedCardIds) => {
         setCardIds([droppedCardIds[0], ...cardIds]);
-        return droppedCardIds;
+        return { pos: POS.PILA, slot };
       },
       canDrop: (droppedCardIds) => {
         if (droppedCardIds.length !== 1) return false;
@@ -65,7 +66,7 @@ const Pila = ({ slot }: { slot: number }) => {
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
-      end: (item, monitor) => {
+      end: (_, monitor) => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
           saveStateAction(false);

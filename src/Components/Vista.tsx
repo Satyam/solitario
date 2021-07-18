@@ -26,7 +26,7 @@ const Vista = () => {
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
-      end: (item, monitor) => {
+      end: (_, monitor) => {
         if (monitor.didDrop()) {
           setCardIds(cardIds.slice(1));
           saveStateAction(false);

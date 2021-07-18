@@ -1,8 +1,17 @@
+export enum POS {
+  HUECO,
+  PILA,
+  VISTA,
+}
+
 export const DRAG_TYPE = 'cardIds';
 
 export type dragItem = CardId[];
 
-export type dropResult = CardId[];
+export type dropResult = {
+  pos: POS;
+  slot: number;
+};
 
 export type dropCollectedProps = { isOver: boolean; canDrop: boolean };
 export type dragCollectedProps = { isDragging: boolean };

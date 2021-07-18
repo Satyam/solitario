@@ -37,7 +37,7 @@ const CardStack = ({
         isDragging: !!monitor.isDragging(),
       }),
       canDrag: () => index >= firstShown,
-      end: (item, monitor) => {
+      end: (_, monitor) => {
         if (monitor.didDrop()) {
           dropCardIds(cardIds);
           saveStateAction(false);
