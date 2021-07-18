@@ -90,7 +90,7 @@ export const saveState = selector<boolean>({
       }
     });
 
-    set(undoStack, [newState as SavedState, ...storedStates]);
+    set(undoStack, [newState as SavedState, ...storedStates.slice(0, 10)]);
   },
 });
 
