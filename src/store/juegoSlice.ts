@@ -70,40 +70,18 @@ export const counterSlice = createSlice({
     ) => {
       switch (fromPos) {
         case POS.PILA:
-          if (cardIds[0] !== state.pilas[fromSlot][0]) {
-            console.error(
-              'source pilas do not match',
-              fromSlot,
-              cardIds,
-              state.pilas[fromSlot]
-            );
-          }
           state.pilas[fromSlot].shift();
           break;
         case POS.VISTA:
-          if (cardIds[0] !== state.vista[0]) {
-            console.error('source vista do not match', cardIds, state.vista);
-          }
           state.vista.shift();
           break;
         case POS.MAZO:
-          if (cardIds[0] !== state.mazo[0]) {
-            console.error('source mazo do not match', cardIds, state.mazo);
-          }
           state.mazo.shift();
           break;
 
         case POS.HUECO:
           {
             const h = state.huecos[fromSlot];
-            if (!cardIds.every((c, i) => c === h.cardIds[i])) {
-              console.error(
-                'source hueco do not match',
-                fromSlot,
-                cardIds,
-                h.cardIds
-              );
-            }
             h.cardIds.splice(0, cardIds.length);
             if (h.firstShown >= h.cardIds.length) {
               h.firstShown = h.cardIds.length - 1;
