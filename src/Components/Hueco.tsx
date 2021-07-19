@@ -1,7 +1,6 @@
-import { useRecoilState } from 'recoil';
 import { useDrop } from 'react-dnd';
+import { useSelector } from 'react-redux';
 import useSendToPila from 'hooks/useSendToPila';
-import { huecoState, firstShownState } from 'store/huecos';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
 import {
@@ -14,11 +13,14 @@ import {
   CardId,
   POS,
 } from 'datos';
+import { RootState } from 'store';
 
 const Hueco = ({ slot }: { slot: number }) => {
-  const [cardIds, setCardIds] = useRecoilState(huecoState(slot));
+  const { cardIds, firstShown } = useSelector<
+    RootState,
+    { cardIds: CardId[]; firstShown: number }
+  >((state) => state.juego.huecos[slot]);
   const cardId = cardIds[0];
-  const [firstShown, setFirstShown] = useRecoilState(firstShownState(slot));
 
   const [{ isOver, canDrop }, drop] = useDrop<
     dragItem,
@@ -31,9 +33,8 @@ const Hueco = ({ slot }: { slot: number }) => {
         isOver: !!monitor.isOver(),
         canDrop: !!monitor.canDrop(),
       }),
-      drop: (droppedCardIds) => {
-        setCardIds([...droppedCardIds, ...cardIds]);
-        return { pos: POS.HUECO, slot };
+      drop: () => {
+        return { toPos: POS.HUECO, toSlot: slot };
       },
       canDrop: (droppedCardIds) => {
         const droppedCardId = droppedCardIds[droppedCardIds.length - 1];
@@ -57,14 +58,7 @@ const Hueco = ({ slot }: { slot: number }) => {
     [cardIds]
   );
 
-  const dropCardIds = (dropped: CardId[]) => {
-    const newStack = cardIds.slice(dropped.length);
-    setCardIds(newStack);
-    if (firstShown >= newStack.length) {
-      setFirstShown(newStack.length - 1);
-    }
-  };
-  const onPointerHandler = useSendToPila(cardId, () => dropCardIds([cardId]));
+  const onPointerHandler = useSendToPila(cardId, POS.HUECO, slot);
   return (
     <div
       ref={drop}
@@ -73,11 +67,7 @@ const Hueco = ({ slot }: { slot: number }) => {
       style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
     >
       {cardIds.length ? (
-        <CardStack
-          cardIds={cardIds}
-          firstShown={firstShown}
-          dropCardIds={dropCardIds}
-        />
+        <CardStack cardIds={cardIds} firstShown={firstShown} slot={slot} />
       ) : (
         <Sprite cardId={HUECO} />
       )}

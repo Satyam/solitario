@@ -1,32 +1,25 @@
-import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
-import { mazoBarajar, mazoState } from 'store/mazo';
-import { vistaState } from 'store/vista';
-import { HUECO, REVERSO } from 'datos';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'store';
+import { jugadaAction } from 'store/juegoSlice';
+import { CardId, HUECO, POS, REVERSO } from 'datos';
 import Sprite from './Sprite';
-import { saveState } from 'store/undoStack';
 
 const Mazo = () => {
-  const [cardIds, setCardIds] = useRecoilState(mazoState);
-  const resetVista = useResetRecoilState(vistaState);
-  const [vista, setVista] = useRecoilState(vistaState);
-  const barajar = useSetRecoilState(mazoBarajar);
-  const saveStateAction = useSetRecoilState(saveState);
+  const dispatch = useDispatch();
+  const cardIds = useSelector<RootState, CardId[]>((state) => state.juego.mazo);
+
   const sacar = () => {
-    const l = cardIds.length;
-    if (l) {
-      const [cardId, ...resto] = cardIds;
-      setVista([cardId, ...vista]);
-      setCardIds(resto);
-    } else {
-      setCardIds([...vista].reverse());
-      resetVista();
-    }
-    saveStateAction(false);
+    dispatch(
+      jugadaAction({
+        cardIds: [cardIds[0]],
+        fromPos: POS.MAZO,
+        fromSlot: 0,
+        toPos: POS.VISTA,
+        toSlot: 0,
+      })
+    );
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => barajar(), []);
   return <Sprite cardId={cardIds.length ? REVERSO : HUECO} onClick={sacar} />;
 };
 

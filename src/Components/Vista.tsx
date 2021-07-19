@@ -4,17 +4,23 @@ import {
   dragItem,
   dropResult,
   dragCollectedProps,
+  POS,
+  CardId,
 } from 'datos';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useDrag } from 'react-dnd';
-import { vistaState } from 'store/vista';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { jugadaAction } from 'store/juegoSlice';
+import { useSendToPila } from 'hooks/useSendToPila';
 import Sprite from './Sprite';
-import useSendToPila from 'hooks/useSendToPila';
-import { saveState } from 'store/undoStack';
+
 const Vista = () => {
-  const [cardIds, setCardIds] = useRecoilState(vistaState);
-  const saveStateAction = useSetRecoilState(saveState);
+  const dispatch = useDispatch();
+  const cardIds = useSelector<RootState, CardId[]>(
+    (state) => state.juego.vista
+  );
   const cardId = cardIds[0];
+
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
@@ -26,19 +32,24 @@ const Vista = () => {
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
-      end: (_, monitor) => {
+      end: (cardIds, monitor) => {
         if (monitor.didDrop()) {
-          setCardIds(cardIds.slice(1));
-          saveStateAction(false);
+          dispatch(
+            jugadaAction({
+              ...(monitor.getDropResult() as dropResult),
+              cardIds,
+              fromPos: POS.VISTA,
+              fromSlot: 0,
+            })
+          );
         }
       },
     }),
     [cardId]
   );
 
-  const onPointerHandler = useSendToPila(cardId, () =>
-    setCardIds(cardIds.slice(1))
-  );
+  const onPointerHandler = useSendToPila(cardId, POS.VISTA, 0);
+
   return (
     <div ref={drag} onPointerDown={onPointerHandler}>
       <Sprite

@@ -1,5 +1,6 @@
 import { useDrag } from 'react-dnd';
-import { useSetRecoilState } from 'recoil';
+import { useDispatch } from 'react-redux';
+import { jugadaAction } from 'store/juegoSlice';
 import {
   REVERSO,
   CardId,
@@ -7,24 +8,24 @@ import {
   dragItem,
   dragCollectedProps,
   DRAG_TYPE,
+  POS,
 } from 'datos';
 import Sprite from './Sprite';
-import { saveState } from 'store/undoStack';
 
 const CardStack = ({
   cardIds,
   firstShown,
   index = 0,
   total = 0,
-  dropCardIds,
+  slot,
 }: {
   cardIds: CardId[];
   firstShown: number;
   index?: number;
   total?: number;
-  dropCardIds: (cardIds: CardId[]) => void;
+  slot: number;
 }) => {
-  const saveStateAction = useSetRecoilState(saveState);
+  const dispatch = useDispatch();
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
@@ -39,8 +40,14 @@ const CardStack = ({
       canDrag: () => index >= firstShown,
       end: (_, monitor) => {
         if (monitor.didDrop()) {
-          dropCardIds(cardIds);
-          saveStateAction(false);
+          dispatch(
+            jugadaAction({
+              ...(monitor.getDropResult() as dropResult),
+              cardIds,
+              fromPos: POS.HUECO,
+              fromSlot: slot,
+            })
+          );
         }
       },
     }),
@@ -64,7 +71,7 @@ const CardStack = ({
           firstShown={firstShown}
           index={index + 1}
           total={total}
-          dropCardIds={dropCardIds}
+          slot={slot}
         />
       )}
     </div>

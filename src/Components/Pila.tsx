@@ -1,7 +1,6 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useDrop, useDrag } from 'react-dnd';
-import { pilaState } from 'store/pilas';
-import { saveState } from 'store/undoStack';
+import { useSelector, useDispatch } from 'react-redux';
+import { jugadaAction } from 'store/juegoSlice';
 import Sprite from './Sprite';
 import {
   HUECO,
@@ -12,12 +11,16 @@ import {
   dropCollectedProps,
   dragCollectedProps,
   POS,
+  CardId,
 } from 'datos';
-import React from 'react';
+
+import { RootState } from 'store';
 
 const Pila = ({ slot }: { slot: number }) => {
-  const [cardIds, setCardIds] = useRecoilState(pilaState(slot));
-  const saveStateAction = useSetRecoilState(saveState);
+  const cardIds = useSelector<RootState, CardId[]>(
+    (state) => state.juego.pilas[slot]
+  );
+  const dispatch = useDispatch();
   const cardId = cardIds[0];
   const [{ isOver, canDrop }, drop] = useDrop<
     dragItem,
@@ -31,8 +34,7 @@ const Pila = ({ slot }: { slot: number }) => {
         canDrop: !!monitor.canDrop(),
       }),
       drop: (droppedCardIds) => {
-        setCardIds([droppedCardIds[0], ...cardIds]);
-        return { pos: POS.PILA, slot };
+        return { toPos: POS.PILA, toSlot: slot };
       },
       canDrop: (droppedCardIds) => {
         if (droppedCardIds.length !== 1) return false;
@@ -68,8 +70,14 @@ const Pila = ({ slot }: { slot: number }) => {
       }),
       end: (_, monitor) => {
         if (monitor.didDrop()) {
-          setCardIds(cardIds.slice(1));
-          saveStateAction(false);
+          dispatch(
+            jugadaAction({
+              ...(monitor.getDropResult() as dropResult),
+              cardIds,
+              fromPos: POS.PILA,
+              fromSlot: slot,
+            })
+          );
         }
       },
     }),

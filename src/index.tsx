@@ -3,17 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { RecoilRoot } from 'recoil';
+import { store } from 'store';
+import { Provider } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 ReactDOM.render(
   <React.StrictMode>
-    <RecoilRoot>
+    <Provider store={store}>
       <DndProvider backend={HTML5Backend}>
         <App />
       </DndProvider>
-    </RecoilRoot>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
