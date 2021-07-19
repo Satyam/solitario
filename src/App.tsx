@@ -9,7 +9,7 @@ import Pila from 'Components/Pila';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { newGameAction } from 'store/juegoSlice';
-import { isWon } from 'store/selectors';
+import { selHasWon } from 'store/selectors';
 
 import { numHuecos, numPilas, baraja } from 'datos';
 
@@ -18,7 +18,7 @@ import { slotsArray } from 'utils';
 function App() {
   const dispatch = useDispatch();
 
-  const isGameWon = useSelector(isWon);
+  const isGameWon = useSelector(selHasWon);
   const doInit = () => {
     dispatch(newGameAction());
     // Image preload
