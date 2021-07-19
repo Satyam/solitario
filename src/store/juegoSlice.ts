@@ -124,10 +124,15 @@ export const counterSlice = createSlice({
           state.huecos[toSlot].cardIds.unshift(...cardIds);
       }
     },
+    restoreMazoAction: (state) => {
+      state.mazo = state.vista.reverse();
+      state.vista = [];
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { newGameAction, jugadaAction } = counterSlice.actions;
+export const { newGameAction, jugadaAction, restoreMazoAction } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;

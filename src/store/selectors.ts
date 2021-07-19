@@ -18,8 +18,9 @@ export const selPilaToSendCard = (
   cardId: CardId
 ): number | false => {
   const carta = baraja[cardId];
+  if (!carta) return false;
   for (let slot = 0; slot < numPilas; slot++)
-    if (state.juego.pilas.length) {
+    if (state.juego.pilas[slot].length) {
       const topCardId = state.juego.pilas[slot][0];
       if (!topCardId) return false;
       const topCarta = baraja[topCardId];
