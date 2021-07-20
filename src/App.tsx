@@ -7,9 +7,12 @@ import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
 
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from 'store';
-import { newGameAction } from 'store/juegoSlice';
-import { selHasWon } from 'store/selectors';
+import {
+  useAppDispatch,
+  useAppSelector,
+  newGameAction,
+  selHasWon,
+} from 'store';
 
 import { numHuecos, numPilas, baraja } from 'datos';
 

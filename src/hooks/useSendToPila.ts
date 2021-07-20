@@ -1,8 +1,11 @@
 import { CardId, POS } from 'datos';
 import { PointerEventHandler } from 'react';
-import { useAppDispatch, useAppSelector } from 'store';
-import { selPilaToSendCard } from 'store/selectors';
-import { jugadaAction } from 'store/juegoSlice';
+import {
+  useAppDispatch,
+  useAppSelector,
+  jugadaAction,
+  selPilaToSendCard,
+} from 'store';
 
 export function useSendToPila(
   cardId: CardId,

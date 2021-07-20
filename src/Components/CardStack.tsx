@@ -1,6 +1,5 @@
 import { useDrag } from 'react-dnd';
-import { useAppDispatch } from 'store';
-import { jugadaAction } from 'store/juegoSlice';
+import { useAppDispatch, jugadaAction } from 'store';
 import {
   REVERSO,
   CardId,

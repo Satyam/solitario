@@ -1,5 +1,9 @@
-import { useAppSelector, useAppDispatch } from 'store';
-import { jugadaAction, restoreMazoAction } from 'store/juegoSlice';
+import {
+  useAppSelector,
+  useAppDispatch,
+  jugadaAction,
+  restoreMazoAction,
+} from 'store';
 import { CardId, HUECO, POS, REVERSO } from 'datos';
 import Sprite from './Sprite';
 

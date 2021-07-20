@@ -34,7 +34,7 @@ const initialState: JuegoState = {
   })),
 };
 
-export const counterSlice = createSlice({
+export const juegoSlice = createSlice({
   name: 'juego',
   initialState,
   reducers: {
@@ -111,6 +111,6 @@ export const counterSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { newGameAction, jugadaAction, restoreMazoAction } =
-  counterSlice.actions;
+  juegoSlice.actions;
 
-export default counterSlice.reducer;
+export default juegoSlice.reducer;

@@ -8,8 +8,7 @@ import {
   CardId,
 } from 'datos';
 import { useDrag } from 'react-dnd';
-import { useAppDispatch, useAppSelector } from 'store';
-import { jugadaAction } from 'store/juegoSlice';
+import { useAppDispatch, useAppSelector, jugadaAction } from 'store';
 import { useSendToPila } from 'hooks/useSendToPila';
 import Sprite from './Sprite';
 

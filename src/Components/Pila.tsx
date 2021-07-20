@@ -1,6 +1,5 @@
 import { useDrop, useDrag } from 'react-dnd';
-import { useAppSelector, useAppDispatch } from 'store';
-import { jugadaAction } from 'store/juegoSlice';
+import { useAppSelector, useAppDispatch, jugadaAction } from 'store';
 import Sprite from './Sprite';
 import {
   HUECO,

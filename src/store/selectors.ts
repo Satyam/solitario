@@ -1,6 +1,6 @@
 // import { createSelector } from '@reduxjs/toolkit';
 import { baraja, CardId, numPilas } from 'datos';
-import { RootState } from 'store';
+import { RootState } from 'store/store';
 import { slotsArray } from 'utils';
 
 export const selHasWon = (state: RootState): boolean => {

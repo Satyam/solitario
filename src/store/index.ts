@@ -1,17 +1,13 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import juegoReducer from 'store/juegoSlice';
+import { AppDispatch, RootState } from 'store/store';
 
-export const store = configureStore({
-  reducer: {
-    juego: juegoReducer,
-  },
-});
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+export { store } from 'store/store';
+export {
+  newGameAction,
+  jugadaAction,
+  restoreMazoAction,
+} from 'store/juegoSlice';
+export { selHasWon, selPilaToSendCard } from 'store/selectors';
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
