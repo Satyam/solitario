@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import juegoReducer from 'store/juegoSlice';
+import undoStackReducer from 'store/undoStackSlice';
 
 export const store = configureStore({
   reducer: {
     juego: juegoReducer,
+    undo: undoStackReducer,
   },
 });
 

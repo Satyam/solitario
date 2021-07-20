@@ -6,8 +6,18 @@ export {
   newGameAction,
   jugadaAction,
   restoreMazoAction,
+  undoAction,
+  redoAction,
 } from 'store/juegoSlice';
-export { selHasWon, selPilaToSendCard } from 'store/selectors';
+
+export {
+  selHasWon,
+  selPilaToSendCard,
+  selCanRedo,
+  selCanUndo,
+  selUndoAction,
+  selRedoAction,
+} from 'store/selectors';
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

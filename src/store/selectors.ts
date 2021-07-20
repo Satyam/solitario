@@ -1,6 +1,7 @@
 // import { createSelector } from '@reduxjs/toolkit';
 import { baraja, CardId, numPilas } from 'datos';
 import { RootState } from 'store/store';
+import { UndoStackEntry } from 'store/juegoSlice';
 import { slotsArray } from 'utils';
 
 export const selHasWon = (state: RootState): boolean => {
@@ -33,4 +34,22 @@ export const selPilaToSendCard = (
     }
   }
   return false;
+};
+
+export const selCanUndo = (state: RootState): boolean => {
+  return state.undo.current >= 0;
+};
+export const selCanRedo = (state: RootState): boolean => {
+  const u = state.undo;
+  return u.current < u.stack.length - 1;
+};
+
+export const selUndoAction = (state: RootState): UndoStackEntry => {
+  const u = state.undo;
+  return u.stack[u.current];
+};
+
+export const selRedoAction = (state: RootState): UndoStackEntry => {
+  const u = state.undo;
+  return u.stack[u.current + 1];
 };

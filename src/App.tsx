@@ -1,6 +1,6 @@
 import './App.css';
 
-import UndoButton from 'Components/UndoButton';
+import { UndoButton, RedoButton } from 'Components/UndoRedoButton';
 import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
@@ -40,6 +40,7 @@ function App() {
       <header>
         <button onClick={doInit}>Nuevo Juego</button>
         <UndoButton>Undo</UndoButton>
+        <RedoButton>Redo</RedoButton>
         {isGameWon && <h3>Ganamos</h3>}
       </header>
       <main>
