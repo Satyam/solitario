@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'store';
 import useSendToPila from 'hooks/useSendToPila';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
@@ -13,13 +13,12 @@ import {
   CardId,
   POS,
 } from 'datos';
-import { RootState } from 'store';
 
 const Hueco = ({ slot }: { slot: number }) => {
-  const { cardIds, firstShown } = useSelector<
-    RootState,
-    { cardIds: CardId[]; firstShown: number }
-  >((state) => state.juego.huecos[slot]);
+  const { cardIds, firstShown } = useAppSelector<{
+    cardIds: CardId[];
+    firstShown: number;
+  }>((state) => state.juego.huecos[slot]);
   const cardId = cardIds[0];
 
   const [{ isOver, canDrop }, drop] = useDrop<

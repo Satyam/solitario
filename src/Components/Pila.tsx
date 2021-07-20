@@ -1,5 +1,5 @@
 import { useDrop, useDrag } from 'react-dnd';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from 'store';
 import { jugadaAction } from 'store/juegoSlice';
 import Sprite from './Sprite';
 import {
@@ -14,13 +14,9 @@ import {
   CardId,
 } from 'datos';
 
-import { RootState } from 'store';
-
 const Pila = ({ slot }: { slot: number }) => {
-  const cardIds = useSelector<RootState, CardId[]>(
-    (state) => state.juego.pilas[slot]
-  );
-  const dispatch = useDispatch();
+  const cardIds = useAppSelector<CardId[]>((state) => state.juego.pilas[slot]);
+  const dispatch = useAppDispatch();
   const cardId = cardIds[0];
   const [{ isOver, canDrop }, drop] = useDrop<
     dragItem,

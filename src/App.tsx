@@ -7,7 +7,7 @@ import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
 
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store';
 import { newGameAction } from 'store/juegoSlice';
 import { selHasWon } from 'store/selectors';
 
@@ -16,9 +16,9 @@ import { numHuecos, numPilas, baraja } from 'datos';
 import { slotsArray } from 'utils';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const isGameWon = useSelector(selHasWon);
+  const isGameWon = useAppSelector(selHasWon);
   const doInit = () => {
     dispatch(newGameAction());
     // Image preload

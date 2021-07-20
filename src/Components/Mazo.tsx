@@ -1,12 +1,11 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'store';
+import { useAppSelector, useAppDispatch } from 'store';
 import { jugadaAction, restoreMazoAction } from 'store/juegoSlice';
 import { CardId, HUECO, POS, REVERSO } from 'datos';
 import Sprite from './Sprite';
 
 const Mazo = () => {
-  const dispatch = useDispatch();
-  const cardIds = useSelector<RootState, CardId[]>((state) => state.juego.mazo);
+  const dispatch = useAppDispatch();
+  const cardIds = useAppSelector<CardId[]>((state) => state.juego.mazo);
 
   const sacar = () => {
     const l = cardIds.length;

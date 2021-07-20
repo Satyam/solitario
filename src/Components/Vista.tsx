@@ -8,17 +8,14 @@ import {
   CardId,
 } from 'datos';
 import { useDrag } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store';
+import { useAppDispatch, useAppSelector } from 'store';
 import { jugadaAction } from 'store/juegoSlice';
 import { useSendToPila } from 'hooks/useSendToPila';
 import Sprite from './Sprite';
 
 const Vista = () => {
-  const dispatch = useDispatch();
-  const cardIds = useSelector<RootState, CardId[]>(
-    (state) => state.juego.vista
-  );
+  const dispatch = useAppDispatch();
+  const cardIds = useAppSelector<CardId[]>((state) => state.juego.vista);
   const cardId = cardIds[0];
 
   const [{ isDragging }, drag] = useDrag<

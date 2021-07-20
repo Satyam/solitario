@@ -1,8 +1,7 @@
 import { CardId, POS } from 'datos';
 import { PointerEventHandler } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'store';
 import { selPilaToSendCard } from 'store/selectors';
-import { RootState } from 'store';
 import { jugadaAction } from 'store/juegoSlice';
 
 export function useSendToPila(
@@ -10,10 +9,8 @@ export function useSendToPila(
   fromPos: POS,
   fromSlot: number
 ): PointerEventHandler {
-  const dispatch = useDispatch();
-  const toSlot = useSelector<RootState>((state) =>
-    selPilaToSendCard(state, cardId)
-  );
+  const dispatch = useAppDispatch();
+  const toSlot = useAppSelector((state) => selPilaToSendCard(state, cardId));
 
   return (ev) => {
     if (ev.buttons === 4 && typeof toSlot === 'number') {

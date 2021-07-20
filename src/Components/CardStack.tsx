@@ -1,5 +1,5 @@
 import { useDrag } from 'react-dnd';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'store';
 import { jugadaAction } from 'store/juegoSlice';
 import {
   REVERSO,
@@ -25,7 +25,7 @@ const CardStack = ({
   total?: number;
   slot: number;
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [{ isDragging }, drag] = useDrag<
     dragItem,
     dropResult,
