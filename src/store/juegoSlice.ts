@@ -25,46 +25,40 @@ export interface JuegoState {
   }[];
 }
 
-const initialState: JuegoState = {
-  mazo: [],
-  vista: [],
-  pilas: slotsArray(numPilas).map(() => []),
-  huecos: slotsArray(numHuecos).map(() => ({
-    cardIds: [],
-    firstShown: 0,
-  })),
+const initNewGame = (): JuegoState => {
+  const state: Partial<JuegoState> = {};
+  state.pilas = slotsArray(numPilas).map(() => []);
+  state.vista = [];
+
+  const cardIds: CardId[] = [];
+  // Shuffle (get an array of unique cards)
+  while (cardIds.length < numCartas) {
+    let p = getRandomInt(numPalos - 1);
+    let v = getRandomInt(numValores - 1);
+    const cardId = `${valores[v]}${palos[p]}` as CardId;
+    if (!cardIds.includes(cardId)) {
+      cardIds.push(cardId);
+    }
+  }
+
+  state.huecos = slotsArray(numHuecos).map((slot) => ({
+    // splice returns the array of elements deleted from the array
+    cardIds: cardIds.splice(0, slot + 1),
+    firstShown: slot,
+  }));
+
+  // Place the remaining cards in the mazo.
+  state.mazo = cardIds;
+  return state as JuegoState;
 };
 
 export type UndoStackEntry = PayloadAction<jugada> | PayloadAction;
 
 export const juegoSlice = createSlice({
   name: 'juego',
-  initialState,
+  initialState: initNewGame(),
   reducers: {
-    newGameAction: (state) => {
-      state.pilas = slotsArray(numPilas).map(() => []);
-      state.vista = [];
-
-      const cardIds: CardId[] = [];
-      // Shuffle (get an array of unique cards)
-      while (cardIds.length < numCartas) {
-        let p = getRandomInt(numPalos - 1);
-        let v = getRandomInt(numValores - 1);
-        const cardId = `${valores[v]}${palos[p]}` as CardId;
-        if (!cardIds.includes(cardId)) {
-          cardIds.push(cardId);
-        }
-      }
-
-      state.huecos = slotsArray(numHuecos).map((slot) => ({
-        // splice returns the array of elements deleted from the array
-        cardIds: cardIds.splice(0, slot + 1),
-        firstShown: slot,
-      }));
-
-      // Place the remaining cards in the mazo.
-      state.mazo = cardIds;
-    },
+    newGameAction: () => initNewGame(),
     jugadaAction: (
       state: JuegoState,
       {

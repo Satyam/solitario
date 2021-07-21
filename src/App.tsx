@@ -6,7 +6,6 @@ import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
 
-import { useEffect } from 'react';
 import {
   useAppDispatch,
   useAppSelector,
@@ -14,7 +13,7 @@ import {
   selHasWon,
 } from 'store';
 
-import { numHuecos, numPilas, baraja } from 'datos';
+import { numHuecos, numPilas } from 'datos';
 
 import { slotsArray } from 'utils';
 
@@ -22,23 +21,14 @@ function App() {
   const dispatch = useAppDispatch();
 
   const isGameWon = useAppSelector(selHasWon);
-  const doInit = () => {
+  const newGame = () => {
     dispatch(newGameAction());
-    // Image preload
-    Object.keys(baraja).forEach((cardId) => {
-      new Image().src = `assets/cards/${cardId}.svg`;
-    });
   };
-  useEffect(
-    doInit,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   return (
     <div className="App">
       <header>
-        <button onClick={doInit}>Nuevo Juego</button>
+        <button onClick={newGame}>Nuevo Juego</button>
         <UndoButton>Undo</UndoButton>
         <RedoButton>Redo</RedoButton>
         {isGameWon && <h3>Ganamos</h3>}
