@@ -74,6 +74,12 @@ export const jugadaActionReducer = (
       break;
     case POS.HUECO:
       state.huecos[toSlot].cardIds.unshift(...cardIds);
+      break;
+    case POS.MAZO:
+      state.mazo.unshift(cardIds[0]);
+      break;
+    default:
+      throw new Error(`Invalid toPos: ${toPos} on jugada`);
   }
   return state;
 };
@@ -134,16 +140,9 @@ export const juegoSlice = createSlice({
       { payload: { type, payload } }: PayloadAction<UndoStackEntry>
     ) => {
       if (payload) {
-        const { fromPos, fromSlot, cardIds, toPos, toSlot } = payload;
         return jugadaActionReducer(state, {
           type,
-          payload: {
-            cardIds,
-            fromPos: toPos,
-            fromSlot: toSlot,
-            toPos: fromPos,
-            toSlot: fromSlot,
-          },
+          payload,
         });
       }
     },
