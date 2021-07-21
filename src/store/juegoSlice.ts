@@ -37,54 +37,6 @@ const initialState: JuegoState = {
 
 export type UndoStackEntry = PayloadAction<jugada> | PayloadAction;
 
-export const jugadaActionReducer = (
-  state: JuegoState,
-  {
-    payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
-  }: PayloadAction<jugada>
-) => {
-  switch (fromPos) {
-    case POS.PILA:
-      state.pilas[fromSlot].shift();
-      break;
-    case POS.VISTA:
-      state.vista.shift();
-      break;
-    case POS.MAZO:
-      state.mazo.shift();
-      break;
-
-    case POS.HUECO:
-      {
-        const h = state.huecos[fromSlot];
-        h.cardIds.splice(0, cardIds.length);
-        if (h.firstShown >= h.cardIds.length) {
-          h.firstShown = h.cardIds.length - 1;
-        }
-      }
-      break;
-    default:
-      throw new Error(`Invalid fromPos: ${fromPos} on jugada`);
-  }
-  switch (toPos) {
-    case POS.PILA:
-      state.pilas[toSlot].unshift(...cardIds);
-      break;
-    case POS.VISTA:
-      state.vista.unshift(cardIds[0]);
-      break;
-    case POS.HUECO:
-      state.huecos[toSlot].cardIds.unshift(...cardIds);
-      break;
-    case POS.MAZO:
-      state.mazo.unshift(cardIds[0]);
-      break;
-    default:
-      throw new Error(`Invalid toPos: ${toPos} on jugada`);
-  }
-  return state;
-};
-
 export const juegoSlice = createSlice({
   name: 'juego',
   initialState,
@@ -113,39 +65,55 @@ export const juegoSlice = createSlice({
       // Place the remaining cards in the mazo.
       state.mazo = cardIds;
     },
-    jugadaAction: jugadaActionReducer,
+    jugadaAction: (
+      state: JuegoState,
+      {
+        payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
+      }: PayloadAction<jugada>
+    ) => {
+      switch (fromPos) {
+        case POS.PILA:
+          state.pilas[fromSlot].shift();
+          break;
+        case POS.VISTA:
+          state.vista.shift();
+          break;
+        case POS.MAZO:
+          state.mazo.shift();
+          break;
+
+        case POS.HUECO:
+          {
+            const h = state.huecos[fromSlot];
+            h.cardIds.splice(0, cardIds.length);
+            if (h.firstShown >= h.cardIds.length) {
+              h.firstShown = h.cardIds.length - 1;
+            }
+          }
+          break;
+        default:
+          throw new Error(`Invalid fromPos: ${fromPos} on jugada`);
+      }
+      switch (toPos) {
+        case POS.PILA:
+          state.pilas[toSlot].unshift(...cardIds);
+          break;
+        case POS.VISTA:
+          state.vista.unshift(cardIds[0]);
+          break;
+        case POS.HUECO:
+          state.huecos[toSlot].cardIds.unshift(...cardIds);
+          break;
+        case POS.MAZO:
+          state.mazo.unshift(cardIds[0]);
+          break;
+        default:
+          throw new Error(`Invalid toPos: ${toPos} on jugada`);
+      }
+    },
     restoreMazoAction: (state) => {
       state.mazo = state.vista.reverse();
       state.vista = [];
-    },
-    undoAction: (
-      state,
-      { payload: { type, payload } }: PayloadAction<UndoStackEntry>
-    ) => {
-      if (payload) {
-        const { fromPos, fromSlot, cardIds, toPos, toSlot } = payload;
-        return jugadaActionReducer(state, {
-          type,
-          payload: {
-            cardIds,
-            fromPos: toPos,
-            fromSlot: toSlot,
-            toPos: fromPos,
-            toSlot: fromSlot,
-          },
-        });
-      }
-    },
-    redoAction: (
-      state,
-      { payload: { type, payload } }: PayloadAction<UndoStackEntry>
-    ) => {
-      if (payload) {
-        return jugadaActionReducer(state, {
-          type,
-          payload,
-        });
-      }
     },
   },
 });
