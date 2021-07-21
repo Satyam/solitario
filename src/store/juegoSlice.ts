@@ -34,13 +34,15 @@ const initialState: JuegoState = {
   })),
 };
 
-export type UndoStackEntry = PayloadAction<jugada> | PayloadAction;
+export type UndoStackEntry =
+  | PayloadAction<jugada & { firstShown?: number }>
+  | PayloadAction;
 
 export const jugadaActionReducer = (
   state: JuegoState,
   {
-    payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
-  }: PayloadAction<jugada>
+    payload: { fromPos, fromSlot, cardIds, toPos, toSlot, firstShown },
+  }: PayloadAction<jugada & { firstShown?: number }>
 ) => {
   switch (fromPos) {
     case POS.PILA:
@@ -74,6 +76,9 @@ export const jugadaActionReducer = (
       break;
     case POS.HUECO:
       state.huecos[toSlot].cardIds.unshift(...cardIds);
+      if (typeof firstShown === 'number') {
+        state.huecos[toSlot].firstShown = firstShown;
+      }
       break;
     case POS.MAZO:
       state.mazo.unshift(cardIds[0]);
@@ -122,7 +127,8 @@ export const juegoSlice = createSlice({
       { payload: { type, payload } }: PayloadAction<UndoStackEntry>
     ) => {
       if (payload) {
-        const { fromPos, fromSlot, cardIds, toPos, toSlot } = payload;
+        const { fromPos, fromSlot, cardIds, toPos, toSlot, firstShown } =
+          payload;
         return jugadaActionReducer(state, {
           type,
           payload: {
@@ -131,6 +137,7 @@ export const juegoSlice = createSlice({
             fromSlot: toSlot,
             toPos: fromPos,
             toSlot: fromSlot,
+            firstShown,
           },
         });
       }
