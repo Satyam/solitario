@@ -6,17 +6,14 @@ import {
   redoAction,
   selCanUndo,
   selCanRedo,
-  selUndoAction,
-  selRedoAction,
 } from 'store';
 
 export const UndoButton: React.FC = ({ children }) => {
   const canUndo = useAppSelector(selCanUndo);
-  const actionToUndo = useAppSelector(selUndoAction);
   const dispatch = useAppDispatch();
   const onClick: MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.preventDefault();
-    dispatch(undoAction(actionToUndo));
+    dispatch(undoAction());
   };
   return (
     <button disabled={!canUndo} onClick={onClick}>
@@ -27,11 +24,10 @@ export const UndoButton: React.FC = ({ children }) => {
 
 export const RedoButton: React.FC = ({ children }) => {
   const canRedo = useAppSelector(selCanRedo);
-  const actionToRedo = useAppSelector(selRedoAction);
   const dispatch = useAppDispatch();
   const onClick: MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.preventDefault();
-    dispatch(redoAction(actionToRedo));
+    dispatch(redoAction());
   };
   return (
     <button disabled={!canRedo} onClick={onClick}>

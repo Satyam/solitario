@@ -14,7 +14,9 @@ import Sprite from './Sprite';
 
 const Vista = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>((state) => state.juego.vista);
+  const cardIds = useAppSelector<CardId[]>(
+    (state) => state.juego.present.vista
+  );
   const cardId = cardIds[0];
 
   const [{ isDragging }, drag] = useDrag<

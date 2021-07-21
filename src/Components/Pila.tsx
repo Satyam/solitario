@@ -14,7 +14,9 @@ import {
 } from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
-  const cardIds = useAppSelector<CardId[]>((state) => state.juego.pilas[slot]);
+  const cardIds = useAppSelector<CardId[]>(
+    (state) => state.juego.present.pilas[slot]
+  );
   const dispatch = useAppDispatch();
   const cardId = cardIds[0];
   const [{ isOver, canDrop }, drop] = useDrop<

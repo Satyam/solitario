@@ -18,7 +18,7 @@ const Hueco = ({ slot }: { slot: number }) => {
   const { cardIds, firstShown } = useAppSelector<{
     cardIds: CardId[];
     firstShown: number;
-  }>((state) => state.juego.huecos[slot]);
+  }>((state) => state.juego.present.huecos[slot]);
   const cardId = cardIds[0];
 
   const [{ isOver, canDrop }, drop] = useDrop<

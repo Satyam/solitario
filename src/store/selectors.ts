@@ -1,12 +1,11 @@
 // import { createSelector } from '@reduxjs/toolkit';
 import { baraja, CardId, numPilas } from 'datos';
 import { RootState } from 'store/store';
-import { UndoStackEntry } from 'store/juegoSlice';
 import { slotsArray } from 'utils';
 
 export const selHasWon = (state: RootState): boolean => {
   return slotsArray(numPilas).every((slot) => {
-    const pila = state.juego.pilas[slot];
+    const pila = state.juego.present.pilas[slot];
     if (pila.length === 0) return false;
     const topCarta = baraja[pila[0]];
     if (topCarta.index !== 12) return false;
@@ -21,7 +20,7 @@ export const selPilaToSendCard = (
   const carta = baraja[cardId];
   if (!carta) return false;
   for (let slot = 0; slot < numPilas; slot++) {
-    const pila = state.juego.pilas[slot];
+    const pila = state.juego.present.pilas[slot];
     if (pila.length) {
       const topCardId = pila[0];
       if (!topCardId) return false;
@@ -36,20 +35,7 @@ export const selPilaToSendCard = (
   return false;
 };
 
-export const selCanUndo = (state: RootState): boolean => {
-  return state.undo.current >= 0;
-};
-export const selCanRedo = (state: RootState): boolean => {
-  const u = state.undo;
-  return u.current < u.stack.length - 1;
-};
-
-export const selUndoAction = (state: RootState): UndoStackEntry => {
-  const u = state.undo;
-  return u.stack[u.current];
-};
-
-export const selRedoAction = (state: RootState): UndoStackEntry => {
-  const u = state.undo;
-  return u.stack[u.current + 1];
-};
+export const selCanUndo = (state: RootState): boolean =>
+  state.juego.past.length > 0;
+export const selCanRedo = (state: RootState): boolean =>
+  state.juego.future.length > 0;

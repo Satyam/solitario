@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import undoable, { ActionCreators as UndoActionCreators } from 'redux-undo';
 import {
   CardId,
   numCartas,
@@ -34,15 +35,13 @@ const initialState: JuegoState = {
   })),
 };
 
-export type UndoStackEntry =
-  | PayloadAction<jugada & { firstShown?: number }>
-  | PayloadAction;
+export type UndoStackEntry = PayloadAction<jugada> | PayloadAction;
 
 export const jugadaActionReducer = (
   state: JuegoState,
   {
-    payload: { fromPos, fromSlot, cardIds, toPos, toSlot, firstShown },
-  }: PayloadAction<jugada & { firstShown?: number }>
+    payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
+  }: PayloadAction<jugada>
 ) => {
   switch (fromPos) {
     case POS.PILA:
@@ -76,9 +75,6 @@ export const jugadaActionReducer = (
       break;
     case POS.HUECO:
       state.huecos[toSlot].cardIds.unshift(...cardIds);
-      if (typeof firstShown === 'number') {
-        state.huecos[toSlot].firstShown = firstShown;
-      }
       break;
     case POS.MAZO:
       state.mazo.unshift(cardIds[0]);
@@ -127,8 +123,7 @@ export const juegoSlice = createSlice({
       { payload: { type, payload } }: PayloadAction<UndoStackEntry>
     ) => {
       if (payload) {
-        const { fromPos, fromSlot, cardIds, toPos, toSlot, firstShown } =
-          payload;
+        const { fromPos, fromSlot, cardIds, toPos, toSlot } = payload;
         return jugadaActionReducer(state, {
           type,
           payload: {
@@ -137,7 +132,6 @@ export const juegoSlice = createSlice({
             fromSlot: toSlot,
             toPos: fromPos,
             toSlot: fromSlot,
-            firstShown,
           },
         });
       }
@@ -157,12 +151,8 @@ export const juegoSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  newGameAction,
-  jugadaAction,
-  restoreMazoAction,
-  undoAction,
-  redoAction,
-} = juegoSlice.actions;
+export const { newGameAction, jugadaAction, restoreMazoAction } =
+  juegoSlice.actions;
 
-export default juegoSlice.reducer;
+export const { undo: undoAction, redo: redoAction } = UndoActionCreators;
+export default undoable(juegoSlice.reducer);

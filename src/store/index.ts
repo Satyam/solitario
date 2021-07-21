@@ -15,8 +15,6 @@ export {
   selPilaToSendCard,
   selCanRedo,
   selCanUndo,
-  selUndoAction,
-  selRedoAction,
 } from 'store/selectors';
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

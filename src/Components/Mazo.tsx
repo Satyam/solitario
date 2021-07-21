@@ -9,7 +9,7 @@ import Sprite from './Sprite';
 
 const Mazo = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>((state) => state.juego.mazo);
+  const cardIds = useAppSelector<CardId[]>((state) => state.juego.present.mazo);
 
   const sacar = () => {
     const l = cardIds.length;
