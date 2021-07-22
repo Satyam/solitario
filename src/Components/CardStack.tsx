@@ -2,14 +2,14 @@ import { useDrag } from 'react-dnd';
 import { useAppDispatch, jugadaAction } from 'store';
 import {
   REVERSO,
-  CardId,
-  dropResult,
-  dragItem,
-  dragCollectedProps,
+  tCardId,
+  tDropResult,
+  tDragItem,
+  tDragCollectedProps,
   DRAG_TYPE,
   POS,
 } from 'datos';
-import Sprite from './Sprite';
+import Sprite from 'Components/Sprite';
 
 const CardStack = ({
   cardIds,
@@ -18,7 +18,7 @@ const CardStack = ({
   total = 0,
   slot,
 }: {
-  cardIds: CardId[];
+  cardIds: tCardId[];
   firstShown: number;
   index?: number;
   total?: number;
@@ -26,9 +26,9 @@ const CardStack = ({
 }) => {
   const dispatch = useAppDispatch();
   const [{ isDragging }, drag] = useDrag<
-    dragItem,
-    dropResult,
-    dragCollectedProps
+    tDragItem,
+    tDropResult,
+    tDragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,
@@ -41,7 +41,7 @@ const CardStack = ({
         if (monitor.didDrop()) {
           dispatch(
             jugadaAction({
-              ...(monitor.getDropResult() as dropResult),
+              ...(monitor.getDropResult() as tDropResult),
               cardIds,
               fromPos: POS.HUECO,
               fromSlot: slot,

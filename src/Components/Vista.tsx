@@ -1,26 +1,26 @@
 import {
   HUECO,
   DRAG_TYPE,
-  dragItem,
-  dropResult,
-  dragCollectedProps,
+  tDragItem,
+  tDropResult,
+  tDragCollectedProps,
   POS,
-  CardId,
+  tCardId,
 } from 'datos';
 import { useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector, jugadaAction, selVista } from 'store';
 import { useSendToPila } from 'hooks/useSendToPila';
-import Sprite from './Sprite';
+import Sprite from 'Components/Sprite';
 
 const Vista = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>(selVista);
+  const cardIds = useAppSelector<tCardId[]>(selVista);
   const cardId = cardIds[0];
 
   const [{ isDragging }, drag] = useDrag<
-    dragItem,
-    dropResult,
-    dragCollectedProps
+    tDragItem,
+    tDropResult,
+    tDragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,
@@ -32,7 +32,7 @@ const Vista = () => {
         if (monitor.didDrop()) {
           dispatch(
             jugadaAction({
-              ...(monitor.getDropResult() as dropResult),
+              ...(monitor.getDropResult() as tDropResult),
               cardIds,
               fromPos: POS.VISTA,
               fromSlot: 0,

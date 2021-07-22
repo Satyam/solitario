@@ -1,4 +1,4 @@
-import { CardId, POS } from 'datos';
+import { tCardId, POS } from 'datos';
 import { PointerEventHandler } from 'react';
 import {
   useAppDispatch,
@@ -8,12 +8,12 @@ import {
 } from 'store';
 
 export function useSendToPila(
-  cardId: CardId,
+  cardId: tCardId,
   fromPos: POS,
   fromSlot: number
 ): PointerEventHandler {
   const dispatch = useAppDispatch();
-  const toSlot = useParamSelector<CardId, number | false>(
+  const toSlot = useParamSelector<tCardId, number | false>(
     selPilaToSendCard,
     cardId
   );

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import undoable, { ActionCreators as UndoActionCreators } from 'redux-undo';
 import {
-  CardId,
+  tCardId,
   numCartas,
   numPalos,
   numValores,
@@ -9,24 +9,24 @@ import {
   palos,
   numPilas,
   numHuecos,
-  jugada,
+  tJugada,
   POS,
-  JuegoState,
+  tJuegoState,
 } from 'datos';
 
 import { slotsArray, getRandomInt } from 'utils';
 
-const initNewGame = (): JuegoState => {
-  const state: Partial<JuegoState> = {};
+const initNewGame = (): tJuegoState => {
+  const state: Partial<tJuegoState> = {};
   state.pilas = slotsArray(numPilas).map(() => []);
   state.vista = [];
 
-  const cardIds: CardId[] = [];
+  const cardIds: tCardId[] = [];
   // Shuffle (get an array of unique cards)
   while (cardIds.length < numCartas) {
     let p = getRandomInt(numPalos - 1);
     let v = getRandomInt(numValores - 1);
-    const cardId = `${valores[v]}${palos[p]}` as CardId;
+    const cardId = `${valores[v]}${palos[p]}` as tCardId;
     if (!cardIds.includes(cardId)) {
       cardIds.push(cardId);
     }
@@ -40,10 +40,8 @@ const initNewGame = (): JuegoState => {
 
   // Place the remaining cards in the mazo.
   state.mazo = cardIds;
-  return state as JuegoState;
+  return state as tJuegoState;
 };
-
-export type UndoStackEntry = PayloadAction<jugada> | PayloadAction;
 
 export const juegoSlice = createSlice({
   name: 'juego',
@@ -51,10 +49,10 @@ export const juegoSlice = createSlice({
   reducers: {
     newGameAction: () => initNewGame(),
     jugadaAction: (
-      state: JuegoState,
+      state: tJuegoState,
       {
         payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
-      }: PayloadAction<jugada>
+      }: PayloadAction<tJugada>
     ) => {
       switch (fromPos) {
         case POS.PILA:
@@ -77,7 +75,7 @@ export const juegoSlice = createSlice({
           }
           break;
         default:
-          throw new Error(`Invalid fromPos: ${fromPos} on jugada`);
+          throw new Error(`Invalid fromPos: ${fromPos} on tJugada`);
       }
       switch (toPos) {
         case POS.PILA:
@@ -93,7 +91,7 @@ export const juegoSlice = createSlice({
           state.mazo.unshift(cardIds[0]);
           break;
         default:
-          throw new Error(`Invalid toPos: ${toPos} on jugada`);
+          throw new Error(`Invalid toPos: ${toPos} on tJugada`);
       }
     },
     restoreMazoAction: (state) => {

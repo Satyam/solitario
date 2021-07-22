@@ -5,12 +5,12 @@ import {
   restoreMazoAction,
   selMazo,
 } from 'store';
-import { CardId, HUECO, POS, REVERSO } from 'datos';
-import Sprite from './Sprite';
+import { tCardId, HUECO, POS, REVERSO } from 'datos';
+import Sprite from 'Components/Sprite';
 
 const Mazo = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>(selMazo);
+  const cardIds = useAppSelector<tCardId[]>(selMazo);
 
   const sacar = () => {
     const l = cardIds.length;

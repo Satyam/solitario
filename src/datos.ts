@@ -7,23 +7,23 @@ export enum POS {
 
 export const DRAG_TYPE = 'cardIds';
 
-export type dragItem = CardId[];
+export type tDragItem = tCardId[];
 
-export type dropResult = {
+export type tDropResult = {
   toPos: POS;
   toSlot: number;
 };
 
-export type jugada = {
-  cardIds: CardId[];
+export type tJugada = {
+  cardIds: tCardId[];
   toPos: POS;
   toSlot: number;
   fromPos: POS;
   fromSlot: number;
 };
 
-export type dropCollectedProps = { isOver: boolean; canDrop: boolean };
-export type dragCollectedProps = { isDragging: boolean };
+export type tDropCollectedProps = { isOver: boolean; canDrop: boolean };
+export type tDragCollectedProps = { isDragging: boolean };
 
 export const numPilas = 4;
 export const numHuecos = 7;
@@ -51,34 +51,34 @@ export const valores = [
   'K',
 ] as const;
 
-export type VALOR = typeof valores[number];
+export type tValor = typeof valores[number];
 
 export const palos = ['C', 'D', 'H', 'S'] as const;
 
-export type PALO = typeof palos[number];
+export type tPalo = typeof palos[number];
 
 export const REVERSO = '2B';
 export const HUECO = 'hueco';
 
-export type CardId = `${VALOR}${PALO}` | typeof REVERSO | typeof HUECO;
+export type tCardId = `${tValor}${tPalo}` | typeof REVERSO | typeof HUECO;
 
-export type cartaType = {
-  name: CardId;
-  palo: PALO;
-  valor: VALOR;
+export type tCarta = {
+  name: tCardId;
+  palo: tPalo;
+  valor: tValor;
   index: number;
   color: COLOR;
 };
 
-export type HuecoState = {
-  cardIds: CardId[];
+export type tHuecoState = {
+  cardIds: tCardId[];
   firstShown: number;
 };
-export type JuegoState = {
-  mazo: CardId[];
-  vista: CardId[];
-  pilas: CardId[][];
-  huecos: HuecoState[];
+export type tJuegoState = {
+  mazo: tCardId[];
+  vista: tCardId[];
+  pilas: tCardId[][];
+  huecos: tHuecoState[];
 };
 
 export const numPalos = palos.length;
@@ -86,11 +86,11 @@ export const numValores = valores.length;
 
 export const numCartas = numPalos * numValores;
 
-export const baraja = {} as Record<CardId, cartaType>;
+export const baraja = {} as Record<tCardId, tCarta>;
 
 palos.forEach((palo) =>
   valores.forEach((valor, index) => {
-    const name: CardId = `${valor}${palo}` as CardId;
+    const name: tCardId = `${valor}${palo}` as tCardId;
     baraja[name] = {
       name,
       palo,

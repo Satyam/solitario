@@ -5,26 +5,26 @@ import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
 import {
   DRAG_TYPE,
-  dragItem,
-  dropResult,
-  dropCollectedProps,
+  tDragItem,
+  tDropResult,
+  tDropCollectedProps,
   baraja,
   HUECO,
   POS,
-  HuecoState,
+  tHuecoState,
 } from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
-  const { cardIds, firstShown } = useParamSelector<number, HuecoState>(
+  const { cardIds, firstShown } = useParamSelector<number, tHuecoState>(
     selHueco,
     slot
   );
   const cardId = cardIds[0];
 
   const [{ isOver, canDrop }, drop] = useDrop<
-    dragItem,
-    dropResult,
-    dropCollectedProps
+    tDragItem,
+    tDropResult,
+    tDropCollectedProps
   >(
     () => ({
       accept: DRAG_TYPE,

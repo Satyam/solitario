@@ -1,8 +1,8 @@
-import type { CardId } from 'datos';
+import type { tCardId } from 'datos';
 import { ImgHTMLAttributes } from 'react';
 
-type spriteParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
-  cardId: CardId;
+type tSpriteParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
+  cardId: tCardId;
   index?: number;
 };
 
@@ -12,7 +12,7 @@ const Sprite = ({
   className,
   alt,
   ...params
-}: spriteParams) => (
+}: tSpriteParams) => (
   <img
     className={`${className} sprite`}
     src={`assets/cards/${cardId}.svg`}

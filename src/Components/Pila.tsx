@@ -1,26 +1,26 @@
 import { useDrop, useDrag } from 'react-dnd';
 import { useParamSelector, useAppDispatch, jugadaAction, selPila } from 'store';
-import Sprite from './Sprite';
+import Sprite from 'Components/Sprite';
 import {
   HUECO,
   DRAG_TYPE,
   baraja,
-  dragItem,
-  dropResult,
-  dropCollectedProps,
-  dragCollectedProps,
+  tDragItem,
+  tDropResult,
+  tDropCollectedProps,
+  tDragCollectedProps,
   POS,
-  CardId,
+  tCardId,
 } from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
-  const cardIds = useParamSelector<number, CardId[]>(selPila, slot);
+  const cardIds = useParamSelector<number, tCardId[]>(selPila, slot);
   const dispatch = useAppDispatch();
   const cardId = cardIds[0];
   const [{ isOver, canDrop }, drop] = useDrop<
-    dragItem,
-    dropResult,
-    dropCollectedProps
+    tDragItem,
+    tDropResult,
+    tDropCollectedProps
   >(
     () => ({
       accept: DRAG_TYPE,
@@ -53,9 +53,9 @@ const Pila = ({ slot }: { slot: number }) => {
     [cardId]
   );
   const [{ isDragging }, drag] = useDrag<
-    dragItem,
-    dropResult,
-    dragCollectedProps
+    tDragItem,
+    tDropResult,
+    tDragCollectedProps
   >(
     () => ({
       type: DRAG_TYPE,
@@ -67,7 +67,7 @@ const Pila = ({ slot }: { slot: number }) => {
         if (monitor.didDrop()) {
           dispatch(
             jugadaAction({
-              ...(monitor.getDropResult() as dropResult),
+              ...(monitor.getDropResult() as tDropResult),
               cardIds,
               fromPos: POS.PILA,
               fromSlot: slot,

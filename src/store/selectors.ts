@@ -1,14 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { baraja, CardId, numPilas } from 'datos';
-import { RootState } from 'store/store';
+import { baraja, tCardId, numPilas } from 'datos';
+import { tRootState } from 'store/store';
 import { slotsArray } from 'utils';
 
-const selPresentJuego = (state: RootState) => state.juego.present;
-const selSlot = (_: RootState, slot: number) => slot;
+const selPresentJuego = (state: tRootState) => state.juego.present;
+const selSlot = (_: tRootState, slot: number) => slot;
 
-export const selCanUndo = (state: RootState): boolean =>
+export const selCanUndo = (state: tRootState): boolean =>
   state.juego.past.length > 0;
-export const selCanRedo = (state: RootState): boolean =>
+export const selCanRedo = (state: tRootState): boolean =>
   state.juego.future.length > 0;
 
 export const selMazo = createSelector(selPresentJuego, (juego) => juego.mazo);
@@ -26,7 +26,7 @@ export const selPila = createSelector(
   (juego, slot) => juego.pilas[slot]
 );
 
-const selPilas = (state: RootState) => state.juego.present.pilas;
+const selPilas = (state: tRootState) => state.juego.present.pilas;
 
 export const selHasWon = createSelector(selPilas, (pilas) =>
   slotsArray(numPilas).every((slot) => {
@@ -39,7 +39,7 @@ export const selHasWon = createSelector(selPilas, (pilas) =>
 );
 export const selPilaToSendCard = createSelector(
   selPilas,
-  (_: RootState, cardId: CardId) => baraja[cardId],
+  (_: tRootState, cardId: tCardId) => baraja[cardId],
   (pilas, carta) => {
     if (!carta) return false;
     for (let slot = 0; slot < numPilas; slot++) {
