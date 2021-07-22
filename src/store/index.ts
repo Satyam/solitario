@@ -8,6 +8,7 @@ export {
   restoreMazoAction,
   undoAction,
   redoAction,
+  clearUndoAction,
 } from 'store/juegoSlice';
 
 export * from 'store/selectors';

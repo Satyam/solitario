@@ -105,5 +105,9 @@ export const juegoSlice = createSlice({
 export const { newGameAction, jugadaAction, restoreMazoAction } =
   juegoSlice.actions;
 
-export const { undo: undoAction, redo: redoAction } = UndoActionCreators;
+export const {
+  undo: undoAction,
+  redo: redoAction,
+  clearHistory: clearUndoAction,
+} = UndoActionCreators;
 export default undoable(juegoSlice.reducer);

@@ -11,6 +11,7 @@ import {
   useAppSelector,
   newGameAction,
   selHasWon,
+  clearUndoAction,
 } from 'store';
 
 import { numHuecos, numPilas } from 'datos';
@@ -23,6 +24,7 @@ function App() {
   const isGameWon = useAppSelector(selHasWon);
   const newGame = () => {
     dispatch(newGameAction());
+    dispatch(clearUndoAction());
   };
 
   return (
