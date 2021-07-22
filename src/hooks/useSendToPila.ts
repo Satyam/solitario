@@ -2,7 +2,7 @@ import { CardId, POS } from 'datos';
 import { PointerEventHandler } from 'react';
 import {
   useAppDispatch,
-  useAppSelector,
+  useParamSelector,
   jugadaAction,
   selPilaToSendCard,
 } from 'store';
@@ -13,7 +13,10 @@ export function useSendToPila(
   fromSlot: number
 ): PointerEventHandler {
   const dispatch = useAppDispatch();
-  const toSlot = useAppSelector((state) => selPilaToSendCard(state, cardId));
+  const toSlot = useParamSelector<CardId, number | false>(
+    selPilaToSendCard,
+    cardId
+  );
 
   return (ev) => {
     if (ev.buttons === 4 && typeof toSlot === 'number') {

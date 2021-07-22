@@ -1,5 +1,5 @@
 import { useDrop, useDrag } from 'react-dnd';
-import { useAppSelector, useAppDispatch, jugadaAction } from 'store';
+import { useParamSelector, useAppDispatch, jugadaAction, selPila } from 'store';
 import Sprite from './Sprite';
 import {
   HUECO,
@@ -14,9 +14,7 @@ import {
 } from 'datos';
 
 const Pila = ({ slot }: { slot: number }) => {
-  const cardIds = useAppSelector<CardId[]>(
-    (state) => state.juego.present.pilas[slot]
-  );
+  const cardIds = useParamSelector<number, CardId[]>(selPila, slot);
   const dispatch = useAppDispatch();
   const cardId = cardIds[0];
   const [{ isOver, canDrop }, drop] = useDrop<

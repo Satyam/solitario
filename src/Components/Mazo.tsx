@@ -3,13 +3,14 @@ import {
   useAppDispatch,
   jugadaAction,
   restoreMazoAction,
+  selMazo,
 } from 'store';
 import { CardId, HUECO, POS, REVERSO } from 'datos';
 import Sprite from './Sprite';
 
 const Mazo = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>((state) => state.juego.present.mazo);
+  const cardIds = useAppSelector<CardId[]>(selMazo);
 
   const sacar = () => {
     const l = cardIds.length;

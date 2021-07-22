@@ -8,15 +8,13 @@ import {
   CardId,
 } from 'datos';
 import { useDrag } from 'react-dnd';
-import { useAppDispatch, useAppSelector, jugadaAction } from 'store';
+import { useAppDispatch, useAppSelector, jugadaAction, selVista } from 'store';
 import { useSendToPila } from 'hooks/useSendToPila';
 import Sprite from './Sprite';
 
 const Vista = () => {
   const dispatch = useAppDispatch();
-  const cardIds = useAppSelector<CardId[]>(
-    (state) => state.juego.present.vista
-  );
+  const cardIds = useAppSelector<CardId[]>(selVista);
   const cardId = cardIds[0];
 
   const [{ isDragging }, drag] = useDrag<

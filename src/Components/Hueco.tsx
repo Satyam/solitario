@@ -1,5 +1,5 @@
 import { useDrop } from 'react-dnd';
-import { useAppSelector } from 'store';
+import { useParamSelector, selHueco } from 'store';
 import useSendToPila from 'hooks/useSendToPila';
 import CardStack from 'Components/CardStack';
 import Sprite from 'Components/Sprite';
@@ -10,15 +10,15 @@ import {
   dropCollectedProps,
   baraja,
   HUECO,
-  CardId,
   POS,
+  HuecoState,
 } from 'datos';
 
 const Hueco = ({ slot }: { slot: number }) => {
-  const { cardIds, firstShown } = useAppSelector<{
-    cardIds: CardId[];
-    firstShown: number;
-  }>((state) => state.juego.present.huecos[slot]);
+  const { cardIds, firstShown } = useParamSelector<number, HuecoState>(
+    selHueco,
+    slot
+  );
   const cardId = cardIds[0];
 
   const [{ isOver, canDrop }, drop] = useDrop<
