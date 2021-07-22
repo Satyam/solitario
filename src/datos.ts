@@ -70,6 +70,17 @@ export type cartaType = {
   color: COLOR;
 };
 
+export type HuecoState = {
+  cardIds: CardId[];
+  firstShown: number;
+};
+export type JuegoState = {
+  mazo: CardId[];
+  vista: CardId[];
+  pilas: CardId[][];
+  huecos: HuecoState[];
+};
+
 export const numPalos = palos.length;
 export const numValores = valores.length;
 

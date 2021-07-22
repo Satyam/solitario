@@ -11,19 +11,10 @@ import {
   numHuecos,
   jugada,
   POS,
+  JuegoState,
 } from 'datos';
 
 import { slotsArray, getRandomInt } from 'utils';
-
-export interface JuegoState {
-  mazo: CardId[];
-  vista: CardId[];
-  pilas: CardId[][];
-  huecos: {
-    cardIds: CardId[];
-    firstShown: number;
-  }[];
-}
 
 const initNewGame = (): JuegoState => {
   const state: Partial<JuegoState> = {};
