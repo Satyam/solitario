@@ -5,6 +5,7 @@ import Mazo from 'Components/Mazo';
 import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
+import Stats from 'Components/Stats';
 
 import {
   useAppDispatch,
@@ -29,11 +30,19 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <button onClick={newGame}>Nuevo Juego</button>
-        <UndoButton>Undo</UndoButton>
-        <RedoButton>Redo</RedoButton>
-        {isGameWon && <h3>Ganamos</h3>}
+      <header className="nav">
+        <div className="leftNav">
+          <button onClick={newGame}>Nuevo Juego</button>
+          <UndoButton>Undo</UndoButton>
+          <RedoButton>Redo</RedoButton>
+        </div>
+        <div className="centerNav">
+          <div className="heading">Solitario</div>
+          <div className="celda heading">{isGameWon && 'Ganamos'}</div>
+        </div>
+        <div className="rightNav">
+          <Stats />
+        </div>
       </header>
       <main>
         <div className="grid">

@@ -81,6 +81,12 @@ export type tJuegoState = {
   huecos: tHuecoState[];
 };
 
+export type tStatsState = {
+  jugadas: number;
+  rondas: number;
+  undos: number;
+  redos: number;
+};
 export const numPalos = palos.length;
 export const numValores = valores.length;
 

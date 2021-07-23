@@ -61,3 +61,5 @@ export const selPilaToSendCard = createSelector(
     return false;
   }
 );
+
+export const selStats = (state: tRootState) => state.stats;

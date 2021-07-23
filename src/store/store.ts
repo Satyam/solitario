@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import juegoReducer from 'store/juegoSlice';
+import statsReducer from './statsSlice';
 
 export const store = configureStore({
   reducer: {
     juego: juegoReducer,
+    stats: statsReducer,
   },
 });
 
