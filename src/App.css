@@ -64,3 +64,14 @@ body {
   grid-template-columns: repeat(4, 1fr);
   column-gap: 1rem;
 }
+
+button {
+  border-radius: 25%;
+  background-color: wheat;
+  border: thin solid slate;
+  color: darkblue;
+}
+
+button:disabled {
+  color: gray;
+}

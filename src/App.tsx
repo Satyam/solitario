@@ -6,7 +6,7 @@ import Vista from 'Components/Vista';
 import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
 import Stats from 'Components/Stats';
-
+import { MdAutorenew, MdUndo, MdRedo } from 'react-icons/md';
 import {
   useAppDispatch,
   useAppSelector,
@@ -32,9 +32,15 @@ function App() {
     <div className="App">
       <header className="nav">
         <div className="leftNav">
-          <button onClick={newGame}>Nuevo Juego</button>
-          <UndoButton>Undo</UndoButton>
-          <RedoButton>Redo</RedoButton>
+          <button onClick={newGame} title="New Game">
+            <MdAutorenew />
+          </button>
+          <UndoButton>
+            <MdUndo title="Undo" />
+          </UndoButton>
+          <RedoButton>
+            <MdRedo title="Redo" />
+          </RedoButton>
         </div>
         <div className="centerNav">
           <div className="heading">Solitario</div>
