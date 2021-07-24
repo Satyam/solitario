@@ -68,7 +68,7 @@ const Pila = ({ slot }: { slot: number }) => {
           dispatch(
             jugadaAction({
               ...(monitor.getDropResult() as tDropResult),
-              cardIds,
+              cardIds: [cardId],
               fromPos: POS.PILA,
               fromSlot: slot,
             })
