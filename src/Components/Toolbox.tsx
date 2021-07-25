@@ -1,10 +1,11 @@
 import { MouseEventHandler } from 'react';
-import { MdAutorenew, MdUndo, MdRedo } from 'react-icons/md';
+import { MdAutorenew, MdUndo, MdRedo, MdTrendingUp } from 'react-icons/md';
 import {
   useAppDispatch,
   useAppSelector,
   newGameAction,
   clearUndoAction,
+  raiseAction,
   undoAction,
   redoAction,
   selCanUndo,
@@ -29,6 +30,10 @@ export const Toolbox = () => {
     ev.preventDefault();
     dispatch(redoAction());
   };
+  const raise: MouseEventHandler<HTMLButtonElement> = (ev) => {
+    ev.preventDefault();
+    dispatch(raiseAction());
+  };
 
   return (
     <div className="toolbox">
@@ -40,6 +45,9 @@ export const Toolbox = () => {
       </button>
       <button disabled={!canRedo} onClick={redo}>
         <MdRedo title="Redo" />
+      </button>
+      <button onClick={raise}>
+        <MdTrendingUp title="Raise" />
       </button>
     </div>
   );

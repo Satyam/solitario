@@ -1,7 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { tAppDispatch, tRootState } from 'store/store';
 
-export { store } from 'store/store';
+export * from 'store/store';
 export * from 'store/juegoSlice';
 export * from 'store/selectors';
 
@@ -14,3 +14,5 @@ export function useParamSelector<P, R>(
 ) {
   return useAppSelector((state) => selector(state, param));
 }
+
+export * from 'store/batchActions';
