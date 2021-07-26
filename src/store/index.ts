@@ -15,4 +15,4 @@ export function useParamSelector<P, R>(
   return useAppSelector((state) => selector(state, param));
 }
 
-export * from 'store/batchActions';
+export * from 'store/asyncActions';

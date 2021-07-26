@@ -12,7 +12,7 @@ export const raiseAction = createAsyncThunk<
   void,
   void,
   { dispatch: tAppDispatch; state: tRootState }
->('testaction', async (_, { getState, dispatch }) => {
+>('raiseAction', async (_, { getState, dispatch }) => {
   loop: do {
     const present = getState().juego.present;
     const cardId = present.vista[0];
