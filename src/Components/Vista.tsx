@@ -51,7 +51,7 @@ const Vista = () => {
       <Card
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}
-        className={POS.VISTA}
+        className={`${POS.VISTA}0`}
       />
     </div>
   );
