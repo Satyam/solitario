@@ -1,20 +1,20 @@
 import type { tCardId } from 'datos';
 import { ImgHTMLAttributes } from 'react';
 
-type tSpriteParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
+type tCardParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   cardId: tCardId;
   index?: number;
 };
 
-const Sprite = ({
+const Card = ({
   cardId,
   index = 0,
   className,
   alt,
   ...params
-}: tSpriteParams) => (
+}: tCardParams) => (
   <img
-    className={`${className} sprite`}
+    className={`${className} card`}
     src={`assets/cards/${cardId}.svg`}
     alt={alt || cardId}
     draggable={false}
@@ -22,4 +22,4 @@ const Sprite = ({
   />
 );
 
-export default Sprite;
+export default Card;

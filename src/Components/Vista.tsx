@@ -10,7 +10,7 @@ import {
 import { useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector, jugadaAction, selVista } from 'store';
 import { useSendToPila } from 'hooks/useSendToPila';
-import Sprite from 'Components/Sprite';
+import Card from 'Components/Card';
 
 const Vista = () => {
   const dispatch = useAppDispatch();
@@ -48,7 +48,7 @@ const Vista = () => {
 
   return (
     <div ref={drag} onPointerDown={onPointerHandler}>
-      <Sprite
+      <Card
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}
         className={POS.VISTA}

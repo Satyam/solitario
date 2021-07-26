@@ -2,7 +2,7 @@ import { useDrop } from 'react-dnd';
 import { useParamSelector, selHueco } from 'store';
 import useSendToPila from 'hooks/useSendToPila';
 import CardStack from 'Components/CardStack';
-import Sprite from 'Components/Sprite';
+import Card from 'Components/Card';
 import {
   DRAG_TYPE,
   tDragItem,
@@ -68,7 +68,7 @@ const Hueco = ({ slot }: { slot: number }) => {
       {cardIds.length ? (
         <CardStack cardIds={cardIds} firstShown={firstShown} slot={slot} />
       ) : (
-        <Sprite cardId={HUECO} />
+        <Card cardId={HUECO} />
       )}
     </div>
   );

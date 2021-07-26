@@ -9,7 +9,7 @@ import {
   DRAG_TYPE,
   POS,
 } from 'datos';
-import Sprite from 'Components/Sprite';
+import Card from 'Components/Card';
 
 const CardStack = ({
   cardIds,
@@ -59,7 +59,7 @@ const CardStack = ({
   return (
     <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
       <div className={isLast ? '' : 'stackedSprite'}>
-        <Sprite
+        <Card
           cardId={index >= firstShown ? cardIds[cardIds.length - 1] : REVERSO}
           index={index}
           className={isLast ? `${POS.HUECO}${slot}` : ''}

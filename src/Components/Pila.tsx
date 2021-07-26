@@ -1,6 +1,6 @@
 import { useDrop, useDrag } from 'react-dnd';
 import { useParamSelector, useAppDispatch, jugadaAction, selPila } from 'store';
-import Sprite from 'Components/Sprite';
+import Card from 'Components/Card';
 import {
   HUECO,
   DRAG_TYPE,
@@ -88,7 +88,7 @@ const Pila = ({ slot }: { slot: number }) => {
       className="dropTarget"
       style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
     >
-      <Sprite
+      <Card
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}
         className={`${POS.PILA}${slot}`}

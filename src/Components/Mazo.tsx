@@ -6,7 +6,7 @@ import {
   selMazo,
 } from 'store';
 import { tCardId, HUECO, POS, REVERSO } from 'datos';
-import Sprite from 'Components/Sprite';
+import Card from 'Components/Card';
 
 const Mazo = () => {
   const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ const Mazo = () => {
     }
   };
 
-  return <Sprite cardId={cardIds.length ? REVERSO : HUECO} onClick={sacar} />;
+  return <Card cardId={cardIds.length ? REVERSO : HUECO} onClick={sacar} />;
 };
 
 export default Mazo;
