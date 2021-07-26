@@ -20,6 +20,7 @@ export type tJugada = {
   toSlot: number;
   fromPos: POS;
   fromSlot: number;
+  anim?: boolean;
 };
 
 export type tDropCollectedProps = { isOver: boolean; canDrop: boolean };
@@ -114,3 +115,6 @@ export type tMoveCard = {
   duration?: number;
   idSprite?: string;
 };
+
+export const SPRITE_ID = 'sprite';
+export const ANIM_DURATION = 200;

@@ -48,11 +48,9 @@ export const juegoSlice = createSlice({
   initialState: initNewGame(),
   reducers: {
     newGameAction: () => initNewGame(),
-    jugadaAction: (
+    takeFrom: (
       state: tJuegoState,
-      {
-        payload: { fromPos, fromSlot, cardIds, toPos, toSlot },
-      }: PayloadAction<tJugada>
+      { payload: { fromPos, fromSlot, cardIds } }: PayloadAction<tJugada>
     ) => {
       switch (fromPos) {
         case POS.PILA:
@@ -77,6 +75,11 @@ export const juegoSlice = createSlice({
         default:
           throw new Error(`Invalid fromPos: ${fromPos} on tJugada`);
       }
+    },
+    putInto: (
+      state: tJuegoState,
+      { payload: { cardIds, toPos, toSlot } }: PayloadAction<tJugada>
+    ) => {
       switch (toPos) {
         case POS.PILA:
           state.pilas[toSlot].unshift(...cardIds);
@@ -102,7 +105,7 @@ export const juegoSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { newGameAction, jugadaAction, restoreMazoAction } =
+export const { newGameAction, restoreMazoAction, takeFrom, putInto } =
   juegoSlice.actions;
 
 export const {

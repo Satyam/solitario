@@ -28,6 +28,7 @@ export function useSendToPila(
           fromSlot,
           toPos: POS.PILA,
           toSlot,
+          anim: true,
         })
       );
     }
