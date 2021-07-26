@@ -51,6 +51,7 @@ const Vista = () => {
       <Sprite
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}
+        className={POS.VISTA}
       />
     </div>
   );

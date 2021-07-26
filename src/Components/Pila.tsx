@@ -91,6 +91,7 @@ const Pila = ({ slot }: { slot: number }) => {
       <Sprite
         cardId={cardId || HUECO}
         style={{ opacity: isDragging ? 0.5 : 1 }}
+        className={`${POS.PILA}${slot}`}
       />
     </div>
   );

@@ -62,6 +62,7 @@ const CardStack = ({
         <Sprite
           cardId={index >= firstShown ? cardIds[cardIds.length - 1] : REVERSO}
           index={index}
+          className={isLast ? `${POS.HUECO}${slot}` : ''}
         />
       </div>
       {isLast ? null : (
