@@ -106,3 +106,11 @@ palos.forEach((palo) =>
     };
   })
 );
+
+export type tMoveCard = {
+  cardId: tCardId;
+  fromClassName: string;
+  toClassName: string;
+  duration?: number;
+  idSprite?: string;
+};

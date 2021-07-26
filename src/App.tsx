@@ -6,6 +6,7 @@ import Hueco from 'Components/Hueco';
 import Pila from 'Components/Pila';
 import Stats from 'Components/Stats';
 import Toolbox from 'Components/Toolbox';
+import CardSprite from 'Components/CardSprite';
 import { useAppSelector, selHasWon } from 'store';
 
 import { numHuecos, numPilas } from 'datos';
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <div className="App">
+      <CardSprite />
       <header className="nav">
         <div className="leftNav">
           <Toolbox />

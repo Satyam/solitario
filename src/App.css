@@ -9,7 +9,7 @@ body {
   margin: 0 1em;
 }
 
-.sprite {
+.card {
   width: 120px;
   height: 168px;
 }
@@ -79,4 +79,11 @@ button {
 
 button:disabled {
   color: gray;
+}
+
+.sprite {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
 }

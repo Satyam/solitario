@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { POS } from 'datos';
+import { moveCard } from 'Components/CardSprite';
+import { numHuecos, POS } from 'datos';
 import {
   tAppDispatch,
   tRootState,
@@ -11,12 +12,17 @@ export const raiseAction = createAsyncThunk<
   void,
   void,
   { dispatch: tAppDispatch; state: tRootState }
->('testaction', (_, { getState, dispatch }) => {
-  do {
+>('testaction', async (_, { getState, dispatch }) => {
+  loop: do {
     const present = getState().juego.present;
     const cardId = present.vista[0];
     const toSlot = selPilaToSendCard(getState(), cardId);
     if (toSlot !== false) {
+      await moveCard({
+        cardId,
+        fromClassName: POS.VISTA,
+        toClassName: `${POS.PILA}${toSlot}`,
+      });
       dispatch(
         jugadaAction({
           fromPos: POS.VISTA,
@@ -28,25 +34,28 @@ export const raiseAction = createAsyncThunk<
       );
       continue;
     }
-    if (
-      present.huecos.some(({ cardIds }, fromSlot) => {
-        const toSlot = selPilaToSendCard(getState(), cardIds[0]);
-        if (toSlot !== false) {
-          dispatch(
-            jugadaAction({
-              fromPos: POS.HUECO,
-              fromSlot,
-              cardIds: [cardIds[0]],
-              toPos: POS.PILA,
-              toSlot,
-            })
-          );
-          return true;
-        }
-        return false;
-      })
-    )
-      continue;
+
+    for (let fromSlot = 0; fromSlot < numHuecos; fromSlot++) {
+      const cardId = present.huecos[fromSlot].cardIds[0];
+      const toSlot = selPilaToSendCard(getState(), cardId);
+      if (toSlot !== false) {
+        await moveCard({
+          cardId,
+          fromClassName: `${POS.HUECO}${fromSlot}`,
+          toClassName: `${POS.PILA}${toSlot}`,
+        });
+        dispatch(
+          jugadaAction({
+            fromPos: POS.HUECO,
+            fromSlot,
+            cardIds: [cardId],
+            toPos: POS.PILA,
+            toSlot,
+          })
+        );
+        continue loop;
+      }
+    }
     break;
   } while (true);
   return;
