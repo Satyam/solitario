@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import undoable, { ActionCreators as UndoActionCreators } from 'redux-undo';
+import undoable, {
+  ActionCreators as UndoActionCreators,
+  excludeAction,
+} from 'redux-undo';
 import {
   tCardId,
   numCartas,
@@ -15,6 +18,14 @@ import {
 } from 'datos';
 
 import { slotsArray, getRandomInt } from 'utils';
+
+const checkQtys = ({ mazo, vista, pilas, huecos }: tJuegoState): void => {
+  let count = mazo.length + vista.length;
+  pilas.forEach((p) => (count += p.length));
+  huecos.forEach((h) => (count += h.cardIds.length));
+  console.log(count);
+  if (count !== 52) debugger;
+};
 
 const initNewGame = (): tJuegoState => {
   const state: Partial<tJuegoState> = {};
@@ -40,6 +51,8 @@ const initNewGame = (): tJuegoState => {
 
   // Place the remaining cards in the mazo.
   state.mazo = cardIds;
+  checkQtys(state as tJuegoState);
+
   return state as tJuegoState;
 };
 
@@ -96,10 +109,12 @@ export const juegoSlice = createSlice({
         default:
           throw new Error(`Invalid toPos: ${toPos} on tJugada`);
       }
+      checkQtys(state);
     },
     restoreMazoAction: (state) => {
       state.mazo = state.vista.reverse();
       state.vista = [];
+      checkQtys(state);
     },
   },
 });
@@ -113,4 +128,6 @@ export const {
   redo: redoAction,
   clearHistory: clearUndoAction,
 } = UndoActionCreators;
-export default undoable(juegoSlice.reducer);
+export default undoable(juegoSlice.reducer, {
+  filter: excludeAction(takeFrom.type),
+});
