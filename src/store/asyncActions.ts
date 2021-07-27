@@ -4,7 +4,7 @@ import {
   tAppDispatch,
   tRootState,
   selPilaToSendCard,
-  // jugadaAction,
+  selCoords,
   takeFrom,
   putInto,
 } from 'store';
@@ -59,40 +59,35 @@ export const jugadaAction = createAsyncThunk<
   void,
   tJugada,
   { dispatch: tAppDispatch; state: tRootState }
->('jugadaAction', async (jugada, { dispatch }) => {
+>('jugadaAction', async (jugada, { dispatch, getState }) => {
   const { cardIds, toPos, toSlot, fromPos, fromSlot, anim } = jugada;
 
+  const { left: fromLeft, top: fromTop } = selCoords(
+    getState(),
+    `${fromPos}${fromSlot}`
+  );
+  const { left: toLeft, top: toTop } = selCoords(
+    getState(),
+    `${toPos}${toSlot}`
+  );
   dispatch(takeFrom(jugada));
 
   if (cardIds.length === 1 && anim) {
-    const fromClassName = `${fromPos}${fromSlot}`;
-    const fromEl = document.getElementsByClassName(fromClassName)[0];
-    if (!fromEl)
-      return Promise.reject(
-        `Source element with class ${fromClassName} not found`
-      );
-    const { left: fromX, top: fromY } = fromEl.getBoundingClientRect();
-
-    const toClassName = `${toPos}${toSlot}`;
-    const toEl = document.getElementsByClassName(toClassName)[0];
-    if (!toEl)
-      return Promise.reject(
-        `Source element with class ${toClassName} not found`
-      );
-    const { left: toX, top: toY } = toEl.getBoundingClientRect();
-
     const spriteEl = document.getElementById(SPRITE_ID) as HTMLImageElement;
-    if (!spriteEl)
+    if (!spriteEl) {
+      console.error(`Card element with id ${SPRITE_ID} not found`);
       return Promise.reject(`Card element with id ${SPRITE_ID} not found`);
-
+    }
     spriteEl.src = `assets/cards/${cardIds[0]}.svg`;
-    spriteEl.style.top = `${fromY}px`;
-    spriteEl.style.left = `${fromX}px`;
+    spriteEl.style.top = `${fromTop}px`;
+    spriteEl.style.left = `${fromLeft}px`;
     spriteEl.style.display = 'inline-block';
     // Mozilla docs suggests allowing a handful of ms after element is displayed
     // before starting transformation
     await sleep(10);
-    spriteEl.style.transform = `translate(${toX - fromX}px, ${toY - fromY}px)`;
+    spriteEl.style.transform = `translate(${toLeft - fromLeft}px, ${
+      toTop - fromTop
+    }px)`;
     spriteEl.style.transition = `transform ${ANIM_DURATION}ms ease-in-out`;
     await new Promise<void>((resolve) => {
       const updateTransition = () => {

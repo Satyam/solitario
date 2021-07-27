@@ -88,6 +88,14 @@ export type tStatsState = {
   undos: number;
   redos: number;
 };
+
+export type tTopLeft = {
+  left: number;
+  top: number;
+};
+export type tCoordsState = Record<string, tTopLeft>;
+export type tCoordsAction = tTopLeft & { name: string };
+
 export const numPalos = palos.length;
 export const numValores = valores.length;
 

@@ -4,6 +4,7 @@ import { tAppDispatch, tRootState } from 'store/store';
 export * from 'store/store';
 export * from 'store/juegoSlice';
 export * from 'store/selectors';
+export * from 'store/coordsSlice';
 
 export const useAppDispatch = () => useDispatch<tAppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<tRootState> = useSelector;

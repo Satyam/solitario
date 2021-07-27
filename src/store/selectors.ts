@@ -63,3 +63,6 @@ export const selPilaToSendCard = createSelector(
 );
 
 export const selStats = (state: tRootState) => state.stats;
+
+export const selCoords = (state: tRootState, name: string) =>
+  state.coords[name];
