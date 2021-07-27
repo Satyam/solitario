@@ -29,7 +29,13 @@ const Mazo = () => {
     }
   };
 
-  return <Card cardId={cardIds.length ? REVERSO : HUECO} onClick={sacar} />;
+  return (
+    <Card
+      cardId={cardIds.length ? REVERSO : HUECO}
+      onClick={sacar}
+      className={`${POS.MAZO}0`}
+    />
+  );
 };
 
 export default Mazo;
