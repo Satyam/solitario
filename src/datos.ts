@@ -108,13 +108,5 @@ palos.forEach((palo) =>
   })
 );
 
-export type tMoveCard = {
-  cardId: tCardId;
-  fromClassName: string;
-  toClassName: string;
-  duration?: number;
-  idSprite?: string;
-};
-
 export const SPRITE_ID = 'sprite';
 export const ANIM_DURATION = 200;
