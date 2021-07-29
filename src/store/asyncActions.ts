@@ -1,5 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { numHuecos, POS, tJugada, SPRITE_ID, ANIM_DURATION } from 'datos';
+import {
+  numHuecos,
+  POS,
+  tJugada,
+  SPRITE_ID,
+  ANIM_DURATION,
+  tCardId,
+} from 'datos';
 import {
   tAppDispatch,
   tRootState,
@@ -55,6 +62,40 @@ export const raiseAction = createAsyncThunk<
   return;
 });
 
+const moveCarta = async (
+  cardId: tCardId,
+  fromTop: number,
+  fromLeft: number,
+  toTop: number,
+  toLeft: number
+): Promise<void> => {
+  const spriteEl = document.getElementById(SPRITE_ID) as HTMLImageElement;
+  if (!spriteEl) {
+    console.error(`Card element with id ${SPRITE_ID} not found`);
+    return Promise.reject(`Card element with id ${SPRITE_ID} not found`);
+  }
+  spriteEl.src = `assets/cards/${cardId}.svg`;
+  spriteEl.style.top = `${fromTop}px`;
+  spriteEl.style.left = `${fromLeft}px`;
+  spriteEl.style.display = 'inline-block';
+  // Mozilla docs suggests allowing a handful of ms after element is displayed
+  // before starting transformation
+  await sleep(10);
+  spriteEl.style.transform = `translate(${toLeft - fromLeft}px, ${
+    toTop - fromTop
+  }px)`;
+  spriteEl.style.transition = `transform ${ANIM_DURATION}ms ease-in-out`;
+  await new Promise<void>((resolve) => {
+    const updateTransition = () => {
+      spriteEl.removeEventListener('transitionend', updateTransition);
+      resolve();
+    };
+    spriteEl.addEventListener('transitionend', updateTransition, true);
+  });
+  spriteEl.style.display = 'none';
+  spriteEl.style.transform = 'none';
+};
+
 export const jugadaAction = createAsyncThunk<
   void,
   tJugada,
@@ -73,31 +114,7 @@ export const jugadaAction = createAsyncThunk<
   dispatch(takeFrom(jugada));
 
   if (cardIds.length === 1 && anim) {
-    const spriteEl = document.getElementById(SPRITE_ID) as HTMLImageElement;
-    if (!spriteEl) {
-      console.error(`Card element with id ${SPRITE_ID} not found`);
-      return Promise.reject(`Card element with id ${SPRITE_ID} not found`);
-    }
-    spriteEl.src = `assets/cards/${cardIds[0]}.svg`;
-    spriteEl.style.top = `${fromTop}px`;
-    spriteEl.style.left = `${fromLeft}px`;
-    spriteEl.style.display = 'inline-block';
-    // Mozilla docs suggests allowing a handful of ms after element is displayed
-    // before starting transformation
-    await sleep(10);
-    spriteEl.style.transform = `translate(${toLeft - fromLeft}px, ${
-      toTop - fromTop
-    }px)`;
-    spriteEl.style.transition = `transform ${ANIM_DURATION}ms ease-in-out`;
-    await new Promise<void>((resolve) => {
-      const updateTransition = () => {
-        spriteEl.removeEventListener('transitionend', updateTransition);
-        resolve();
-      };
-      spriteEl.addEventListener('transitionend', updateTransition, true);
-    });
-    spriteEl.style.display = 'none';
-    spriteEl.style.transform = 'none';
+    await moveCarta(cardIds[0], fromTop, fromLeft, toTop, toLeft);
   }
 
   dispatch(putInto(jugada));
