@@ -19,11 +19,6 @@ body {
   overflow-y: hidden;
 }
 
-.celda {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -50,6 +45,13 @@ body {
 }
 .dropTarget {
   border: medium solid darkgreen;
+  margin-left: auto;
+  margin-right: auto;
+  width: 120px;
+}
+
+.dropArea {
+  width: 100%;
 }
 
 .toolbox {

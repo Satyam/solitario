@@ -30,11 +30,13 @@ const Mazo = () => {
   };
 
   return (
-    <Card
-      cardId={cardIds.length ? REVERSO : HUECO}
-      onClick={sacar}
-      className={`${POS.MAZO}0`}
-    />
+    <div className="dropTarget">
+      <Card
+        cardId={cardIds.length ? REVERSO : HUECO}
+        onClick={sacar}
+        className={`${POS.MAZO}0`}
+      />
+    </div>
   );
 };
 

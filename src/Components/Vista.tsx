@@ -47,12 +47,14 @@ const Vista = () => {
   const onPointerHandler = useSendToPila(cardId, POS.VISTA, 0);
 
   return (
-    <div ref={drag} onPointerDown={onPointerHandler}>
-      <Card
-        cardId={cardId || HUECO}
-        style={{ opacity: isDragging ? 0.5 : 1 }}
-        className={`${POS.VISTA}0`}
-      />
+    <div className="dropArea">
+      <div ref={drag} className="dropTarget" onPointerDown={onPointerHandler}>
+        <Card
+          cardId={cardId || HUECO}
+          style={{ opacity: isDragging ? 0.5 : 1 }}
+          className={`${POS.VISTA}0`}
+        />
+      </div>
     </div>
   );
 };

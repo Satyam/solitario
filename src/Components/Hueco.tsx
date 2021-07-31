@@ -59,17 +59,20 @@ const Hueco = ({ slot }: { slot: number }) => {
 
   const onPointerHandler = useSendToPila(cardId, POS.HUECO, slot);
   return (
-    <div
-      ref={drop}
-      onPointerDown={onPointerHandler}
-      className="dropTarget"
-      style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
-    >
-      {cardIds.length ? (
-        <CardStack cardIds={cardIds} firstShown={firstShown} slot={slot} />
-      ) : (
-        <Card cardId={HUECO} />
-      )}
+    <div ref={drop} className="dropArea">
+      <div
+        onPointerDown={onPointerHandler}
+        className="dropTarget"
+        style={{
+          borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen',
+        }}
+      >
+        {cardIds.length ? (
+          <CardStack cardIds={cardIds} firstShown={firstShown} slot={slot} />
+        ) : (
+          <Card cardId={HUECO} />
+        )}
+      </div>
     </div>
   );
 };

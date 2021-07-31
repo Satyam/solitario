@@ -78,21 +78,22 @@ const Pila = ({ slot }: { slot: number }) => {
     }),
     [cardId]
   );
-  const ref = (el: HTMLDivElement) => {
-    drag(el);
-    drop(el);
-  };
+
   return (
-    <div
-      ref={ref}
-      className="dropTarget"
-      style={{ borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen' }}
-    >
-      <Card
-        cardId={cardId || HUECO}
-        style={{ opacity: isDragging ? 0.5 : 1 }}
-        className={`${POS.PILA}${slot}`}
-      />
+    <div className="dropArea" ref={drop}>
+      <div
+        ref={drag}
+        className="dropTarget"
+        style={{
+          borderColor: isOver ? (canDrop ? 'cyan' : 'red') : 'darkgreen',
+        }}
+      >
+        <Card
+          cardId={cardId || HUECO}
+          style={{ opacity: isDragging ? 0.5 : 1 }}
+          className={`${POS.PILA}${slot}`}
+        />
+      </div>
     </div>
   );
 };
