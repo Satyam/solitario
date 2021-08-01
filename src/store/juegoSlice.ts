@@ -19,14 +19,6 @@ import {
 
 import { slotsArray, getRandomInt } from 'utils';
 
-const checkQtys = ({ mazo, vista, pilas, huecos }: tJuegoState): void => {
-  let count = mazo.length + vista.length;
-  pilas.forEach((p) => (count += p.length));
-  huecos.forEach((h) => (count += h.cardIds.length));
-  console.log(count);
-  if (count !== 52) debugger;
-};
-
 const initNewGame = (): tJuegoState => {
   const state: Partial<tJuegoState> = {};
   state.pilas = slotsArray(numPilas).map(() => []);
@@ -51,7 +43,6 @@ const initNewGame = (): tJuegoState => {
 
   // Place the remaining cards in the mazo.
   state.mazo = cardIds;
-  checkQtys(state as tJuegoState);
 
   return state as tJuegoState;
 };
@@ -109,12 +100,10 @@ export const juegoSlice = createSlice({
         default:
           throw new Error(`Invalid toPos: ${toPos} on tJugada`);
       }
-      checkQtys(state);
     },
     restoreMazoAction: (state) => {
       state.mazo = state.vista.reverse();
       state.vista = [];
-      checkQtys(state);
     },
   },
 });
