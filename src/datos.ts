@@ -1,34 +1,4 @@
-export enum POS {
-  HUECO = 'hueco',
-  PILA = 'pila',
-  VISTA = 'vista',
-  MAZO = 'mazo',
-}
-
-export const DRAG_TYPE = 'cardIds';
-
-export type tDragItem = tCardId[];
-
-export type tDropResult = {
-  toPos: POS;
-  toSlot: number;
-};
-
-export type tJugada = {
-  cardIds: tCardId[];
-  toPos: POS;
-  toSlot: number;
-  fromPos: POS;
-  fromSlot: number;
-  anim?: boolean;
-};
-
-export type tDropCollectedProps = { isOver: boolean; canDrop: boolean };
-export type tDragCollectedProps = { isDragging: boolean };
-
-export const numPilas = 4;
-export const numHuecos = 7;
-
+// Types and constants related to cards.
 export enum COLOR {
   ROJO = 'rojo',
   NEGRO = 'negro',
@@ -36,7 +6,7 @@ export enum COLOR {
 
 // Cards from https://www.me.uk/cards/makeadeck.cgi
 
-export const valores = [
+const valores = [
   'A',
   '2',
   '3',
@@ -52,12 +22,11 @@ export const valores = [
   'K',
 ] as const;
 
-export type tValor = typeof valores[number];
+type tValor = typeof valores[number];
 
-export const palos = ['C', 'D', 'H', 'S'] as const;
+const palos = ['C', 'D', 'H', 'S'] as const;
 
-export type tPalo = typeof palos[number];
-
+type tPalo = typeof palos[number];
 export const REVERSO = '2B';
 export const HUECO = 'hueco';
 
@@ -70,36 +39,6 @@ export type tCarta = {
   index: number;
   color: COLOR;
 };
-
-export type tHuecoState = {
-  cardIds: tCardId[];
-  firstShown: number;
-};
-export type tJuegoState = {
-  mazo: tCardId[];
-  vista: tCardId[];
-  pilas: tCardId[][];
-  huecos: tHuecoState[];
-};
-
-export type tStatsState = {
-  jugadas: number;
-  rondas: number;
-  undos: number;
-  redos: number;
-};
-
-export type tTopLeft = {
-  left: number;
-  top: number;
-};
-export type tCoordsState = Record<string, tTopLeft>;
-export type tCoordsAction = tTopLeft & { name: string };
-
-export const numPalos = palos.length;
-export const numValores = valores.length;
-
-export const numCartas = numPalos * numValores;
 
 export const baraja = {} as Record<tCardId, tCarta>;
 
@@ -116,5 +55,69 @@ palos.forEach((palo) =>
   })
 );
 
+// types and constants related to board playing positions and drag&drop.
+
+export enum POS {
+  HUECO = 'hueco',
+  PILA = 'pila',
+  VISTA = 'vista',
+  MAZO = 'mazo',
+}
+
+export const numPilas = 4;
+export const numHuecos = 7;
+
+export const DRAG_TYPE = 'cardIds';
+
+export type tDragItem = tCardId[];
+
+export type tDropResult = {
+  toPos: POS;
+  toSlot: number;
+};
+
+export type tDropCollectedProps = { isOver: boolean; canDrop: boolean };
+export type tDragCollectedProps = { isDragging: boolean };
+
+// Types for action creators and redux slice states
+
+// for juegoSlice
+export type tHuecoState = {
+  cardIds: tCardId[];
+  firstShown: number;
+};
+export type tJuegoState = {
+  mazo: tCardId[];
+  vista: tCardId[];
+  pilas: tCardId[][];
+  huecos: tHuecoState[];
+};
+
+export type tJugada = {
+  cardIds: tCardId[];
+  toPos: POS;
+  toSlot: number;
+  fromPos: POS;
+  fromSlot: number;
+  anim?: boolean;
+};
+
+// for statsSlice
+export type tStatsState = {
+  jugadas: number;
+  rondas: number;
+  undos: number;
+  redos: number;
+};
+
+// for coords Slice
+export type tTopLeft = {
+  left: number;
+  top: number;
+};
+export type tCoordsState = Record<string, tTopLeft>;
+export type tCoordsAction = tTopLeft & { name: string };
+
+// various
 export const SPRITE_ID = 'sprite';
 export const ANIM_DURATION = 200;
