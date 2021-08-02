@@ -5,35 +5,22 @@ import undoable, {
 } from 'redux-undo';
 import {
   tCardId,
-  numCartas,
-  numPalos,
-  numValores,
-  valores,
-  palos,
   numPilas,
   numHuecos,
   tJugada,
   POS,
   tJuegoState,
+  baraja,
 } from 'datos';
 
-import { slotsArray, getRandomInt } from 'utils';
+import { slotsArray, shuffle } from 'utils';
 
 const initNewGame = (): tJuegoState => {
   const state: Partial<tJuegoState> = {};
   state.pilas = slotsArray(numPilas).map(() => []);
   state.vista = [];
 
-  const cardIds: tCardId[] = [];
-  // Shuffle (get an array of unique cards)
-  while (cardIds.length < numCartas) {
-    let p = getRandomInt(numPalos - 1);
-    let v = getRandomInt(numValores - 1);
-    const cardId = `${valores[v]}${palos[p]}` as tCardId;
-    if (!cardIds.includes(cardId)) {
-      cardIds.push(cardId);
-    }
-  }
+  const cardIds = shuffle<tCardId[]>(Object.keys(baraja) as tCardId[]);
 
   state.huecos = slotsArray(numHuecos).map((slot) => ({
     // splice returns the array of elements deleted from the array
