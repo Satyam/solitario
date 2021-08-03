@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ActionTypes } from 'redux-undo';
-import { newGameAction, takeFrom, restoreMazoAction } from 'store/juego';
+import { newGameAction, putInto, restoreMazoAction } from 'store/juego';
 import type { tStatsState } from './types';
 import type { tRootState } from 'store/types';
 
@@ -20,7 +20,7 @@ const statsSlice = createSlice({
       .addCase(newGameAction, (state) => {
         return initialState;
       })
-      .addCase(takeFrom, (state) => {
+      .addCase(putInto, (state) => {
         state.jugadas += 1;
       })
       .addCase(restoreMazoAction, (state) => {
