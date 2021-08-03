@@ -79,45 +79,6 @@ export type tDropResult = {
 export type tDropCollectedProps = { isOver: boolean; canDrop: boolean };
 export type tDragCollectedProps = { isDragging: boolean };
 
-// Types for action creators and redux slice states
-
-// for juegoSlice
-export type tHuecoState = {
-  cardIds: tCardId[];
-  firstShown: number;
-};
-export type tJuegoState = {
-  mazo: tCardId[];
-  vista: tCardId[];
-  pilas: tCardId[][];
-  huecos: tHuecoState[];
-};
-
-export type tJugada = {
-  cardIds: tCardId[];
-  toPos: POS;
-  toSlot: number;
-  fromPos: POS;
-  fromSlot: number;
-  anim?: boolean;
-};
-
-// for statsSlice
-export type tStatsState = {
-  jugadas: number;
-  rondas: number;
-  undos: number;
-  redos: number;
-};
-
-// for coords Slice
-export type tTopLeft = {
-  left: number;
-  top: number;
-};
-export type tCoordsState = Record<string, tTopLeft>;
-export type tCoordsAction = tTopLeft & { name: string };
-
 // various
 export const SPRITE_ID = 'sprite';
 export const ANIM_DURATION = 200;

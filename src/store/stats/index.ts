@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { tStatsState } from 'datos';
-import { newGameAction, takeFrom, restoreMazoAction } from 'store/juegoSlice';
 import { ActionTypes } from 'redux-undo';
+import { newGameAction, takeFrom, restoreMazoAction } from 'store/juego';
+import type { tStatsState } from './types';
+import type { tRootState } from 'store/types';
+
 const initialState: tStatsState = {
   jugadas: 0,
   rondas: 0,
@@ -9,7 +11,7 @@ const initialState: tStatsState = {
   redos: 0,
 };
 
-export const statsSlice = createSlice({
+const statsSlice = createSlice({
   name: 'contadores',
   initialState,
   reducers: {},
@@ -35,5 +37,7 @@ export const statsSlice = createSlice({
       });
   },
 });
+
+export const selStats = (state: tRootState) => state.stats;
 
 export default statsSlice.reducer;

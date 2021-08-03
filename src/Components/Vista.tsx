@@ -9,7 +9,7 @@ import {
 } from 'datos';
 import { useDrag } from 'react-dnd';
 import { useAppDispatch, useAppSelector, jugadaAction, selVista } from 'store';
-import { useSendToPila } from 'hooks/useSendToPila';
+import useSendToPila from 'hooks/useSendToPila';
 import Card from 'Components/Card';
 
 const Vista = () => {

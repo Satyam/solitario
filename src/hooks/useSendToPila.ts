@@ -7,7 +7,7 @@ import {
   selPilaToSendCard,
 } from 'store';
 
-export function useSendToPila(
+function useSendToPila(
   cardId: tCardId,
   fromPos: POS,
   fromSlot: number

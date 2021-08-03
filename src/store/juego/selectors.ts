@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { baraja, tCardId, numPilas } from 'datos';
-import { tRootState } from 'store/store';
+import type { tRootState } from 'store/types';
 import { slotsArray } from 'utils';
 
 const selPresentJuego = (state: tRootState) => state.juego.present;
@@ -37,6 +37,7 @@ export const selHasWon = createSelector(selPilas, (pilas) =>
     return true;
   })
 );
+
 export const selPilaToSendCard = createSelector(
   selPilas,
   (_: tRootState, cardId: tCardId) => baraja[cardId],
@@ -61,8 +62,3 @@ export const selPilaToSendCard = createSelector(
     return false;
   }
 );
-
-export const selStats = (state: tRootState) => state.stats;
-
-export const selCoords = (state: tRootState, name: string) =>
-  state.coords[name];

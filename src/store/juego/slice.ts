@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import undoable, {
   ActionCreators as UndoActionCreators,
   excludeAction,
 } from 'redux-undo';
-import {
-  tCardId,
-  numPilas,
-  numHuecos,
-  tJugada,
-  POS,
-  tJuegoState,
-  baraja,
-} from 'datos';
+
+import { tCardId, numPilas, numHuecos, POS, baraja } from 'datos';
+
+import { tJugada, tJuegoState } from './types';
 
 import { slotsArray, shuffle } from 'utils';
 
@@ -34,7 +30,7 @@ const initNewGame = (): tJuegoState => {
   return state as tJuegoState;
 };
 
-export const juegoSlice = createSlice({
+const juegoSlice = createSlice({
   name: 'juego',
   initialState: initNewGame(),
   reducers: {
@@ -104,6 +100,7 @@ export const {
   redo: redoAction,
   clearHistory: clearUndoAction,
 } = UndoActionCreators;
-export default undoable(juegoSlice.reducer, {
+
+export const reducer = undoable(juegoSlice.reducer, {
   filter: excludeAction(takeFrom.type),
 });

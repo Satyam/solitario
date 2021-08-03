@@ -1,10 +1,10 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { tAppDispatch, tRootState } from 'store/store';
+import type { tAppDispatch, tRootState } from 'store/types';
 
 export * from 'store/store';
-export * from 'store/juegoSlice';
-export * from 'store/selectors';
-export * from 'store/coordsSlice';
+export * from 'store/juego';
+export * from 'store/coords';
+export * from 'store/stats';
 
 export const useAppDispatch = () => useDispatch<tAppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<tRootState> = useSelector;
@@ -15,5 +15,3 @@ export function useParamSelector<P, R>(
 ) {
   return useAppSelector((state) => selector(state, param));
 }
-
-export * from 'store/asyncActions';

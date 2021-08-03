@@ -11,8 +11,8 @@ import {
   baraja,
   HUECO,
   POS,
-  tHuecoState,
 } from 'datos';
+import type { tHuecoState } from 'store/types';
 
 const Hueco = ({ slot }: { slot: number }) => {
   const { cardIds, firstShown } = useParamSelector<number, tHuecoState>(

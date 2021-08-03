@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   numHuecos,
   POS,
-  tJugada,
   SPRITE_ID,
   ANIM_DURATION,
   tCardId,
@@ -10,14 +9,14 @@ import {
 } from 'datos';
 
 import {
-  tAppDispatch,
-  tRootState,
   selPilaToSendCard,
   selCoords,
   selHasWon,
   takeFrom,
   putInto,
 } from 'store';
+
+import type { tJugada, tAppDispatch, tRootState } from 'store/types';
 import { sleep } from 'utils';
 import { selPila } from './selectors';
 

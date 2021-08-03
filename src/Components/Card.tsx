@@ -1,6 +1,5 @@
+import { useRef, useEffect, ImgHTMLAttributes } from 'react';
 import type { tCardId } from 'datos';
-import { useRef, useEffect } from 'react';
-import { ImgHTMLAttributes } from 'react';
 import { useAppDispatch, saveCoords } from 'store';
 
 type tCardParams = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {

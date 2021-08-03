@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { tCoordsState, tCoordsAction } from 'datos';
+import { tRootState } from 'store/types';
+import { tCoordsState, tCoordsAction } from './types';
 
 const initialState: tCoordsState = {};
 
-export const coordsSlice = createSlice({
+const coordsSlice = createSlice({
   name: 'coordinates',
   initialState,
   reducers: {
@@ -20,4 +21,8 @@ export const coordsSlice = createSlice({
 });
 
 export const { saveCoords } = coordsSlice.actions;
+
+export const selCoords = (state: tRootState, name: string) =>
+  state.coords[name];
+
 export default coordsSlice.reducer;
