@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Solitario</title>
+    <link rel="stylesheet" href="assets/jquery/jquery-ui.min.css" />
+    <script src="assets/jquery/jquery-3.6.0.min.js"></script>
+    <script src="assets/jquery/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="assets/jq.css" />
+  </head>
+  <body>
+    <div class="App">
+      <header class="nav">
+        <div id="toolbox" class="leftNav">
+          <button id="newGame">
+            <img src="assets/icons/autorenew_black_24dp.svg" />
+          </button>
+          <button id="undo">
+            <img src="assets/icons/undo_black_24dp.svg" />
+          </button>
+          <button id="redo">
+            <img src="assets/icons/redo_black_24dp.svg" />
+          </button>
+          <button id="raise">
+            <img src="assets/icons/trending_up_black_24dp.svg" />
+          </button>
+        </div>
+        <div class="centerNav">
+          <div class="heading">Solitario</div>
+          <div class="celda heading">{isGameWon && 'Ganamos'}</div>
+        </div>
+        <div class="rightNav">
+          <div class="stats">
+            <div class="stat">Jugadas: {stats.jugadas}</div>
+            <div class="stat">Rondas: {stats.rondas}</div>
+            <div class="stat">Undos: {stats.undos}</div>
+            <div class="stat">Redos: {stats.redos}</div>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="grid">
+          <div class="celda" id="mazo">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+
+          <div class="celda" id="vista">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+
+          <div class="celda"></div>
+
+          <div class="celda pila">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+          <div class="celda pila">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+          <div class="celda pila">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+          <div class="celda pila">
+            <img class="card" src="assets/cards/2B.svg" />
+          </div>
+
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+          <div class="celda hueco"></div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module">
+      import { main } from './assets/index.js';
+      main();
+    </script>
+  </body>
+</html>

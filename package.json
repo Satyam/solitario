@@ -8,9 +8,10 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@types/jest": "^26.0.24",
-    "@types/node": "^12.20.16",
-    "@types/react": "^17.0.14",
+    "@types/node": "^12.20.19",
+    "@types/react": "^17.0.17",
     "@types/react-dom": "^17.0.9",
+    "jquery": "^3.6.0",
     "react": "^17.0.2",
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
@@ -26,7 +27,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "jq": "cd jqsrc && tsc --watch"
   },
   "eslintConfig": {
     "extends": [
@@ -45,5 +47,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.6",
+    "@types/jqueryui": "^1.12.16"
   }
 }
