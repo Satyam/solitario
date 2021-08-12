@@ -24,7 +24,7 @@ const r = (msg: string) => {
   );
 };
 
-export const push = () => {
+export const pushState = () => {
   r('- push');
   previous += 1;
   undoStack.length = previous;
