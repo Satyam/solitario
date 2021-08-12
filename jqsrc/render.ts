@@ -58,3 +58,10 @@ export const renderHuecos = () => {
 export const renderHueco = (slot: number) => {
   renderOneHueco($(SEL.HUECOS).eq(slot), slot);
 };
+
+export const renderAll = () => {
+  renderMazo();
+  renderVista();
+  renderHuecos();
+  renderPilas();
+};

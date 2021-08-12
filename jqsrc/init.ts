@@ -1,11 +1,6 @@
 import { tCardId, baraja, datos, numHuecos, numPilas } from './datos.js';
 import { shuffle } from './utils.js';
-import {
-  renderMazo,
-  renderVista,
-  renderPilas,
-  renderHuecos,
-} from './render.js';
+import { renderAll } from './render.js';
 
 export const initNewGame = (): void => {
   datos.vista = [];
@@ -21,8 +16,5 @@ export const initNewGame = (): void => {
   // Place the remaining cards in the mazo.
   datos.mazo = cardIds;
 
-  renderMazo();
-  renderVista();
-  renderPilas();
-  renderHuecos();
+  renderAll();
 };
