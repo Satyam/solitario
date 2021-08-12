@@ -1,4 +1,4 @@
-import { tCardId, baraja, SEL, DATA } from './datos.js';
+import { tCardId, baraja, datos, numHuecos, numPilas } from './datos.js';
 import { shuffle } from './utils.js';
 import {
   renderMazo,
@@ -8,20 +8,18 @@ import {
 } from './render.js';
 
 export const initNewGame = (): void => {
-  $(SEL.PILAS).data(DATA.cardIds, []);
-  $(SEL.VISTA).data(DATA.cardIds, []);
+  datos.vista = [];
+  for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
   const cardIds = shuffle<tCardId[]>(Object.keys(baraja) as tCardId[]);
 
-  $(SEL.HUECOS).each(function (slot) {
-    $(this).data({
-      cardIds: cardIds.splice(0, slot + 1),
-      firstShown: slot,
-    });
-  });
+  for (let slot = 0; slot < numHuecos; slot++) {
+    datos.huecos[slot] = cardIds.splice(0, slot + 1);
+    datos.firstShown[slot] = slot;
+  }
 
   // Place the remaining cards in the mazo.
-  $('#mazo').data(DATA.cardIds, cardIds);
+  datos.mazo = cardIds;
 
   renderMazo();
   renderVista();

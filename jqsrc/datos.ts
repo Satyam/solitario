@@ -71,9 +71,20 @@ export enum SEL {
   HUECOS = '.hueco',
 }
 
-export enum DATA {
-  cardIds = 'cardIds',
-  firstShown = 'firstShown',
-}
 export const numPilas = 4;
 export const numHuecos = 7;
+
+export type tDatos = {
+  mazo: tCardId[];
+  vista: tCardId[];
+  pilas: tCardId[][];
+  huecos: tCardId[][];
+  firstShown: number[];
+};
+export const datos: tDatos = {
+  mazo: [],
+  vista: [],
+  pilas: Array(numPilas).fill([]),
+  huecos: Array(numHuecos).fill([]),
+  firstShown: Array(numHuecos).fill(0),
+};
