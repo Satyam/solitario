@@ -1,32 +1,22 @@
 import { REVERSO, HUECO, SEL, datos, tCardId } from './datos.js';
 import { imgSrc, cardImg } from './utils.js';
 
-export const renderMazo = () => {
-  $(SEL.MAZO)
-    .children()
-    .prop('src', imgSrc(datos.mazo.length ? REVERSO : HUECO));
-};
+const setCardId = (el: JQuery, cardId: tCardId) =>
+  el.find('img').prop('src', imgSrc(cardId));
 
-export const renderVista = () => {
-  $(SEL.VISTA)
-    .children()
-    .prop('src', imgSrc(datos.vista[0] || HUECO));
-};
+export const renderMazo = () =>
+  setCardId($(SEL.MAZO), datos.mazo.length ? REVERSO : HUECO);
 
-export const renderPilas = () => {
+export const renderVista = () =>
+  setCardId($(SEL.VISTA), datos.vista[0] || HUECO);
+
+export const renderPilas = () =>
   $(SEL.PILAS).each(function (slot) {
-    $(this)
-      .children()
-      .prop('src', imgSrc(datos.pilas[slot][0] || HUECO));
+    setCardId($(this), datos.pilas[slot][0] || HUECO);
   });
-};
 
-export const renderPila = (slot: number) => {
-  $(SEL.PILAS)
-    .eq(slot)
-    .children()
-    .prop('src', imgSrc(datos.pilas[slot][0] || HUECO));
-};
+export const renderPila = (slot: number) =>
+  setCardId($(SEL.PILAS), datos.pilas[slot][0] || HUECO);
 
 const renderHuecoStack = (
   cardIds: tCardId[],
