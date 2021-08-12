@@ -1,6 +1,7 @@
 import { tCardId, baraja, datos, numHuecos, numPilas } from './datos.js';
 import { shuffle } from './utils.js';
 import { renderAll } from './render.js';
+import { initUndo } from './undoStack.js';
 
 export const initNewGame = (): void => {
   datos.vista = [];
@@ -17,4 +18,5 @@ export const initNewGame = (): void => {
   datos.mazo = cardIds;
 
   renderAll();
+  initUndo();
 };
