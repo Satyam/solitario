@@ -2,40 +2,60 @@ import { datos, tDatos } from './datos.js';
 import { renderAll } from './render.js';
 
 const undoStack: string[] = [];
-let current = -1;
+let previous = -1;
 
 export const initUndo = () => {
   undoStack.length = 0;
-  current = -1;
+  previous = -1;
   setButtons();
   $('#undo').on('click', undo);
   $('#redo').on('click', redo);
 };
 
+const r = (msg: string) => {
+  console.log(
+    msg,
+    previous,
+    undoStack.length,
+    undoStack.map((e) => {
+      const x = JSON.parse(e);
+      return [x.mazo[0], x.vista[0]];
+    })
+  );
+};
+
 export const push = () => {
-  current += 1;
-  undoStack.length = current;
-  undoStack[current] = JSON.stringify(datos);
+  r('- push');
+  previous += 1;
+  undoStack.length = previous;
+  undoStack[previous] = JSON.stringify(datos);
   setButtons();
+  r('+ push');
 };
 
 const undo = () => {
-  if (current < 0) return;
-  Object.assign(datos, JSON.parse(undoStack[current]) as tDatos);
-  current -= 1;
+  r('- undo');
+  if (previous < 0) return;
+  undoStack[previous + 1] = JSON.stringify(datos);
+  Object.assign(datos, JSON.parse(undoStack[previous]) as tDatos);
+  previous -= 1;
   renderAll();
   setButtons();
+  r('+ undo');
 };
 
 const redo = () => {
-  if (current >= undoStack.length) return;
-  current += 1;
-  Object.assign(datos, JSON.parse(undoStack[current]) as tDatos);
+  r('- redo');
+
+  if (previous >= undoStack.length - 2) return;
+  previous += 1;
+  Object.assign(datos, JSON.parse(undoStack[previous + 1]) as tDatos);
   renderAll();
   setButtons();
+  r('+ redo');
 };
 
 export const setButtons = () => {
-  $('#undo').prop('disabled', current < 0);
-  $('#redo').prop('disabled', current >= undoStack.length - 1);
+  $('#undo').prop('disabled', previous < 0);
+  $('#redo').prop('disabled', previous >= undoStack.length - 2);
 };
