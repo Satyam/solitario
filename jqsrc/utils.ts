@@ -15,4 +15,4 @@ export function shuffle<T extends any[]>(a: T): T {
 export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
 export const cardImg = (cardId: tCardId, className: string = ''): string =>
-  `<img class="card ${className}" src="${imgSrc(cardId)}"/>`;
+  `<img  draggable="false" class="card ${className}" src="${imgSrc(cardId)}"/>`;

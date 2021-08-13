@@ -1,11 +1,9 @@
-import { initNewGame } from './init.js';
-import { initActions } from './actions.js';
+import { initActions, startNewGame } from './actions.js';
+import { initDrag } from './dragdrop.js';
 
 export const main = () => {
-  initNewGame();
   initActions();
-  $('#newGame').on('click', initNewGame);
-  $('#raise').on('click', () => {
-    alert('click on raise');
-  });
+  initDrag();
+
+  startNewGame();
 };

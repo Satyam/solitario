@@ -8,6 +8,7 @@ import {
   numHuecos,
 } from './datos.js';
 import { imgSrc, cardImg } from './utils.js';
+import { enableDraggable } from './dragdrop.js';
 
 let topMazo: tCardId;
 let topVista: tCardId;
@@ -28,14 +29,18 @@ export const renderVista = () => {
   const cardId = datos.vista[0] || HUECO;
   if (cardId === topVista) return;
   topVista = cardId;
-  setCardId($(SEL.VISTA), cardId);
+  const vistaEl = $(SEL.VISTA);
+  setCardId(vistaEl, cardId);
+  enableDraggable(vistaEl, cardId !== HUECO);
 };
 
 export const renderPila = (slot: number) => {
   const cardId = datos.pilas[slot][0] || HUECO;
   if (cardId === topPilas[slot]) return;
   topPilas[slot] = cardId;
-  setCardId($(SEL.PILAS), cardId);
+  const pilaEl = $(SEL.PILAS).eq(slot);
+  setCardId(pilaEl, cardId);
+  enableDraggable(pilaEl, cardId !== HUECO);
 };
 
 export const renderPilas = () => $(SEL.PILAS).each(renderPila);
@@ -48,10 +53,10 @@ const renderHuecoStack = (
   const [cardId, ...rest] = cardIds;
 
   return rest.length
-    ? `<div><div class="short">${cardImg(
+    ? `<div class="draggable"><div class="short">${cardImg(
         index < firstShown ? REVERSO : cardId
       )}</div>${renderHuecoStack(rest, firstShown, index + 1)}</div>`
-    : cardImg(cardId);
+    : cardImg(cardId, 'draggable');
 };
 
 const renderOneHueco = (h: JQuery, slot: number) => {
@@ -59,11 +64,13 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   const cardId = cardIds[0];
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
-  h.html(
+  h.find('.cardContainer').html(
     cardIds.length
       ? renderHuecoStack(cardIds, datos.firstShown[slot], 0)
-      : cardImg(HUECO)
+      : cardImg(HUECO, 'draggable')
   );
+  h.find(SEL.DRAGGABLE).draggable({ helper: 'clone' });
+  enableDraggable(h, cardIds.length > 0);
 };
 
 export const renderHuecos = () => {

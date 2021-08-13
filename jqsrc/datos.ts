@@ -58,8 +58,8 @@ palos.forEach((palo) =>
 // types and constants related to board playing positions and drag&drop.
 
 export enum POS {
-  HUECO = 'hueco',
-  PILA = 'pila',
+  HUECO = 'huecos',
+  PILA = 'pilas',
   VISTA = 'vista',
   MAZO = 'mazo',
 }
@@ -69,6 +69,8 @@ export enum SEL {
   VISTA = '#vista',
   PILAS = '.pila',
   HUECOS = '.hueco',
+  DROPPABLE = '.droppable',
+  DRAGGABLE = '.draggable',
 }
 
 export const numPilas = 4;
