@@ -71,6 +71,7 @@ export enum SEL {
   HUECOS = '.hueco',
   DROPPABLE = '.droppable',
   DRAGGABLE = '.draggable',
+  CELDA = '.celda',
 }
 
 export const numPilas = 4;
