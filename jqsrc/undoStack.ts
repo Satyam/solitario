@@ -13,15 +13,15 @@ export const initUndo = () => {
 };
 
 const r = (msg: string) => {
-  console.log(
-    msg,
-    previous,
-    undoStack.length,
-    undoStack.map((e) => {
-      const x = JSON.parse(e);
-      return [x.mazo[0], x.vista[0]];
-    })
-  );
+  // console.log(
+  //   msg,
+  //   previous,
+  //   undoStack.length,
+  //   undoStack.map((e) => {
+  //     const x = JSON.parse(e);
+  //     return [x.mazo[0], x.vista[0]];
+  //   })
+  // );
 };
 
 export const pushState = () => {
