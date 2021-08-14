@@ -51,11 +51,16 @@ const renderHuecoStack = (
   index: number
 ): string => {
   const [cardId, ...rest] = cardIds;
+  const isVisible = index >= firstShown;
 
   return rest.length
-    ? `<div class="draggable"><div class="short">${cardImg(
-        index < firstShown ? REVERSO : cardId
-      )}</div>${renderHuecoStack(rest, firstShown, index + 1)}</div>`
+    ? `${
+        isVisible
+          ? `<div class="draggable" data-index="${
+              rest.length
+            }"><div class="short">${cardImg(cardId)}</div>`
+          : `<div class="short">${cardImg(REVERSO)}</div>`
+      }${renderHuecoStack(rest, firstShown, index + 1)}</div>`
     : cardImg(cardId, 'draggable');
 };
 
@@ -64,9 +69,11 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   const cardId = cardIds[0];
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
+
   h.find('.cardContainer').html(
     cardIds.length
-      ? renderHuecoStack(cardIds, datos.firstShown[slot], 0)
+      ? // reverse the cards so the last is placed first, at the bottom
+        renderHuecoStack(cardIds.slice(0).reverse(), datos.firstShown[slot], 0)
       : cardImg(HUECO, 'draggable')
   );
   h.find(SEL.DRAGGABLE).draggable({ helper: 'clone' });
