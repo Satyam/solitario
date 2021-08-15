@@ -34,7 +34,12 @@ export const startNewGame = (): void => {
 
 const dealCard = (ev: JQuery.Event) => {
   pushState();
-  datos.vista.unshift(datos.mazo.shift());
+  if (datos.mazo.length) {
+    datos.vista.unshift(datos.mazo.shift());
+  } else {
+    datos.mazo = datos.vista.reverse();
+    datos.vista = [];
+  }
   renderMazo();
   renderVista();
 };
