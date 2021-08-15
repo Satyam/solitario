@@ -7,7 +7,7 @@ export const initActions = () => {
   // Buttons
   $('#newGame').on('click', startNewGame);
   $('#raise').on('click', () => {
-    alert('click on raise');
+    console.log(datos);
   });
 
   // cards
