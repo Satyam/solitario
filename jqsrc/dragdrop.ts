@@ -1,4 +1,6 @@
+import { renderPila, renderVista, renderHueco } from './render.js';
 import { POS, SEL, datos, baraja } from './datos.js';
+import { pushState } from './undoStack.js';
 
 export const initDrag = () => {
   $(SEL.MAZO).data({
@@ -48,14 +50,16 @@ function accept(source: JQuery) {
     case POS.VISTA: {
       const fromCardId = datos.vista[0];
       const fromCarta = baraja[fromCardId];
+      if (!fromCarta) return false;
+      // console.log(fromCardId);
       switch (toPos) {
         case POS.PILA: {
           const toCardId = datos.pilas[toSlot][0];
           const toCarta = baraja[toCardId];
           if (toCardId) {
             return (
-              toCarta.color === fromCarta.color &&
-              toCarta.index === fromCarta.index + 1
+              toCarta.palo === fromCarta.palo &&
+              toCarta.index === fromCarta.index - 1
             );
           } else {
             return fromCarta.valor === 'A';
@@ -80,6 +84,7 @@ function accept(source: JQuery) {
     case POS.PILA: {
       const fromCardId = datos.pilas[fromSlot][0];
       const fromCarta = baraja[fromCardId];
+      if (!fromCarta) return false;
       switch (toPos) {
         case POS.HUECO: {
           const toCardId = datos.huecos[toSlot][0];
@@ -100,6 +105,7 @@ function accept(source: JQuery) {
     case POS.HUECO: {
       const fromCardId = datos.huecos[fromSlot][fromIndex];
       const fromCarta = baraja[fromCardId];
+      if (!fromCarta) return false;
       switch (toPos) {
         case POS.PILA: {
           if (fromIndex > 0) return false;
@@ -107,7 +113,7 @@ function accept(source: JQuery) {
           const toCarta = baraja[toCardId];
           if (toCardId) {
             return (
-              fromCarta.color === toCarta.color &&
+              fromCarta.palo === toCarta.palo &&
               fromCarta.index === toCarta.index + 1
             );
           } else {
@@ -134,5 +140,69 @@ function drop(ev: JQuery.Event, ui: any) {
     .closest(SEL.CELDA)
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
-  console.log('drop', { fromPos, fromSlot, toPos, toSlot });
+  const fromIndex = $(ui.draggable).data('index') || 0;
+  // $(ui.draggable).draggable('disable');
+  // $(this).droppable('disable');
+  console.log('drop', { fromPos, fromSlot, fromIndex, toPos, toSlot });
+  switch (fromPos) {
+    case POS.VISTA:
+      switch (toPos) {
+        case POS.PILA:
+          pushState();
+          datos.pilas[toSlot].unshift(datos.vista.shift());
+          setTimeout(() => {
+            renderPila(toSlot);
+            renderVista();
+          }, 100);
+          break;
+        case POS.HUECO:
+          pushState();
+          datos.huecos[toSlot].unshift(datos.vista.shift());
+          setTimeout(() => {
+            renderVista();
+            renderHueco(toSlot);
+          }, 100);
+          break;
+      }
+      break;
+    case POS.PILA:
+      switch (toPos) {
+        case POS.HUECO:
+          pushState();
+          datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
+          setTimeout(() => {
+            renderPila(fromSlot);
+            renderHueco(toSlot);
+          }, 100);
+          break;
+      }
+      break;
+    case POS.HUECO:
+      switch (toPos) {
+        case POS.PILA:
+          pushState();
+          datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
+          setTimeout(() => {
+            renderHueco(fromSlot);
+            renderPila(toSlot);
+          }, 100);
+          break;
+
+        case POS.HUECO:
+          pushState();
+          datos.huecos[toSlot].unshift(
+            ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
+          );
+          setTimeout(() => {
+            renderHueco(fromSlot);
+            renderHueco(toSlot);
+          }, 100);
+          break;
+      }
+      const lastCardIndex = datos.huecos[fromSlot].length - 1;
+      if (datos.firstShown[fromSlot] > lastCardIndex) {
+        datos.firstShown[fromSlot] = lastCardIndex;
+      }
+      break;
+  }
 }
