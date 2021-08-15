@@ -8,13 +8,18 @@ import {
   numPilas,
   numHuecos,
 } from './datos.js';
-import { imgSrc, cardImg } from './utils.js';
+
 import { enableDraggable } from './dragdrop.js';
 
 let topMazo: tCardId;
 let topVista: tCardId;
 const topPilas: tCardId[] = Array(numPilas);
 const topHuecos: tCardId[] = Array(numHuecos);
+
+export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
+
+export const cardImg = (cardId: tCardId, className: string = ''): string =>
+  `<img  draggable="false" class="card ${className}" src="${imgSrc(cardId)}"/>`;
 
 const createContainer = (
   name: string,
@@ -24,14 +29,13 @@ const createContainer = (
   $(`
 <div class="celda ${name} ${droppable ? 'droppable' : ''}">
   <div class="cardContainer">
-    <img
-      draggable="false"
-      class="card ${draggable ? 'draggable' : ''}"
-      src="assets/cards/2B.svg"
-    />
+  ${cardImg(REVERSO, draggable ? 'draggable' : '')}
   </div>
 </div>
 `);
+
+const setCardId = (el: JQuery, cardId: tCardId) =>
+  el.find('img').prop('src', imgSrc(cardId));
 
 export const initBoard = () => {
   const boardEl = $('.grid');
@@ -48,9 +52,6 @@ export const initBoard = () => {
     boardEl.append(createContainer(POS.HUECO, true, true));
   }
 };
-
-const setCardId = (el: JQuery, cardId: tCardId) =>
-  el.find('img').prop('src', imgSrc(cardId));
 
 export const renderMazo = () => {
   const cardId = datos.mazo.length ? REVERSO : HUECO;
