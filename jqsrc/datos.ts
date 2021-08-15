@@ -65,10 +65,10 @@ export enum POS {
 }
 
 export enum SEL {
-  MAZO = '#mazo',
-  VISTA = '#vista',
-  PILAS = '.pila',
-  HUECOS = '.hueco',
+  MAZO = '.mazo',
+  VISTA = '.vista',
+  PILAS = '.pilas',
+  HUECOS = '.huecos',
   DROPPABLE = '.droppable',
   DRAGGABLE = '.draggable',
   CELDA = '.celda',

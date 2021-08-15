@@ -1,6 +1,7 @@
 import {
   REVERSO,
   HUECO,
+  POS,
   SEL,
   datos,
   tCardId,
@@ -14,6 +15,39 @@ let topMazo: tCardId;
 let topVista: tCardId;
 const topPilas: tCardId[] = Array(numPilas);
 const topHuecos: tCardId[] = Array(numHuecos);
+
+const createContainer = (
+  name: string,
+  draggable?: boolean,
+  droppable?: boolean
+) =>
+  $(`
+<div class="celda ${name} ${droppable ? 'droppable' : ''}">
+  <div class="cardContainer">
+    <img
+      draggable="false"
+      class="card ${draggable ? 'draggable' : ''}"
+      src="assets/cards/2B.svg"
+    />
+  </div>
+</div>
+`);
+
+export const initBoard = () => {
+  const boardEl = $('.grid');
+
+  boardEl.append(createContainer(POS.MAZO));
+  boardEl.append(createContainer(POS.VISTA, true));
+  boardEl.append($('<div class="celda"></div>'));
+
+  for (let slot = 0; slot < numPilas; slot++) {
+    boardEl.append(createContainer(POS.PILA, true, true));
+  }
+
+  for (let slot = 0; slot < numHuecos; slot++) {
+    boardEl.append(createContainer(POS.HUECO, true, true));
+  }
+};
 
 const setCardId = (el: JQuery, cardId: tCardId) =>
   el.find('img').prop('src', imgSrc(cardId));
