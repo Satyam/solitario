@@ -49,14 +49,14 @@ function accept(source: JQuery) {
   switch (fromPos) {
     case POS.VISTA: {
       const fromCardId = datos.vista[0];
+      if (!fromCardId) return false;
       const fromCarta = baraja[fromCardId];
-      if (!fromCarta) return false;
       // console.log(fromCardId);
       switch (toPos) {
         case POS.PILA: {
           const toCardId = datos.pilas[toSlot][0];
-          const toCarta = baraja[toCardId];
           if (toCardId) {
+            const toCarta = baraja[toCardId];
             return (
               toCarta.palo === fromCarta.palo &&
               toCarta.index === fromCarta.index - 1
@@ -67,8 +67,8 @@ function accept(source: JQuery) {
         }
         case POS.HUECO: {
           const toCardId = datos.huecos[toSlot][0];
-          const toCarta = baraja[toCardId];
-          if (toCarta) {
+          if (toCardId) {
+            const toCarta = baraja[toCardId];
             return (
               fromCarta.color !== toCarta.color &&
               fromCarta.index === toCarta.index - 1
@@ -83,13 +83,13 @@ function accept(source: JQuery) {
     }
     case POS.PILA: {
       const fromCardId = datos.pilas[fromSlot][0];
+      if (!fromCardId) return false;
       const fromCarta = baraja[fromCardId];
-      if (!fromCarta) return false;
       switch (toPos) {
         case POS.HUECO: {
           const toCardId = datos.huecos[toSlot][0];
-          const toCarta = baraja[toCardId];
-          if (toCarta) {
+          if (toCardId) {
+            const toCarta = baraja[toCardId];
             return (
               fromCarta.color !== toCarta.color &&
               fromCarta.index === toCarta.index - 1
@@ -104,14 +104,14 @@ function accept(source: JQuery) {
     }
     case POS.HUECO: {
       const fromCardId = datos.huecos[fromSlot][fromIndex];
+      if (!fromCardId) return false;
       const fromCarta = baraja[fromCardId];
-      if (!fromCarta) return false;
       switch (toPos) {
         case POS.PILA: {
           if (fromIndex > 0) return false;
           const toCardId = datos.pilas[toSlot][0];
-          const toCarta = baraja[toCardId];
           if (toCardId) {
+            const toCarta = baraja[toCardId];
             return (
               fromCarta.palo === toCarta.palo &&
               fromCarta.index === toCarta.index + 1
@@ -122,17 +122,22 @@ function accept(source: JQuery) {
         }
         case POS.HUECO: {
           const toCardId = datos.huecos[toSlot][0];
-          const toCarta = baraja[toCardId];
-          return (
-            fromCarta.color !== toCarta.color &&
-            fromCarta.index === toCarta.index - 1
-          );
+          if (toCardId) {
+            const toCarta = baraja[toCardId];
+            return (
+              fromCarta.color !== toCarta.color &&
+              fromCarta.index === toCarta.index - 1
+            );
+          } else {
+            return fromCarta.valor === 'K';
+          }
         }
         default:
           return false;
       }
     }
   }
+  console.error('should not be here');
 }
 
 function drop(ev: JQuery.Event, ui: any) {
