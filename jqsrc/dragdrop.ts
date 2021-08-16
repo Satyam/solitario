@@ -1,6 +1,7 @@
 import { renderPila, renderVista, renderHueco } from './render.js';
 import { POS, SEL, datos, baraja } from './datos.js';
 import { pushState } from './undoStack.js';
+import { fixFirstShown } from './utils.js';
 
 export const initDrag = () => {
   $(SEL.MAZO).data({
@@ -204,10 +205,7 @@ function drop(ev: JQuery.Event, ui: any) {
           }, 100);
           break;
       }
-      const lastCardIndex = datos.huecos[fromSlot].length - 1;
-      if (datos.firstShown[fromSlot] > lastCardIndex) {
-        datos.firstShown[fromSlot] = lastCardIndex;
-      }
+      fixFirstShown(fromSlot);
       break;
   }
 }
