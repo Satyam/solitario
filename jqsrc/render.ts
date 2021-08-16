@@ -109,7 +109,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     cardIds.length
       ? // reverse the cards so the last is placed first, at the bottom
         renderHuecoStack(cardIds.slice(0).reverse(), datos.firstShown[slot], 0)
-      : cardImg(HUECO, 'draggable')
+      : cardImg(HUECO)
   );
   h.find(SEL.DRAGGABLE).draggable({ helper: 'clone' });
   enableDraggable(h, cardIds.length > 0);
