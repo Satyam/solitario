@@ -149,7 +149,7 @@ function drop(ev: JQuery.Event, ui: any) {
   const fromIndex = $(ui.draggable).data('index') || 0;
   // $(ui.draggable).draggable('disable');
   // $(this).droppable('disable');
-  console.log('drop', { fromPos, fromSlot, fromIndex, toPos, toSlot });
+  // console.log('drop', { fromPos, fromSlot, fromIndex, toPos, toSlot });
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
@@ -208,4 +208,5 @@ function drop(ev: JQuery.Event, ui: any) {
       fixFirstShown(fromSlot);
       break;
   }
+  $('.ui-droppable-active').removeClass('ui-droppable-active');
 }
