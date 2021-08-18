@@ -19,7 +19,9 @@ const topHuecos: tCardId[] = Array(numHuecos);
 export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
 export const cardImg = (cardId: tCardId, className: string = ''): string =>
-  `<img  draggable="false" class="card ${className}" src="${imgSrc(cardId)}"/>`;
+  `<img  draggable="false" class="card ${className}" src="${imgSrc(
+    cardId
+  )}" data-cardid="${cardId}" />`;
 
 const createContainer = (
   name: string,
@@ -35,7 +37,7 @@ const createContainer = (
 `);
 
 const setCardId = (el: JQuery, cardId: tCardId) =>
-  el.find('img').prop('src', imgSrc(cardId));
+  el.find('img').prop('src', imgSrc(cardId)).data('cardid', cardId);
 
 export const initBoard = () => {
   const boardEl = $('.grid');
@@ -89,13 +91,14 @@ const renderHuecoStack = (
   const isVisible = index >= firstShown;
 
   return rest.length
-    ? `${
-        isVisible
-          ? `<div class="draggable" data-index="${
-              rest.length
-            }"><div class="short">${cardImg(cardId)}</div>`
-          : `<div class="short">${cardImg(REVERSO)}</div>`
-      }${renderHuecoStack(rest, firstShown, index + 1)}</div>`
+    ? `
+    <div 
+      ${isVisible ? 'class="draggable"' : ''}
+      data-index="${rest.length}"
+    >
+      <div class="short">${cardImg(isVisible ? cardId : REVERSO)}</div>
+      ${renderHuecoStack(rest, firstShown, index + 1)}
+    </div>`
     : cardImg(cardId, 'draggable');
 };
 
