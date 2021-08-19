@@ -43,7 +43,7 @@ export const enableDraggable = (el: JQuery, enabled: boolean) => {
 function accept(source: JQuery) {
   const { pos: fromPos, slot: fromSlot } = $(source).closest(SEL.CELDA).data();
 
-  const fromIndex = $(source).data('index') || 0;
+  const fromIndex = $(source).data('start') || 0;
   const { pos: toPos, slot: toSlot } = $(this).data();
   // console.log('accept', { fromPos, fromSlot, fromIndex, toPos, toSlot });
 
@@ -146,7 +146,7 @@ function drop(ev: JQuery.Event, ui: any) {
     .closest(SEL.CELDA)
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
-  const fromIndex = $(ui.draggable).data('index') || 0;
+  const fromIndex = $(ui.draggable).data('start') || 0;
   // $(ui.draggable).draggable('disable');
   // $(this).droppable('disable');
   // console.log('drop', { fromPos, fromSlot, fromIndex, toPos, toSlot });
