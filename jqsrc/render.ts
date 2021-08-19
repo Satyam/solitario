@@ -21,7 +21,7 @@ export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 export const cardImg = (cardId: tCardId, className: string = ''): string =>
   `<img  draggable="false" class="card ${className}" src="${imgSrc(
     cardId
-  )}" data-cardid="${cardId}" />`;
+  )}" />`;
 
 const createContainer = (
   name: string,
@@ -31,13 +31,30 @@ const createContainer = (
   $(`
 <div class="celda ${name} ${droppable ? 'droppable' : ''}">
   <div class="cardContainer">
-  ${cardImg(REVERSO, draggable ? 'draggable' : '')}
+    ${cardImg(REVERSO, draggable ? 'draggable' : '')}
   </div>
 </div>
 `);
+const emptyHuecoStackPosition = `
+<div 
+  data-start="0"
+  data-cardid="${HUECO}"
+>
+  <div class="clipper">
+    ${cardImg(HUECO)}
+  </div>
+</div>
+`;
+const emptyHuecoContainer = `
+<div class="celda ${POS.HUECO} droppable">
+  <div class="cardContainer">
+    ${emptyHuecoStackPosition}  
+  </div>
+</div>
+`;
 
 const setCardId = (el: JQuery, cardId: tCardId) =>
-  el.find('img').prop('src', imgSrc(cardId)).data('cardid', cardId);
+  el.find('img').first().prop('src', imgSrc(cardId));
 
 export const initBoard = () => {
   const boardEl = $('.grid');
@@ -51,7 +68,7 @@ export const initBoard = () => {
   }
 
   for (let slot = 0; slot < numHuecos; slot++) {
-    boardEl.append(createContainer(POS.HUECO, true, true));
+    boardEl.append(emptyHuecoContainer);
   }
 };
 
@@ -82,24 +99,41 @@ export const renderPila = (slot: number) => {
 
 export const renderPilas = () => $(SEL.PILAS).each(renderPila);
 
-const renderHuecoStack = (
+const newRenderHuecoStack = (
+  el: JQuery,
   cardIds: tCardId[],
   firstShown: number,
-  index: number
-): string => {
+  stackLength: number
+) => {
   const [cardId, ...rest] = cardIds;
-  const isVisible = index >= firstShown;
+  const isVisible = stackLength - rest.length > firstShown;
+  const isLast = rest.length === 0;
+  // Ajusto la carta existente
+  el.data({
+    start: rest.length,
+    cardid: cardId || HUECO,
+  });
+  el.toggleClass('draggable', isVisible);
+  setCardId(el, isVisible ? cardId || HUECO : REVERSO);
+  el.find('.clipper').toggleClass('short', !isLast);
+  // ajuste hecho
 
-  return rest.length
-    ? `
-    <div 
-      ${isVisible ? 'class="draggable"' : ''}
-      data-index="${rest.length}"
-    >
-      <div class="short">${cardImg(isVisible ? cardId : REVERSO)}</div>
-      ${renderHuecoStack(rest, firstShown, index + 1)}
-    </div>`
-    : cardImg(cardId, 'draggable');
+  if (rest.length) {
+    const next = el.find('div[data-start]').first();
+    if (next.data()) {
+      newRenderHuecoStack(next, rest, firstShown, stackLength);
+    } else {
+      // Append an empty container for the rest
+      el.append(emptyHuecoStackPosition);
+      // this card needs to be redone once the container is in place
+      newRenderHuecoStack(el, cardIds, firstShown, stackLength);
+    }
+  } else {
+    const sobra = el.children().eq(1).get(0);
+    if (sobra) {
+      el.children().last().remove();
+    }
+  }
 };
 
 const renderOneHueco = (h: JQuery, slot: number) => {
@@ -108,12 +142,13 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
 
-  h.find('.cardContainer').html(
+  newRenderHuecoStack(
+    h.find('div[data-start]').first(),
+    cardIds.slice(0).reverse(),
+    datos.firstShown[slot],
     cardIds.length
-      ? // reverse the cards so the last is placed first, at the bottom
-        renderHuecoStack(cardIds.slice(0).reverse(), datos.firstShown[slot], 0)
-      : cardImg(HUECO)
   );
+
   h.find(SEL.DRAGGABLE).draggable({ helper: 'clone' });
   enableDraggable(h, cardIds.length > 0);
 };
