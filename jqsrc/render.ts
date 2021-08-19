@@ -35,8 +35,10 @@ const createContainer = (
   </div>
 </div>
 `);
+
 const emptyHuecoStackPosition = `
 <div 
+  class="stack"
   data-start="0"
   data-cardid="${HUECO}"
 >
@@ -45,6 +47,7 @@ const emptyHuecoStackPosition = `
   </div>
 </div>
 `;
+
 const emptyHuecoContainer = `
 <div class="celda ${POS.HUECO} droppable">
   <div class="cardContainer">
@@ -99,7 +102,7 @@ export const renderPila = (slot: number) => {
 
 export const renderPilas = () => $(SEL.PILAS).each(renderPila);
 
-const newRenderHuecoStack = (
+const renderHuecoStack = (
   el: JQuery,
   cardIds: tCardId[],
   firstShown: number,
@@ -108,31 +111,29 @@ const newRenderHuecoStack = (
   const [cardId, ...rest] = cardIds;
   const isVisible = stackLength - rest.length > firstShown;
   const isLast = rest.length === 0;
+
   // Ajusto la carta existente
   el.data({
     start: rest.length,
     cardid: cardId || HUECO,
-  });
-  el.toggleClass('draggable', isVisible);
+  })
+    .toggleClass('draggable', isVisible)
+    .find('.clipper')
+    .toggleClass('short', !isLast);
   setCardId(el, isVisible ? cardId || HUECO : REVERSO);
-  el.find('.clipper').toggleClass('short', !isLast);
   // ajuste hecho
 
   if (rest.length) {
-    const next = el.find('div[data-start]').first();
-    if (next.data()) {
-      newRenderHuecoStack(next, rest, firstShown, stackLength);
-    } else {
-      // Append an empty container for the rest
+    let next = el.find('.stack').first();
+    // If there is no place to render the rest, create a stack position and carry on
+    if (next.length === 0) {
       el.append(emptyHuecoStackPosition);
-      // this card needs to be redone once the container is in place
-      newRenderHuecoStack(el, cardIds, firstShown, stackLength);
+      next = el.find('.stack').first();
     }
+    renderHuecoStack(next, rest, firstShown, stackLength);
   } else {
-    const sobra = el.children().eq(1).get(0);
-    if (sobra) {
-      el.children().last().remove();
-    }
+    // remove further stack positions.
+    el.find('.stack').remove();
   }
 };
 
@@ -142,8 +143,8 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
 
-  newRenderHuecoStack(
-    h.find('div[data-start]').first(),
+  renderHuecoStack(
+    h.find('.stack').first(),
     cardIds.slice(0).reverse(),
     datos.firstShown[slot],
     cardIds.length
