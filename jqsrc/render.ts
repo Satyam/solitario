@@ -9,7 +9,7 @@ import {
   numHuecos,
 } from './datos.js';
 
-import { enableDraggable } from './dragdrop.js';
+import { enableDraggable, setDraggable } from './dragdrop.js';
 
 let topMazo: tCardId;
 let topVista: tCardId;
@@ -150,7 +150,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     cardIds.length
   );
 
-  h.find(SEL.DRAGGABLE).draggable({ helper: 'clone' });
+  setDraggable(h.find(SEL.DRAGGABLE));
   enableDraggable(h, cardIds.length > 0);
 };
 

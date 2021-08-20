@@ -25,9 +25,7 @@ export const initDrag = () => {
     });
   });
 
-  $(SEL.DRAGGABLE).draggable({
-    helper: 'clone',
-  });
+  setDraggable($(SEL.DRAGGABLE));
 
   $(SEL.DROPPABLE)
     .droppable({
@@ -38,6 +36,12 @@ export const initDrag = () => {
 
 export const enableDraggable = (el: JQuery, enabled: boolean) => {
   el.find(SEL.DRAGGABLE).draggable(enabled ? 'enable' : 'disable');
+};
+export const setDraggable = (el: JQuery) => {
+  el.draggable({
+    helper: 'clone',
+    zIndex: 10,
+  });
 };
 
 function accept(source: JQuery) {
