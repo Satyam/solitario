@@ -83,8 +83,14 @@ function vistaToPila(ev: JQuery.Event) {
     if (slot >= 0) {
       pushState();
       datos.pilas[slot].unshift(datos.vista.shift());
-      renderVista();
-      renderPila(slot);
+      animateMove(
+        $(SEL.VISTA).find('img'),
+        $(SEL.PILAS).eq(slot).find('img'),
+        function () {
+          renderVista();
+          renderPila(slot);
+        }
+      );
     }
     // stop propagation
     return false;
@@ -98,11 +104,41 @@ function huecoToPila(ev: JQuery.Event) {
     if (toSlot >= 0) {
       pushState();
       datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-      fixFirstShown(fromSlot);
-      renderHueco(fromSlot);
-      renderPila(toSlot);
+      animateMove(
+        $(SEL.HUECOS).eq(fromSlot).find('img').last(),
+        $(SEL.PILAS).eq(toSlot).find('img'),
+        function () {
+          fixFirstShown(fromSlot);
+          renderHueco(fromSlot);
+          renderPila(toSlot);
+        }
+      );
     }
     // stop propagation
     return false;
   }
+}
+
+function animateMove(srcEl: JQuery, destEl: JQuery, callback: () => void) {
+  const srcPos = srcEl.position();
+  const destPos = destEl.position();
+  const oldZIndex = srcEl.attr('zIndex');
+  console.log({ oldZIndex });
+  srcEl.css('zIndex', 10);
+  srcEl.animate(
+    {
+      left: `+=${destPos.left - srcPos.left}`,
+      top: `+=${destPos.top - srcPos.top}`,
+    },
+    1000,
+    'swing',
+    function () {
+      srcEl.css({
+        left: 0,
+        top: 0,
+        zIndex: oldZIndex,
+      });
+      callback();
+    }
+  );
 }
