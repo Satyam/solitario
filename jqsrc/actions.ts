@@ -83,14 +83,16 @@ function vistaToPila(ev: JQuery.Event) {
     if (slot >= 0) {
       pushState();
       datos.pilas[slot].unshift(datos.vista.shift());
+      debugger;
       animateMove(
         $(SEL.VISTA).find('img'),
         $(SEL.PILAS).eq(slot).find('img'),
         function () {
-          renderVista();
           renderPila(slot);
-        }
+        },
+        true
       );
+      renderVista();
     }
     // stop propagation
     return false;
@@ -104,41 +106,55 @@ function huecoToPila(ev: JQuery.Event) {
     if (toSlot >= 0) {
       pushState();
       datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-      animateMove(
-        $(SEL.HUECOS).eq(fromSlot).find('img').last(),
-        $(SEL.PILAS).eq(toSlot).find('img'),
-        function () {
-          fixFirstShown(fromSlot);
-          renderHueco(fromSlot);
-          renderPila(toSlot);
-        }
-      );
+      const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
+      animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('img'), function () {
+        fixFirstShown(fromSlot);
+        renderHueco(fromSlot);
+        renderPila(toSlot);
+      });
+      srcEl.parents('.stack').first().siblings('.short').removeClass('short');
     }
     // stop propagation
     return false;
   }
 }
 
-function animateMove(srcEl: JQuery, destEl: JQuery, callback: () => void) {
-  const srcPos = srcEl.position();
-  const destPos = destEl.position();
-  const oldZIndex = srcEl.attr('zIndex');
-  console.log({ oldZIndex });
-  srcEl.css('zIndex', 10);
-  srcEl.animate(
+function animateMove(
+  srcEl: JQuery,
+  destEl: JQuery,
+  callback: () => void,
+  clone: boolean = false
+) {
+  const srcPos = srcEl.offset();
+  const cloneEl = clone ? srcEl.clone().appendTo(srcEl.parent()) : srcEl;
+  cloneEl.css({
+    position: 'absolute',
+    left: srcPos.left,
+    top: srcPos.top,
+    zIndex: 10,
+  });
+  const destPos = destEl.offset();
+  cloneEl.animate(
     {
       left: `+=${destPos.left - srcPos.left}`,
       top: `+=${destPos.top - srcPos.top}`,
     },
-    1000,
-    'swing',
-    function () {
-      srcEl.css({
-        left: 0,
-        top: 0,
-        zIndex: oldZIndex,
-      });
-      callback();
+    {
+      duration: 200,
+      easing: 'swing',
+      complete: () => {
+        if (clone) {
+          cloneEl.remove();
+        } else {
+          cloneEl.css({
+            position: 'relative',
+            left: 0,
+            top: 0,
+            zIndex: 'auto',
+          });
+        }
+        callback();
+      },
     }
   );
 }
