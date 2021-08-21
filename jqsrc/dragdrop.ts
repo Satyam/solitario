@@ -41,6 +41,7 @@ export const setDraggable = (el: JQuery) => {
   el.draggable({
     helper: 'clone',
     zIndex: 10,
+    scroll: false,
   });
 };
 
