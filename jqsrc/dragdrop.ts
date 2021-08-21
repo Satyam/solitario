@@ -1,5 +1,5 @@
-import { renderPila, renderVista, renderHueco } from './render.js';
-import { POS, SEL, datos, baraja } from './datos.js';
+import { renderPila, renderVista, renderHueco, cardImg } from './render.js';
+import { POS, SEL, datos, baraja, HUECO } from './datos.js';
 import { pushState } from './undoStack.js';
 import { fixFirstShown } from './utils.js';
 
@@ -37,11 +37,22 @@ export const initDrag = () => {
 export const enableDraggable = (el: JQuery, enabled: boolean) => {
   el.find(SEL.DRAGGABLE).draggable(enabled ? 'enable' : 'disable');
 };
-export const setDraggable = (el: JQuery) => {
+export const setDraggable = (el: JQuery, dragOriginal?: boolean) => {
   el.draggable({
-    helper: 'clone',
+    helper: dragOriginal
+      ? 'clone'
+      : () => {
+          return $(cardImg(HUECO)).appendTo('body').get(0);
+        },
     zIndex: 10,
     scroll: false,
+    start: function (event, ui) {
+      console.log($(this).get(0).outerHTML, ui.helper.get(0).outerHTML);
+      ui.helper.attr(
+        'src',
+        $(this).find('img').add($(this).filter('img')).attr('src')
+      );
+    },
   });
 };
 

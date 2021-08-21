@@ -150,7 +150,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     cardIds.length
   );
 
-  setDraggable(h.find(SEL.DRAGGABLE));
+  setDraggable(h.find(SEL.DRAGGABLE), true);
   enableDraggable(h, cardIds.length > 0);
 };
 
