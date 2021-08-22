@@ -83,7 +83,6 @@ function vistaToPila(ev: JQuery.Event) {
     if (slot >= 0) {
       pushState();
       datos.pilas[slot].unshift(datos.vista.shift());
-      debugger;
       animateMove(
         $(SEL.VISTA).find('img'),
         $(SEL.PILAS).eq(slot).find('img'),

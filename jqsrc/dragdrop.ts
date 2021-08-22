@@ -47,7 +47,6 @@ export const setDraggable = (el: JQuery, dragOriginal?: boolean) => {
     zIndex: 10,
     scroll: false,
     start: function (event, ui) {
-      console.log($(this).get(0).outerHTML, ui.helper.get(0).outerHTML);
       ui.helper.attr(
         'src',
         $(this).find('img').add($(this).filter('img')).attr('src')
@@ -61,14 +60,13 @@ function accept(source: JQuery) {
 
   const fromIndex = $(source).data('start') || 0;
   const { pos: toPos, slot: toSlot } = $(this).data();
-  // console.log('accept', { fromPos, fromSlot, fromIndex, toPos, toSlot });
 
   switch (fromPos) {
     case POS.VISTA: {
       const fromCardId = datos.vista[0];
       if (!fromCardId) return false;
       const fromCarta = baraja[fromCardId];
-      // console.log(fromCardId);
+
       switch (toPos) {
         case POS.PILA: {
           const toCardId = datos.pilas[toSlot][0];
@@ -163,9 +161,7 @@ function drop(ev: JQuery.Event, ui: any) {
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
   const fromIndex = $(ui.draggable).data('start') || 0;
-  // $(ui.draggable).draggable('disable');
-  // $(this).droppable('disable');
-  // console.log('drop', { fromPos, fromSlot, fromIndex, toPos, toSlot });
+
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
