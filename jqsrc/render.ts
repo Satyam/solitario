@@ -31,7 +31,8 @@ const createContainer = (
   $(`
 <div class="celda ${name} ${droppable ? 'droppable' : ''}">
   <div class="cardContainer">
-    ${cardImg(REVERSO, draggable ? 'draggable' : '')}
+    ${cardImg(REVERSO, `top ${draggable ? 'draggable' : ''}`)}
+    ${cardImg(HUECO, 'behind')}
   </div>
 </div>
 `);
@@ -42,9 +43,7 @@ const emptyHuecoStackPosition = `
   data-start="0"
   data-cardid="${HUECO}"
 >
-  <div class="clipper">
-    ${cardImg(HUECO)}
-  </div>
+  ${cardImg(HUECO)}
 </div>
 `;
 
@@ -56,8 +55,10 @@ const emptyHuecoContainer = `
 </div>
 `;
 
-const setCardId = (el: JQuery, cardId: tCardId) =>
-  el.find('img').first().prop('src', imgSrc(cardId));
+const setCardId = (el: JQuery, cardId: tCardId) => {
+  const imgEls = el.find('img');
+  imgEls.first().prop('src', imgSrc(cardId));
+};
 
 export const initBoard = () => {
   const boardEl = $('.grid');
@@ -82,22 +83,33 @@ export const renderMazo = () => {
   setCardId($(SEL.MAZO), cardId);
 };
 
+const renderVoP = (
+  containerEl: JQuery,
+  cardIdTop: tCardId,
+  cardIdNext: tCardId = HUECO
+) => {
+  const imgTop = containerEl.find('.top');
+  if (imgTop.length) {
+    imgTop.prop('src', imgSrc(cardIdTop));
+  } else {
+    containerEl.children().append(cardImg(cardIdTop, 'draggable'));
+    enableDraggable(imgTop, cardIdTop !== HUECO);
+  }
+  containerEl.find('.behind').prop('src', imgSrc(cardIdNext));
+};
+
 export const renderVista = () => {
   const cardId = datos.vista[0] || HUECO;
   if (cardId === topVista) return;
   topVista = cardId;
-  const vistaEl = $(SEL.VISTA);
-  setCardId(vistaEl, cardId);
-  enableDraggable(vistaEl, cardId !== HUECO);
+  renderVoP($(SEL.VISTA), cardId, datos.vista[1]);
 };
 
 export const renderPila = (slot: number) => {
   const cardId = datos.pilas[slot][0] || HUECO;
   if (cardId === topPilas[slot]) return;
   topPilas[slot] = cardId;
-  const pilaEl = $(SEL.PILAS).eq(slot);
-  setCardId(pilaEl, cardId);
-  enableDraggable(pilaEl, cardId !== HUECO);
+  renderVoP($(SEL.PILAS).eq(slot), cardId, datos.pilas[slot][1]);
 };
 
 export const renderPilas = () => $(SEL.PILAS).each(renderPila);
@@ -109,8 +121,8 @@ const renderHuecoStack = (
   stackLength: number
 ) => {
   const [cardId, ...rest] = cardIds;
-  const isVisible = stackLength - rest.length > firstShown;
-  const isLast = rest.length === 0;
+  const index = stackLength - rest.length;
+  const isVisible = index > firstShown;
 
   // Ajusto la carta existente
   el.data({
@@ -118,8 +130,8 @@ const renderHuecoStack = (
     cardid: cardId || HUECO,
   })
     .toggleClass('draggable', isVisible)
-    .find('.clipper')
-    .toggleClass('short', !isLast);
+    .toggleClass('offset', index > 1)
+    .css({ zIndex: index });
   setCardId(el, isVisible ? cardId || HUECO : REVERSO);
   // ajuste hecho
 
@@ -127,8 +139,7 @@ const renderHuecoStack = (
     let next = el.find('.stack').first();
     // If there is no place to render the rest, create a stack position and carry on
     if (next.length === 0) {
-      el.append(emptyHuecoStackPosition);
-      next = el.find('.stack').first();
+      next = $(emptyHuecoStackPosition).appendTo(el);
     }
     renderHuecoStack(next, rest, firstShown, stackLength);
   } else {
