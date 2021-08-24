@@ -40,11 +40,13 @@ export const enableDraggable = (el: JQuery, enabled: boolean) => {
 
 export const setDraggable = (el: JQuery, preserve?: boolean) => {
   el.draggable({
-    zIndex: 10,
+    zIndex: 100,
     scroll: false,
-    stop: function (event, ui) {
-      if (!preserve) ui.helper.remove();
-    },
+    revert: 'invalid',
+    revertDuration: 50,
+    // stop: function (event, ui) {
+    //   if (!preserve) ui.helper.remove();
+    // },
   });
 };
 

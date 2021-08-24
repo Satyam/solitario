@@ -16,6 +16,11 @@ let topVista: tCardId;
 const topPilas: tCardId[] = Array(numPilas);
 const topHuecos: tCardId[] = Array(numHuecos);
 
+const s = getComputedStyle(document.documentElement);
+const cardWidth = parseInt(s.getPropertyValue('--cardWidth'), 10);
+const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
+const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
+
 export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
 export const cardImg = (cardId: tCardId, className: string = ''): string =>
@@ -90,7 +95,7 @@ const renderVoP = (
 ) => {
   const imgTop = containerEl.find('.top');
   if (imgTop.length) {
-    imgTop.prop('src', imgSrc(cardIdTop));
+    imgTop.prop('src', imgSrc(cardIdTop)).css({ left: 0, top: 0 });
   } else {
     containerEl.children().append(cardImg(cardIdTop, 'draggable'));
     enableDraggable(imgTop, cardIdTop !== HUECO);
@@ -161,6 +166,10 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     cardIds.length
   );
 
+  h.find('.cardContainer').css({
+    height: (cardIds.length - 1) * shortCardHeight + cardHeight,
+    width: cardWidth,
+  });
   setDraggable(h.find(SEL.DRAGGABLE), true);
   enableDraggable(h, cardIds.length > 0);
 };
