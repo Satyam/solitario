@@ -23,6 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 #satyam
-public/assets
-public/assets
-.git.old
+public/assets/*
+!public/assets/jq.css
