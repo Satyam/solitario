@@ -44,9 +44,9 @@ export const setDraggable = (el: JQuery, preserve?: boolean) => {
     scroll: false,
     revert: 'invalid',
     revertDuration: 50,
-    // stop: function (event, ui) {
-    //   if (!preserve) ui.helper.remove();
-    // },
+    stop: function (event, ui) {
+      if (!preserve) ui.helper.remove();
+    },
   });
 };
 

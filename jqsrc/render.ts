@@ -16,10 +16,10 @@ let topVista: tCardId;
 const topPilas: tCardId[] = Array(numPilas);
 const topHuecos: tCardId[] = Array(numHuecos);
 
-const s = getComputedStyle(document.documentElement);
-const cardWidth = parseInt(s.getPropertyValue('--cardWidth'), 10);
-const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
-const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
+// const s = getComputedStyle(document.documentElement);
+// const cardWidth = parseInt(s.getPropertyValue('--cardWidth'), 10);
+// const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
+// const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
 
 export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
@@ -94,13 +94,19 @@ const renderVoP = (
   cardIdNext: tCardId = HUECO
 ) => {
   const imgTop = containerEl.find('.top');
+  const imgBehind = containerEl.find('.behind');
+
   if (imgTop.length) {
-    imgTop.prop('src', imgSrc(cardIdTop)).css({ left: 0, top: 0 });
+    imgTop.prop('src', imgSrc(cardIdTop)).offset(imgBehind.offset());
   } else {
-    containerEl.children().append(cardImg(cardIdTop, 'draggable'));
+    setDraggable(
+      $(cardImg(cardIdTop, 'draggable top'))
+        .appendTo(containerEl.children())
+        .offset(imgBehind.offset())
+    );
     enableDraggable(imgTop, cardIdTop !== HUECO);
   }
-  containerEl.find('.behind').prop('src', imgSrc(cardIdNext));
+  imgBehind.prop('src', imgSrc(cardIdNext));
 };
 
 export const renderVista = () => {
@@ -135,8 +141,7 @@ const renderHuecoStack = (
     cardid: cardId || HUECO,
   })
     .toggleClass('draggable', isVisible)
-    .toggleClass('offset', index > 1)
-    .css({ zIndex: index });
+    .toggleClass('offset', index > 1);
   setCardId(el, isVisible ? cardId || HUECO : REVERSO);
   // ajuste hecho
 
@@ -166,11 +171,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     cardIds.length
   );
 
-  h.find('.cardContainer').css({
-    height: (cardIds.length - 1) * shortCardHeight + cardHeight,
-    width: cardWidth,
-  });
-  setDraggable(h.find(SEL.DRAGGABLE), true);
+  setDraggable(h.find(SEL.DRAGGABLE));
   enableDraggable(h, cardIds.length > 0);
 };
 
