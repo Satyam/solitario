@@ -38,15 +38,12 @@ export const enableDraggable = (el: JQuery, enabled: boolean) => {
   el.find(SEL.DRAGGABLE).draggable(enabled ? 'enable' : 'disable');
 };
 
-export const setDraggable = (el: JQuery, preserve?: boolean) => {
+export const setDraggable = (el: JQuery) => {
   el.draggable({
     zIndex: 100,
     scroll: false,
     revert: 'invalid',
     revertDuration: 50,
-    stop: function (event, ui) {
-      if (!preserve) ui.helper.remove();
-    },
   });
 };
 
@@ -156,7 +153,6 @@ function drop(ev: JQuery.Event, ui: any) {
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
   const fromIndex = $(ui.draggable).data('start') || 0;
-
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
@@ -164,6 +160,7 @@ function drop(ev: JQuery.Event, ui: any) {
           pushState();
           datos.pilas[toSlot].unshift(datos.vista.shift());
           setTimeout(() => {
+            ui.helper.remove();
             renderPila(toSlot);
             renderVista();
           }, 100);
@@ -172,6 +169,7 @@ function drop(ev: JQuery.Event, ui: any) {
           pushState();
           datos.huecos[toSlot].unshift(datos.vista.shift());
           setTimeout(() => {
+            ui.helper.remove();
             renderVista();
             renderHueco(toSlot);
           }, 100);
@@ -184,6 +182,7 @@ function drop(ev: JQuery.Event, ui: any) {
           pushState();
           datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
           setTimeout(() => {
+            ui.helper.remove();
             renderPila(fromSlot);
             renderHueco(toSlot);
           }, 100);
@@ -196,6 +195,7 @@ function drop(ev: JQuery.Event, ui: any) {
           pushState();
           datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
           setTimeout(() => {
+            ui.helper.remove();
             renderHueco(fromSlot);
             renderPila(toSlot);
           }, 100);
@@ -207,6 +207,7 @@ function drop(ev: JQuery.Event, ui: any) {
             ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
           );
           setTimeout(() => {
+            ui.helper.remove();
             renderHueco(fromSlot);
             renderHueco(toSlot);
           }, 100);
