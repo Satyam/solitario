@@ -164,8 +164,12 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
 
+  let stack = h.find('.stack');
+  if (stack.length === 0) {
+    stack = $(emptyHuecoStackPosition).appendTo(h.children());
+  }
   renderHuecoStack(
-    h.find('.stack').first(),
+    stack.first(),
     cardIds.slice(0).reverse(),
     datos.firstShown[slot],
     cardIds.length
