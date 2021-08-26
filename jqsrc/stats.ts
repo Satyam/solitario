@@ -1,4 +1,4 @@
-import { datos, baraja } from './datos.js';
+import { datos } from './datos.js';
 
 let jugadas = 0;
 let rondas = 0;
@@ -12,14 +12,7 @@ export const renderStats = () => {
     <div>Undos: ${undos}</div>
     <div>Redos: ${redos}</div>
   `);
-  $('.gameover').toggle(
-    datos.pilas.every((pila) => {
-      if (pila.length === 0) return false;
-      const topCarta = baraja[pila[0]];
-      if (topCarta.valor !== 'A') return false;
-      return true;
-    })
-  );
+  $('.gameover').toggle(datos.pilas.every((pila) => pila.length === 13));
 };
 
 export const initStats = () => {
