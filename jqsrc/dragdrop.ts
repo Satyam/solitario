@@ -2,7 +2,7 @@ import { renderPila, renderVista, renderHueco } from './render.js';
 import { POS, SEL, datos, baraja } from './datos.js';
 import { pushState } from './undoStack.js';
 import { fixFirstShown } from './utils.js';
-
+import { incJugadas } from './stats.js';
 export const initDrag = () => {
   $(SEL.MAZO).data({
     pos: POS.MAZO,
@@ -203,5 +203,6 @@ function drop(ev: JQuery.Event, ui: any) {
       }
       break;
   }
+  incJugadas();
   ui.helper.remove();
 }

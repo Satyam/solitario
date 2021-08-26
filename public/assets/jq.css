@@ -93,3 +93,10 @@ button:disabled {
 .ui-droppable-active .cardContainer {
   border-color: cyan;
 }
+
+.stats {
+  color: wheat;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1rem;
+}

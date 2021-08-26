@@ -1,3 +1,5 @@
+import { initStats, incJugadas, incRondas } from './stats.js';
+
 import {
   SEL,
   datos,
@@ -7,6 +9,7 @@ import {
   numPilas,
   tCarta,
 } from './datos.js';
+
 import {
   renderAll,
   renderMazo,
@@ -46,6 +49,7 @@ export const startNewGame = (): void => {
 
   renderAll();
   initUndo();
+  initStats();
 };
 
 const dealCard = (ev: JQuery.Event) => {
@@ -55,9 +59,11 @@ const dealCard = (ev: JQuery.Event) => {
   } else {
     datos.mazo = datos.vista.reverse();
     datos.vista = [];
+    incRondas();
   }
   renderMazo();
   renderVista();
+  incJugadas();
 };
 
 function canDropInPila(fromCarta: tCarta) {
@@ -92,6 +98,7 @@ function vistaToPila(ev: JQuery.Event) {
         true
       );
       renderVista();
+      incJugadas();
     }
     // stop propagation
     return false;
@@ -112,6 +119,7 @@ function huecoToPila(ev: JQuery.Event) {
         renderPila(toSlot);
       });
       srcEl.parents('.stack').first().siblings('.short').removeClass('short');
+      incJugadas();
     }
     // stop propagation
     return false;

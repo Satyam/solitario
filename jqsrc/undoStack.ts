@@ -1,5 +1,6 @@
 import { datos, tDatos } from './datos.js';
 import { renderAll } from './render.js';
+import { incUndos, incRedos } from './stats.js';
 
 const undoStack: string[] = [];
 let previous = -1;
@@ -36,6 +37,7 @@ export const pushState = () => {
 const undo = () => {
   r('- undo');
   if (previous < 0) return;
+  incUndos();
   undoStack[previous + 1] = JSON.stringify(datos);
   Object.assign(datos, JSON.parse(undoStack[previous]) as tDatos);
   previous -= 1;
@@ -48,6 +50,7 @@ const redo = () => {
   r('- redo');
 
   if (previous >= undoStack.length - 2) return;
+  incRedos();
   previous += 1;
   Object.assign(datos, JSON.parse(undoStack[previous + 1]) as tDatos);
   renderAll();
