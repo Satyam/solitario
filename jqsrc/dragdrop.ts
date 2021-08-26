@@ -154,6 +154,8 @@ function drop(ev: JQuery.Event, ui: any) {
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
   const fromIndex = ui.draggable.data('start') || 0;
+  incJugadas();
+  ui.helper.remove();
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
@@ -203,6 +205,4 @@ function drop(ev: JQuery.Event, ui: any) {
       }
       break;
   }
-  incJugadas();
-  ui.helper.remove();
 }
