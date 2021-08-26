@@ -48,11 +48,12 @@ export const setDraggable = (el: JQuery) => {
 };
 
 function accept(source: JQuery) {
-  const { pos: fromPos, slot: fromSlot } = $(source).closest(SEL.CELDA).data();
+  const celda = source.closest(SEL.CELDA);
+  if (celda.length === 0) return false;
+  const { pos: fromPos, slot: fromSlot } = celda.data();
 
-  const fromIndex = $(source).data('start') || 0;
+  const fromIndex = source.data('start') || 0;
   const { pos: toPos, slot: toSlot } = $(this).data();
-
   switch (fromPos) {
     case POS.VISTA: {
       const fromCardId = datos.vista[0];
@@ -148,31 +149,25 @@ function accept(source: JQuery) {
 }
 
 function drop(ev: JQuery.Event, ui: any) {
-  const { pos: fromPos, slot: fromSlot } = $(ui.draggable)
+  const { pos: fromPos, slot: fromSlot } = ui.draggable
     .closest(SEL.CELDA)
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
-  const fromIndex = $(ui.draggable).data('start') || 0;
+  const fromIndex = ui.draggable.data('start') || 0;
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
         case POS.PILA:
           pushState();
           datos.pilas[toSlot].unshift(datos.vista.shift());
-          setTimeout(() => {
-            ui.helper.remove();
-            renderPila(toSlot);
-            renderVista();
-          }, 100);
+          renderPila(toSlot);
+          renderVista();
           break;
         case POS.HUECO:
           pushState();
           datos.huecos[toSlot].unshift(datos.vista.shift());
-          setTimeout(() => {
-            ui.helper.remove();
-            renderVista();
-            renderHueco(toSlot);
-          }, 100);
+          renderVista();
+          renderHueco(toSlot);
           break;
       }
       break;
@@ -181,11 +176,8 @@ function drop(ev: JQuery.Event, ui: any) {
         case POS.HUECO:
           pushState();
           datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
-          setTimeout(() => {
-            ui.helper.remove();
-            renderPila(fromSlot);
-            renderHueco(toSlot);
-          }, 100);
+          renderPila(fromSlot);
+          renderHueco(toSlot);
           break;
       }
       break;
@@ -194,11 +186,9 @@ function drop(ev: JQuery.Event, ui: any) {
         case POS.PILA:
           pushState();
           datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-          setTimeout(() => {
-            ui.helper.remove();
-            renderHueco(fromSlot);
-            renderPila(toSlot);
-          }, 100);
+          fixFirstShown(fromSlot);
+          renderHueco(fromSlot);
+          renderPila(toSlot);
           break;
 
         case POS.HUECO:
@@ -206,15 +196,12 @@ function drop(ev: JQuery.Event, ui: any) {
           datos.huecos[toSlot].unshift(
             ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
           );
-          setTimeout(() => {
-            ui.helper.remove();
-            renderHueco(fromSlot);
-            renderHueco(toSlot);
-          }, 100);
+          fixFirstShown(fromSlot);
+          renderHueco(fromSlot);
+          renderHueco(toSlot);
           break;
       }
-      fixFirstShown(fromSlot);
       break;
   }
-  $('.ui-droppable-active').removeClass('ui-droppable-active');
+  ui.helper.remove();
 }
