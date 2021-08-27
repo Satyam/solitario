@@ -74,17 +74,15 @@ function canDropInPila(fromCardId: tCardId) {
   return -1;
 }
 
-function vistaToPila(toSlot: number): boolean {
+async function vistaToPila(toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
   pushState();
   datos.pilas[toSlot].unshift(datos.vista.shift());
-  animateMove(
+  await animateMove(
     $(SEL.VISTA).find('.top'),
-    $(SEL.PILAS).eq(toSlot).find('.top'),
-    function () {
-      renderPila(toSlot);
-    }
+    $(SEL.PILAS).eq(toSlot).find('.top')
   );
+  renderPila(toSlot);
   renderVista();
   incJugadas();
 
@@ -93,20 +91,21 @@ function vistaToPila(toSlot: number): boolean {
 
 function raiseFromVista(ev: JQuery.Event) {
   if (ev.buttons === 4) {
-    return vistaToPila(canDropInPila(datos.vista[0]));
+    vistaToPila(canDropInPila(datos.vista[0]));
+    return false;
   }
 }
 
-function huecoToPila(fromSlot: number, toSlot: number): boolean {
+async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
   pushState();
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
-  animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'), function () {
-    fixFirstShown(fromSlot);
-    renderHueco(fromSlot);
-    renderPila(toSlot);
-  });
+  await animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'));
+  fixFirstShown(fromSlot);
+  renderHueco(fromSlot);
+  renderPila(toSlot);
+
   // srcEl.parents('.stack').first().siblings('.short').removeClass('short');
   incJugadas();
   return true;
@@ -122,37 +121,42 @@ function raiseFromHueco(ev: JQuery.Event) {
   }
 }
 
-function animateMove(srcEl: JQuery, destEl: JQuery, callback: () => void) {
-  const srcPos = srcEl.offset();
-  srcEl.css({
-    position: 'absolute',
-    left: srcPos.left,
-    top: srcPos.top,
-    zIndex: 10,
-  });
-  const destPos = destEl.offset();
-  srcEl.animate(
-    {
-      left: `+=${destPos.left - srcPos.left}`,
-      top: `+=${destPos.top - srcPos.top}`,
-    },
-    {
-      duration: 200,
-      easing: 'swing',
-      complete: () => {
-        srcEl.remove();
-        callback();
+function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
+  return new Promise((resolve) => {
+    const srcPos = srcEl.offset();
+    srcEl.css({
+      position: 'absolute',
+      left: srcPos.left,
+      top: srcPos.top,
+      zIndex: 10,
+    });
+    const destPos = destEl.offset();
+    srcEl.animate(
+      {
+        left: `+=${destPos.left - srcPos.left}`,
+        top: `+=${destPos.top - srcPos.top}`,
       },
-    }
-  );
+      {
+        duration: 200,
+        easing: 'swing',
+        complete: () => {
+          srcEl.remove();
+          resolve();
+        },
+      }
+    );
+  });
 }
 
-function raiseAll() {
-  let found = false;
-  do {
-    found = datos.huecos.some((hueco, fromSlot) =>
-      huecoToPila(fromSlot, canDropInPila(hueco[0]))
-    );
-    found ||= vistaToPila(canDropInPila(datos.vista[0]));
-  } while (found);
+async function raiseAll() {
+  loop: do {
+    if (await vistaToPila(canDropInPila(datos.vista[0]))) continue;
+    const huecos = datos.huecos;
+    const l = huecos.length;
+    for (let fromSlot = 0; fromSlot < l; fromSlot++) {
+      if (await huecoToPila(fromSlot, canDropInPila(huecos[fromSlot][0])))
+        continue loop;
+    }
+    break;
+  } while (true);
 }
