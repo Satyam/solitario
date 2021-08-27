@@ -1,14 +1,6 @@
 import { initStats, incJugadas, incRondas } from './stats.js';
 
-import {
-  SEL,
-  datos,
-  tCardId,
-  baraja,
-  numHuecos,
-  numPilas,
-  tCarta,
-} from './datos.js';
+import { SEL, datos, tCardId, baraja, numHuecos, numPilas } from './datos.js';
 
 import {
   renderAll,
@@ -23,14 +15,12 @@ import { shuffle, fixFirstShown } from './utils.js';
 export const initActions = () => {
   // Buttons
   $('#newGame').on('click', startNewGame);
-  $('#raise').on('click', () => {
-    console.log(datos);
-  });
+  $('#raise').on('click', raiseAll);
 
   // cards
   $(SEL.MAZO).on('click', dealCard);
-  $(SEL.VISTA).on('mousedown', vistaToPila);
-  $(SEL.HUECOS).on('mousedown', huecoToPila);
+  $(SEL.VISTA).on('mousedown', raiseFromVista);
+  $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 };
 
 export const startNewGame = (): void => {
@@ -66,8 +56,9 @@ const dealCard = (ev: JQuery.Event) => {
   incJugadas();
 };
 
-function canDropInPila(fromCarta: tCarta) {
-  if (typeof fromCarta === 'undefined') return -1;
+function canDropInPila(fromCardId: tCardId) {
+  if (typeof fromCardId === 'undefined') return -1;
+  const fromCarta = baraja[fromCardId];
   for (let slot = 0; slot < numPilas; slot++) {
     const toCarta = baraja[datos.pilas[slot][0]];
     if (toCarta) {
@@ -83,43 +74,49 @@ function canDropInPila(fromCarta: tCarta) {
   return -1;
 }
 
-function vistaToPila(ev: JQuery.Event) {
-  if (ev.buttons === 4) {
-    const slot = canDropInPila(baraja[datos.vista[0]]);
-    if (slot >= 0) {
-      pushState();
-      datos.pilas[slot].unshift(datos.vista.shift());
-      animateMove(
-        $(SEL.VISTA).find('.top'),
-        $(SEL.PILAS).eq(slot).find('.top'),
-        function () {
-          renderPila(slot);
-        }
-      );
-      renderVista();
-      incJugadas();
+function vistaToPila(toSlot: number): boolean {
+  if (toSlot === -1) return false;
+  pushState();
+  datos.pilas[toSlot].unshift(datos.vista.shift());
+  animateMove(
+    $(SEL.VISTA).find('.top'),
+    $(SEL.PILAS).eq(toSlot).find('.top'),
+    function () {
+      renderPila(toSlot);
     }
-    // stop propagation
-    return false;
+  );
+  renderVista();
+  incJugadas();
+
+  return true;
+}
+
+function raiseFromVista(ev: JQuery.Event) {
+  if (ev.buttons === 4) {
+    return vistaToPila(canDropInPila(datos.vista[0]));
   }
 }
 
-function huecoToPila(ev: JQuery.Event) {
+function huecoToPila(fromSlot: number, toSlot: number): boolean {
+  if (toSlot === -1) return false;
+  pushState();
+  datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
+  const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
+  animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'), function () {
+    fixFirstShown(fromSlot);
+    renderHueco(fromSlot);
+    renderPila(toSlot);
+  });
+  // srcEl.parents('.stack').first().siblings('.short').removeClass('short');
+  incJugadas();
+  return true;
+}
+
+function raiseFromHueco(ev: JQuery.Event) {
   if (ev.buttons === 4) {
     const fromSlot = $(this).data('slot');
-    const toSlot = canDropInPila(baraja[datos.huecos[fromSlot][0]]);
-    if (toSlot >= 0) {
-      pushState();
-      datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-      const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
-      animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'), function () {
-        fixFirstShown(fromSlot);
-        renderHueco(fromSlot);
-        renderPila(toSlot);
-      });
-      srcEl.parents('.stack').first().siblings('.short').removeClass('short');
-      incJugadas();
-    }
+    const toSlot = canDropInPila(datos.huecos[fromSlot][0]);
+    huecoToPila(fromSlot, toSlot);
     // stop propagation
     return false;
   }
@@ -148,4 +145,14 @@ function animateMove(srcEl: JQuery, destEl: JQuery, callback: () => void) {
       },
     }
   );
+}
+
+function raiseAll() {
+  let found = false;
+  do {
+    found = datos.huecos.some((hueco, fromSlot) =>
+      huecoToPila(fromSlot, canDropInPila(hueco[0]))
+    );
+    found ||= vistaToPila(canDropInPila(datos.vista[0]));
+  } while (found);
 }
