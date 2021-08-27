@@ -56,8 +56,7 @@ const emptyHuecoContainer = `
 `;
 
 const setCardId = (el: JQuery, cardId: tCardId) => {
-  const imgEls = el.find('img');
-  imgEls.first().prop('src', imgSrc(cardId));
+  el.find('img').add(el.filter('img')).prop('src', imgSrc(cardId));
 };
 
 export const initBoard = () => {
@@ -80,7 +79,7 @@ export const renderMazo = () => {
   const cardId = datos.mazo.length ? REVERSO : HUECO;
   if (cardId === topMazo) return;
   topMazo = cardId;
-  setCardId($(SEL.MAZO), cardId);
+  setCardId($(SEL.MAZO).find('.top'), cardId);
 };
 
 const renderVoP = (
@@ -92,14 +91,14 @@ const renderVoP = (
   const imgBehind = containerEl.find('.behind');
 
   if (imgTop.length) {
-    imgTop.prop('src', imgSrc(cardIdTop));
+    setCardId(imgTop, cardIdTop);
   } else {
     setDraggable(
       $(cardImg(cardIdTop, 'draggable top')).appendTo(containerEl.children())
     );
     enableDraggable(imgTop, cardIdTop !== HUECO);
   }
-  imgBehind.prop('src', imgSrc(cardIdNext));
+  setCardId(imgBehind, cardIdNext);
 };
 
 export const renderVista = () => {
