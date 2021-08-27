@@ -205,4 +205,5 @@ function drop(ev: JQuery.Event, ui: any) {
       }
       break;
   }
+  $('.ui-droppable-active').removeClass('ui-droppable-active');
 }
