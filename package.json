@@ -28,7 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "jq": "tsc --watch --project jqsrc/tsconfig.json &  serve public  &"
+    "server": "serve public",
+    "jq": "tsc --watch --project jqsrc/tsconfig.json"
   },
   "eslintConfig": {
     "extends": [
