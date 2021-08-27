@@ -21,7 +21,12 @@ body {
 }
 
 .top {
-  position: absolute;
+  position: relative;
+  top: calc(var(--cardHeight) * -1);
+}
+
+.single {
+  height: var(--cardHeight);
 }
 .stack {
   position: relative;
@@ -29,6 +34,7 @@ body {
 
 .offset {
   top: calc(var(--shortCardHeight) - var(--cardHeight));
+  height: var(--cardHeight);
 }
 
 .grid {
@@ -100,3 +106,18 @@ button:disabled {
   grid-template-columns: repeat(4, 1fr);
   column-gap: 1rem;
 }
+/* for debugging 
+.ui-droppable {
+  border: medium solid green;
+}
+.ui-droppable-active {
+  border-color: white;
+}
+
+.ui-draggable {
+  border: thin solid yellow;
+}
+.ui-draggable-dragging {
+  border-color: magenta;
+}
+*/
