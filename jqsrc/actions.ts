@@ -90,12 +90,11 @@ function vistaToPila(ev: JQuery.Event) {
       pushState();
       datos.pilas[slot].unshift(datos.vista.shift());
       animateMove(
-        $(SEL.VISTA).find('img'),
-        $(SEL.PILAS).eq(slot).find('img'),
+        $(SEL.VISTA).find('.top'),
+        $(SEL.PILAS).eq(slot).find('.top'),
         function () {
           renderPila(slot);
-        },
-        true
+        }
       );
       renderVista();
       incJugadas();
@@ -113,7 +112,7 @@ function huecoToPila(ev: JQuery.Event) {
       pushState();
       datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
       const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
-      animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('img'), function () {
+      animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'), function () {
         fixFirstShown(fromSlot);
         renderHueco(fromSlot);
         renderPila(toSlot);
@@ -126,22 +125,16 @@ function huecoToPila(ev: JQuery.Event) {
   }
 }
 
-function animateMove(
-  srcEl: JQuery,
-  destEl: JQuery,
-  callback: () => void,
-  clone: boolean = false
-) {
+function animateMove(srcEl: JQuery, destEl: JQuery, callback: () => void) {
   const srcPos = srcEl.offset();
-  const cloneEl = clone ? srcEl.clone().appendTo(srcEl.parent()) : srcEl;
-  cloneEl.css({
+  srcEl.css({
     position: 'absolute',
     left: srcPos.left,
     top: srcPos.top,
     zIndex: 10,
   });
   const destPos = destEl.offset();
-  cloneEl.animate(
+  srcEl.animate(
     {
       left: `+=${destPos.left - srcPos.left}`,
       top: `+=${destPos.top - srcPos.top}`,
@@ -150,16 +143,7 @@ function animateMove(
       duration: 200,
       easing: 'swing',
       complete: () => {
-        if (clone) {
-          cloneEl.remove();
-        } else {
-          cloneEl.css({
-            position: 'relative',
-            left: 0,
-            top: 0,
-            zIndex: 'auto',
-          });
-        }
+        srcEl.remove();
         callback();
       },
     }
