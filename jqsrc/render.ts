@@ -16,6 +16,10 @@ let topVista: tCardId;
 const topPilas: tCardId[] = Array(numPilas);
 const topHuecos: tCardId[] = Array(numHuecos);
 
+const s = getComputedStyle(document.documentElement);
+const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
+const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
+
 export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
 export const cardImg = (cardId: tCardId, className: string = ''): string =>
@@ -134,6 +138,9 @@ const renderHuecoStack = (
   })
     .toggleClass('draggable', isVisible)
     .toggleClass('offset', index > 1);
+  if (el.find('img').length === 0) {
+    el.append(cardImg(HUECO));
+  }
   setCardId(el, isVisible ? cardId || HUECO : REVERSO);
   // ajuste hecho
 
@@ -166,7 +173,9 @@ const renderOneHueco = (h: JQuery, slot: number) => {
     datos.firstShown[slot],
     cardIds.length
   );
-
+  h.find('.cardContainer').css({
+    height: ((cardIds.length || 1) - 1) * shortCardHeight + cardHeight,
+  });
   setDraggable(h.find(SEL.DRAGGABLE));
   enableDraggable(h, cardIds.length > 0);
 };
