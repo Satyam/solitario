@@ -79,8 +79,8 @@ async function vistaToPila(toSlot: number): Promise<boolean> {
   pushState();
   datos.pilas[toSlot].unshift(datos.vista.shift());
   await animateMove(
-    $(SEL.VISTA).find('.top'),
-    $(SEL.PILAS).eq(toSlot).find('.top')
+    $(SEL.VISTA).find(SEL.TOP),
+    $(SEL.PILAS).eq(toSlot).find(SEL.TOP)
   );
   renderPila(toSlot);
   renderVista();
@@ -101,8 +101,8 @@ async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   pushState();
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   await animateMove(
-    $(SEL.HUECOS).eq(fromSlot).find('img').last(),
-    $(SEL.PILAS).eq(toSlot).find('.top')
+    $(SEL.HUECOS).eq(fromSlot).find(SEL.IMG).last(),
+    $(SEL.PILAS).eq(toSlot).find(SEL.TOP)
   );
   fixFirstShown(fromSlot);
   renderHueco(fromSlot);
@@ -136,7 +136,7 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
         top: `+=${destPos.top - srcPos.top}`,
       },
       {
-        duration: 1000,
+        duration: 300,
         easing: 'swing',
         complete: () => {
           srcEl.remove();

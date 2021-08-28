@@ -60,7 +60,7 @@ const emptyHuecoContainer = `
 `;
 
 const setCardId = (el: JQuery, cardId: tCardId) => {
-  el.find('img').add(el.filter('img')).prop('src', imgSrc(cardId));
+  el.find(SEL.IMG).add(el.filter(SEL.IMG)).prop('src', imgSrc(cardId));
 };
 
 export const initBoard = () => {
@@ -83,7 +83,7 @@ export const renderMazo = () => {
   const cardId = datos.mazo.length ? REVERSO : HUECO;
   if (cardId === topMazo) return;
   topMazo = cardId;
-  setCardId($(SEL.MAZO).find('.top'), cardId);
+  setCardId($(SEL.MAZO).find(SEL.TOP), cardId);
 };
 
 const renderVoP = (
@@ -91,7 +91,7 @@ const renderVoP = (
   cardIdTop: tCardId = HUECO,
   cardIdNext: tCardId = HUECO
 ) => {
-  const imgTop = containerEl.find('.top');
+  const imgTop = containerEl.find(SEL.TOP);
   const imgBehind = containerEl.find('.behind');
 
   if (imgTop.length) {
@@ -138,14 +138,14 @@ const renderHuecoStack = (
   })
     .toggleClass('draggable', isVisible)
     .toggleClass('offset', index > 1);
-  if (el.find('img').length === 0) {
+  if (el.find(SEL.IMG).length === 0) {
     el.append(cardImg(HUECO));
   }
   setCardId(el, isVisible ? cardId || HUECO : REVERSO);
   // ajuste hecho
 
   if (rest.length) {
-    let next = el.find('.stack').first();
+    let next = el.find(SEL.STACK).first();
     // If there is no place to render the rest, create a stack position and carry on
     if (next.length === 0) {
       next = $(emptyHuecoStackPosition).appendTo(el);
@@ -153,7 +153,7 @@ const renderHuecoStack = (
     renderHuecoStack(next, rest, firstShown, stackLength);
   } else {
     // remove further stack positions.
-    el.find('.stack').remove();
+    el.find(SEL.STACK).remove();
   }
 };
 
@@ -163,7 +163,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   if (cardId === topHuecos[slot]) return;
   topHuecos[slot] = cardId;
 
-  let stack = h.find('.stack');
+  let stack = h.find(SEL.STACK);
   if (stack.length === 0) {
     stack = $(emptyHuecoStackPosition).appendTo(h.children());
   }

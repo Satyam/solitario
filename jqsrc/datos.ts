@@ -72,6 +72,9 @@ export enum SEL {
   DROPPABLE = '.droppable',
   DRAGGABLE = '.draggable',
   CELDA = '.celda',
+  TOP = '.top',
+  IMG = 'img',
+  STACK = '.stack',
 }
 
 export const numPilas = 4;
