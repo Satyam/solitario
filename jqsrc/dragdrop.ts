@@ -30,6 +30,7 @@ export const initDrag = () => {
   $(SEL.DROPPABLE)
     .droppable({
       accept,
+      tolerance: 'pointer',
     })
     .on('drop', drop);
 };
