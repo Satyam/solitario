@@ -149,7 +149,7 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
 }
 
 async function raiseAll() {
-  loop: do {
+  loop: while (true) {
     if (await vistaToPila(canDropInPila(datos.vista[0]))) continue;
     const huecos = datos.huecos;
     const l = huecos.length;
@@ -158,5 +158,5 @@ async function raiseAll() {
         continue loop;
     }
     break;
-  } while (true);
+  }
 }
