@@ -100,13 +100,14 @@ async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
   pushState();
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-  const srcEl = $(SEL.HUECOS).eq(fromSlot).find('img').last();
-  await animateMove(srcEl, $(SEL.PILAS).eq(toSlot).find('.top'));
+  await animateMove(
+    $(SEL.HUECOS).eq(fromSlot).find('img').last(),
+    $(SEL.PILAS).eq(toSlot).find('.top')
+  );
   fixFirstShown(fromSlot);
   renderHueco(fromSlot);
   renderPila(toSlot);
 
-  // srcEl.parents('.stack').first().siblings('.short').removeClass('short');
   incJugadas();
   return true;
 }
@@ -125,9 +126,7 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
   return new Promise((resolve) => {
     const srcPos = srcEl.offset();
     srcEl.css({
-      position: 'absolute',
-      left: srcPos.left,
-      top: srcPos.top,
+      position: 'relative',
       zIndex: 10,
     });
     const destPos = destEl.offset();
@@ -137,7 +136,7 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
         top: `+=${destPos.top - srcPos.top}`,
       },
       {
-        duration: 200,
+        duration: 1000,
         easing: 'swing',
         complete: () => {
           srcEl.remove();
