@@ -21,6 +21,8 @@ export const initActions = () => {
   $(SEL.MAZO).on('click', dealCard);
   $(SEL.VISTA).on('mousedown', raiseFromVista);
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
+
+  $(document).on('gameover', slideDown);
 };
 
 export const startNewGame = (): void => {
@@ -158,4 +160,23 @@ async function raiseAll() {
     }
     break;
   }
+}
+
+function slidePilaDown(slot: number, pila: tCardId[]) {
+  if (pila.length) {
+    $(SEL.PILAS)
+      .eq(slot)
+      .find(SEL.TOP)
+      .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
+        pila.shift();
+        renderPila(slot);
+        slidePilaDown(slot, pila);
+      });
+  }
+}
+
+function slideDown() {
+  datos.pilas.forEach((pila, slot) => {
+    slidePilaDown(slot, pila);
+  });
 }

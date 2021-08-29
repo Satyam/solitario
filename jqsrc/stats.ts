@@ -12,7 +12,9 @@ export const renderStats = () => {
     <div>Undos: ${undos}</div>
     <div>Redos: ${redos}</div>
   `);
-  $('.gameover').toggle(datos.pilas.every((pila) => pila.length === 13));
+  const gameover = datos.pilas.every((pila) => pila.length === 13);
+  $('.gameover').toggle(gameover);
+  if (gameover) $(document).trigger('gameover');
 };
 
 export const initStats = () => {
