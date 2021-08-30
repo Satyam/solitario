@@ -1,4 +1,4 @@
-import { datos, tDatos } from './datos.js';
+import { datos, tDatos, EV } from './datos.js';
 import { renderAll } from './render.js';
 import { incUndos, incRedos } from './stats.js';
 
@@ -6,11 +6,16 @@ const undoStack: string[] = [];
 let previous = -1;
 
 export const initUndo = () => {
+  $(document).on(EV.NEWGAME, resetUndo);
+};
+
+const resetUndo = () => {
   undoStack.length = 0;
   previous = -1;
   setButtons();
   $('#undo').on('click', undo);
   $('#redo').on('click', redo);
+  $(document).on(EV.JUGADA, pushState);
 };
 
 const r = (msg: string) => {
@@ -25,7 +30,7 @@ const r = (msg: string) => {
   // );
 };
 
-export const pushState = () => {
+const pushState = () => {
   r('- push');
   previous += 1;
   undoStack.length = previous;

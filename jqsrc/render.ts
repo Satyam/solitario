@@ -3,6 +3,7 @@ import {
   HUECO,
   POS,
   SEL,
+  EV,
   datos,
   tCardId,
   numPilas,
@@ -77,6 +78,8 @@ export const initBoard = () => {
   for (let slot = 0; slot < numHuecos; slot++) {
     boardEl.append(emptyHuecoContainer);
   }
+
+  $(document).on(EV.NEWGAME, renderAll);
 };
 
 export const renderMazo = () => {

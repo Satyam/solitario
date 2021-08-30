@@ -1,23 +1,24 @@
-import { datos } from './datos.js';
+import { EV } from './datos.js';
 
 let jugadas = 0;
 let rondas = 0;
 let undos = 0;
 let redos = 0;
 
-export const renderStats = () => {
+export const initStats = () => {
+  $(document).on(EV.JUGADA, incJugadas).on(EV.NEWGAME, resetStats);
+};
+
+const renderStats = () => {
   $('.stats').html(`
     <div >Jugadas: ${jugadas}</div>
     <div>Rondas: ${rondas}</div>
     <div>Undos: ${undos}</div>
     <div>Redos: ${redos}</div>
   `);
-  const gameover = datos.pilas.every((pila) => pila.length === 13);
-  $('.gameover').toggle(gameover);
-  if (gameover) $(document).trigger('gameover');
 };
 
-export const initStats = () => {
+const resetStats = () => {
   jugadas = 0;
   rondas = 0;
   undos = 0;

@@ -77,6 +77,11 @@ export enum SEL {
   STACK = '.stack',
 }
 
+export enum EV {
+  GAMEOVER = 'gameover',
+  JUGADA = 'jugada',
+  NEWGAME = 'newgame',
+}
 export const numPilas = 4;
 export const numHuecos = 7;
 

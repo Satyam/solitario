@@ -1,8 +1,7 @@
 import { renderPila, renderVista, renderHueco } from './render.js';
-import { POS, SEL, datos, baraja } from './datos.js';
-import { pushState } from './undoStack.js';
+import { POS, SEL, EV, datos, baraja } from './datos.js';
 import { fixFirstShown } from './utils.js';
-import { incJugadas } from './stats.js';
+
 export const initDrag = () => {
   $(SEL.MAZO).data({
     pos: POS.MAZO,
@@ -155,19 +154,17 @@ function drop(ev: JQuery.Event, ui: any) {
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
   const fromIndex = ui.draggable.data('start') || 0;
-  incJugadas();
+  $(document).trigger(EV.JUGADA);
   ui.helper.remove();
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
         case POS.PILA:
-          pushState();
           datos.pilas[toSlot].unshift(datos.vista.shift());
           renderPila(toSlot);
           renderVista();
           break;
         case POS.HUECO:
-          pushState();
           datos.huecos[toSlot].unshift(datos.vista.shift());
           renderVista();
           renderHueco(toSlot);
@@ -177,7 +174,6 @@ function drop(ev: JQuery.Event, ui: any) {
     case POS.PILA:
       switch (toPos) {
         case POS.HUECO:
-          pushState();
           datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
           renderPila(fromSlot);
           renderHueco(toSlot);
@@ -187,7 +183,6 @@ function drop(ev: JQuery.Event, ui: any) {
     case POS.HUECO:
       switch (toPos) {
         case POS.PILA:
-          pushState();
           datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
           fixFirstShown(fromSlot);
           renderHueco(fromSlot);
@@ -195,7 +190,6 @@ function drop(ev: JQuery.Event, ui: any) {
           break;
 
         case POS.HUECO:
-          pushState();
           datos.huecos[toSlot].unshift(
             ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
           );

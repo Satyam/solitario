@@ -1,20 +1,24 @@
-import { initStats, incJugadas, incRondas } from './stats.js';
-
-import { SEL, datos, tCardId, baraja, numHuecos, numPilas } from './datos.js';
+import { incRondas } from './stats.js';
 
 import {
-  renderAll,
-  renderMazo,
-  renderPila,
-  renderVista,
-  renderHueco,
-} from './render.js';
-import { initUndo, pushState } from './undoStack.js';
+  SEL,
+  EV,
+  datos,
+  tCardId,
+  baraja,
+  numHuecos,
+  numPilas,
+} from './datos.js';
+
+import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
+
 import { shuffle, fixFirstShown } from './utils.js';
 
 export const initActions = () => {
   // Buttons
-  $('#newGame').on('click', startNewGame);
+  $('#newGame').on('click', () => {
+    $(document).trigger(EV.NEWGAME);
+  });
   $('#raise').on('click', raiseAll);
 
   // cards
@@ -22,10 +26,13 @@ export const initActions = () => {
   $(SEL.VISTA).on('mousedown', raiseFromVista);
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
-  $(document).on('gameover', slideDown);
+  $(document)
+    .on(EV.GAMEOVER, slideDown)
+    .on(EV.JUGADA, checkGameover)
+    .on(EV.NEWGAME, startNewGame);
 };
 
-export const startNewGame = (): void => {
+const startNewGame = (): void => {
   datos.vista = [];
   for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
@@ -38,14 +45,16 @@ export const startNewGame = (): void => {
 
   // Place the remaining cards in the mazo.
   datos.mazo = cardIds;
+};
 
-  renderAll();
-  initUndo();
-  initStats();
+const checkGameover = () => {
+  const gameover = datos.pilas.every((pila) => pila.length === 13);
+  $('.gameover').toggle(gameover);
+  if (gameover) $(document).trigger(EV.GAMEOVER);
 };
 
 const dealCard = (ev: JQuery.Event) => {
-  pushState();
+  $(document).trigger(EV.JUGADA);
   if (datos.mazo.length) {
     datos.vista.unshift(datos.mazo.shift());
   } else {
@@ -55,7 +64,6 @@ const dealCard = (ev: JQuery.Event) => {
   }
   renderMazo();
   renderVista();
-  incJugadas();
 };
 
 function canDropInPila(fromCardId: tCardId) {
@@ -78,7 +86,7 @@ function canDropInPila(fromCardId: tCardId) {
 
 async function vistaToPila(toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
-  pushState();
+  $(document).trigger(EV.JUGADA);
   datos.pilas[toSlot].unshift(datos.vista.shift());
   await animateMove(
     $(SEL.VISTA).find(SEL.TOP),
@@ -86,7 +94,6 @@ async function vistaToPila(toSlot: number): Promise<boolean> {
   );
   renderPila(toSlot);
   renderVista();
-  incJugadas();
 
   return true;
 }
@@ -100,7 +107,7 @@ function raiseFromVista(ev: JQuery.Event) {
 
 async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
-  pushState();
+  $(document).trigger(EV.JUGADA);
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   await animateMove(
     $(SEL.HUECOS).eq(fromSlot).find(SEL.IMG).last(),
@@ -110,7 +117,6 @@ async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   renderHueco(fromSlot);
   renderPila(toSlot);
 
-  incJugadas();
   return true;
 }
 
