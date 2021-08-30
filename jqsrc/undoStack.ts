@@ -6,7 +6,7 @@ const undoStack: string[] = [];
 let previous = -1;
 
 export const initUndo = () => {
-  $(document).on(EV.NEWGAME, resetUndo);
+  $(document).on(EV.NEWGAME_BEFORE, resetUndo).on(EV.JUGADA_BEFORE, pushState);
 };
 
 const resetUndo = () => {
@@ -15,7 +15,6 @@ const resetUndo = () => {
   setButtons();
   $('#undo').on('click', undo);
   $('#redo').on('click', redo);
-  $(document).on(EV.JUGADA, pushState);
 };
 
 const r = (msg: string) => {

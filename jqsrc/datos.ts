@@ -78,9 +78,12 @@ export enum SEL {
 }
 
 export enum EV {
-  GAMEOVER = 'gameover',
-  JUGADA = 'jugada',
-  NEWGAME = 'newgame',
+  GAMEOVER_BEFORE = 'before_game_over',
+  GAMEOVER_AFTER = 'after_game_over',
+  JUGADA_BEFORE = 'before_jugada',
+  JUGADA_AFTER = 'after_jugada',
+  NEWGAME_BEFORE = 'before_new_game',
+  NEWGAME_AFTER = 'after_new_game',
 }
 export const numPilas = 4;
 export const numHuecos = 7;

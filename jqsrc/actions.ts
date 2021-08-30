@@ -17,7 +17,7 @@ import { shuffle, fixFirstShown } from './utils.js';
 export const initActions = () => {
   // Buttons
   $('#newGame').on('click', () => {
-    $(document).trigger(EV.NEWGAME);
+    $(document).trigger(EV.NEWGAME_BEFORE);
   });
   $('#raise').on('click', raiseAll);
 
@@ -27,9 +27,11 @@ export const initActions = () => {
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
   $(document)
-    .on(EV.GAMEOVER, slideDown)
-    .on(EV.JUGADA, checkGameover)
-    .on(EV.NEWGAME, startNewGame);
+    .on(EV.GAMEOVER_BEFORE, slideDown)
+    .on(EV.JUGADA_AFTER, checkGameover)
+    .on(EV.JUGADA_AFTER, guessNext)
+    .on(EV.NEWGAME_BEFORE, startNewGame)
+    .on(EV.NEWGAME_AFTER, guessNext);
 };
 
 const startNewGame = (): void => {
@@ -45,16 +47,18 @@ const startNewGame = (): void => {
 
   // Place the remaining cards in the mazo.
   datos.mazo = cardIds;
+
+  $(document).trigger(EV.NEWGAME_AFTER);
 };
 
 const checkGameover = () => {
   const gameover = datos.pilas.every((pila) => pila.length === 13);
   $('.gameover').toggle(gameover);
-  if (gameover) $(document).trigger(EV.GAMEOVER);
+  if (gameover) $(document).trigger(EV.GAMEOVER_BEFORE);
 };
 
 const dealCard = (ev: JQuery.Event) => {
-  $(document).trigger(EV.JUGADA);
+  $(document).trigger(EV.JUGADA_BEFORE);
   if (datos.mazo.length) {
     datos.vista.unshift(datos.mazo.shift());
   } else {
@@ -64,6 +68,7 @@ const dealCard = (ev: JQuery.Event) => {
   }
   renderMazo();
   renderVista();
+  $(document).trigger(EV.JUGADA_AFTER);
 };
 
 function canDropInPila(fromCardId: tCardId) {
@@ -86,7 +91,7 @@ function canDropInPila(fromCardId: tCardId) {
 
 async function vistaToPila(toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
-  $(document).trigger(EV.JUGADA);
+  $(document).trigger(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.vista.shift());
   await animateMove(
     $(SEL.VISTA).find(SEL.TOP),
@@ -94,6 +99,7 @@ async function vistaToPila(toSlot: number): Promise<boolean> {
   );
   renderPila(toSlot);
   renderVista();
+  $(document).trigger(EV.JUGADA_AFTER);
 
   return true;
 }
@@ -107,7 +113,7 @@ function raiseFromVista(ev: JQuery.Event) {
 
 async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   if (toSlot === -1) return false;
-  $(document).trigger(EV.JUGADA);
+  $(document).trigger(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   await animateMove(
     $(SEL.HUECOS).eq(fromSlot).find(SEL.IMG).last(),
@@ -116,6 +122,7 @@ async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
   fixFirstShown(fromSlot);
   renderHueco(fromSlot);
   renderPila(toSlot);
+  $(document).trigger(EV.JUGADA_AFTER);
 
   return true;
 }
@@ -169,20 +176,51 @@ async function raiseAll() {
 }
 
 function slidePilaDown(slot: number, pila: tCardId[]) {
-  if (pila.length) {
-    $(SEL.PILAS)
-      .eq(slot)
-      .find(SEL.TOP)
-      .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
-        pila.shift();
-        renderPila(slot);
-        slidePilaDown(slot, pila);
-      });
-  }
+  return new Promise((resolve) => {
+    if (pila.length) {
+      $(SEL.PILAS)
+        .eq(slot)
+        .find(SEL.TOP)
+        .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
+          pila.shift();
+          renderPila(slot);
+          resolve(slidePilaDown(slot, pila));
+        });
+    } else {
+      resolve(true);
+    }
+  });
 }
 
 function slideDown() {
-  datos.pilas.forEach((pila, slot) => {
-    slidePilaDown(slot, pila);
+  Promise.all(datos.pilas.map((pila, slot) => slidePilaDown(slot, pila))).then(
+    () => {
+      $(document).trigger(EV.GAMEOVER_AFTER);
+    }
+  );
+}
+
+function guessNext() {
+  const huecos = datos.huecos;
+  const longestSlot = huecos.reduce(
+    (slot, current, index, h) =>
+      current.length > h[slot].length ? index : slot,
+    0
+  );
+  // debugger;
+  const cartaInLongestSlot = baraja[huecos[longestSlot][0]];
+
+  huecos.forEach((hueco, slot) => {
+    const thisCarta = baraja[hueco[0]];
+    if (thisCarta) {
+      if (
+        thisCarta.color !== cartaInLongestSlot.color &&
+        thisCarta.index === cartaInLongestSlot.index - 1
+      ) {
+        $('.guess').text(
+          `Move ${cartaInLongestSlot.name} in slot ${longestSlot} to ${thisCarta.name} in slot ${slot}`
+        );
+      }
+    }
   });
 }

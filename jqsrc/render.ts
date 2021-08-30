@@ -69,7 +69,7 @@ export const initBoard = () => {
 
   boardEl.append(createContainer(POS.MAZO));
   boardEl.append(createContainer(POS.VISTA, true));
-  boardEl.append($('<div class="celda"></div>'));
+  boardEl.append($('<div class="celda guess"></div>'));
 
   for (let slot = 0; slot < numPilas; slot++) {
     boardEl.append(createContainer(POS.PILA, true, true));
@@ -79,7 +79,7 @@ export const initBoard = () => {
     boardEl.append(emptyHuecoContainer);
   }
 
-  $(document).on(EV.NEWGAME, renderAll);
+  $(document).on(EV.NEWGAME_AFTER, renderAll);
 };
 
 export const renderMazo = () => {

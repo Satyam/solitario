@@ -12,5 +12,5 @@ export const main = () => {
   initUndo();
   initStats();
 
-  $(document).trigger(EV.NEWGAME);
+  $(document).trigger(EV.NEWGAME_BEFORE);
 };

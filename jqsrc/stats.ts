@@ -6,7 +6,9 @@ let undos = 0;
 let redos = 0;
 
 export const initStats = () => {
-  $(document).on(EV.JUGADA, incJugadas).on(EV.NEWGAME, resetStats);
+  $(document)
+    .on(EV.JUGADA_BEFORE, incJugadas)
+    .on(EV.NEWGAME_BEFORE, resetStats);
 };
 
 const renderStats = () => {

@@ -154,7 +154,7 @@ function drop(ev: JQuery.Event, ui: any) {
     .data();
   const { pos: toPos, slot: toSlot } = $(this).data();
   const fromIndex = ui.draggable.data('start') || 0;
-  $(document).trigger(EV.JUGADA);
+  $(document).trigger(EV.JUGADA_BEFORE);
   ui.helper.remove();
   switch (fromPos) {
     case POS.VISTA:
@@ -200,5 +200,7 @@ function drop(ev: JQuery.Event, ui: any) {
       }
       break;
   }
+  $(document).trigger(EV.JUGADA_AFTER);
+
   $('.ui-droppable-active').removeClass('ui-droppable-active');
 }
