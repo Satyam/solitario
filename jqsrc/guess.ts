@@ -4,7 +4,7 @@ type tGuess = {
   fromPos: POS;
   fromCardId: tCardId;
   fromSlot: number;
-  fromIndex: number;
+  firstShown: number;
   toPos?: POS;
   toSlot?: number;
   toCardId?: tCardId;
@@ -25,11 +25,11 @@ function guessFirstHuecoToPila(): tGuess[] {
         fromPos: POS.HUECO,
         fromCardId: hueco[0],
         fromSlot: slot,
-        fromIndex: hueco.length,
+        firstShown: datos.firstShown[slot],
       });
     }
   });
-  cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
+  cardsToCheck.sort((a: tGuess, b: tGuess) => b.firstShown - a.firstShown);
   cardsToCheck.forEach((move) => {
     const toSlot = canDropInSomePila(move.fromCardId);
     if (toSlot !== false) {
@@ -51,7 +51,7 @@ function guessVistaToPila(): tGuess[] {
           fromCardId: cardId,
           fromPos: POS.VISTA,
           fromSlot: 0,
-          fromIndex: 0,
+          firstShown: 0,
           toPos: POS.PILA,
           toSlot,
           toCardId: datos.pilas[toSlot][0],
@@ -72,7 +72,7 @@ function guessVistaToHueco(): tGuess[] {
           fromCardId: cardId,
           fromPos: POS.VISTA,
           fromSlot: 0,
-          fromIndex: 0,
+          firstShown: 0,
           toPos: POS.HUECO,
           toSlot,
           toCardId: datos.huecos[toSlot][0],
@@ -93,11 +93,12 @@ function guessHuecoToHueco(): tGuess[] {
         fromPos: POS.HUECO,
         fromCardId: hueco[fromIndex],
         fromSlot: slot,
-        fromIndex,
+        firstShown,
       });
     }
   });
-  cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
+  // sort in decreasing order by firstShown so it lists the longest stack to uncover first
+  cardsToCheck.sort((a: tGuess, b: tGuess) => b.firstShown - a.firstShown);
   cardsToCheck.forEach((move) => {
     const toSlot = canDropInSomeHueco(move.fromCardId);
     if (toSlot !== false) {
