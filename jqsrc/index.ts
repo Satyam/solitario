@@ -3,6 +3,7 @@ import { initActions } from './actions.js';
 import { initDrag } from './dragdrop.js';
 import { initUndo } from './undoStack.js';
 import { initStats } from './stats.js';
+import { initGuess } from './guess.js';
 import { EV } from './datos.js';
 
 export const main = () => {
@@ -11,6 +12,7 @@ export const main = () => {
   initDrag();
   initUndo();
   initStats();
+  initGuess();
 
   $(document).trigger(EV.NEWGAME_BEFORE);
 };
