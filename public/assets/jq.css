@@ -118,3 +118,18 @@ button:disabled {
   border-color: magenta;
 }
 */
+
+tr.hasta td {
+  border-bottom: solid black thin;
+}
+tr.desde td {
+  border-top: solid black thin;
+}
+
+.guess {
+  background-color: wheat;
+  border-radius: 1em;
+}
+.noHint {
+  text-align: center;
+}

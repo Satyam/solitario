@@ -11,7 +11,11 @@ type tGuess = {
 };
 
 export function initGuess() {
-  $(document).on(EV.JUGADA_AFTER, guessNext).on(EV.NEWGAME_AFTER, guessNext);
+  $('#hint').on('click', guessNext);
+  $(document).on(EV.JUGADA_AFTER, hideHint).on(EV.NEWGAME_AFTER, hideHint);
+}
+function hideHint() {
+  $('.guess').css('visibility', 'hidden');
 }
 function guessFirstHuecoToPila(): tGuess[] {
   const cardsToCheck: tGuess[] = [];
@@ -109,22 +113,22 @@ function formatGuess(guess: tGuess): string {
   function formatPos(pos: POS, slot?: number) {
     switch (pos) {
       case POS.HUECO:
-        return `hueco, columna ${slot + 1}`;
+        return `<td>hueco</td><td>${slot + 1}</td>`;
       case POS.VISTA:
-        return 'vista';
+        return '<td colspan="2">vista</td>';
       case POS.PILA:
-        return `pila, columna ${slot + 1}`;
+        return `<td>pila</td><td>${slot + 1}</td>`;
     }
   }
-  return `<li>Mover ${guess.fromCardId} en ${formatPos(
+  return `<tr class="desde"><td>De:</td>${formatPos(
     guess.fromPos,
     guess.fromSlot
-  )} 
-  sobre ${guess.toCardId || 'vacío'} en ${formatPos(
-    guess.toPos,
-    guess.toSlot
-  )}</li>`;
+  )}<td>${guess.fromCardId}</td></tr>  
+  <tr class="hasta"><td>A:</td>${formatPos(guess.toPos, guess.toSlot)}<td>${
+    guess.toCardId || 'vacío'
+  }</td></tr>`;
 }
+
 function guessNext() {
   const guesses: tGuess[] = guessFirstHuecoToPila().concat(
     guessHuecoToHueco(),
@@ -132,5 +136,13 @@ function guessNext() {
     guessVistaToHueco()
   );
 
-  $('.guess').html(`<ul>${guesses.map(formatGuess).join('\n')}</ul>`);
+  $('.guess')
+    .css('visibility', 'visible')
+    .html(
+      guesses.length
+        ? `<table>
+  <tr><th></th><th>Donde</th><th>Columna</th><th>Carta</th></tr>
+  ${guesses.map(formatGuess).join('\n')}</table>`
+        : '<p class="noHint">No hay sugerencias</p>'
+    );
 }
