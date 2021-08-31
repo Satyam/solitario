@@ -8,11 +8,14 @@ import {
   baraja,
   numHuecos,
   numPilas,
+  POS,
 } from './datos.js';
 
 import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
 import { shuffle, fixFirstShown } from './utils.js';
+
+type tCanDrop = number | false;
 
 export const initActions = () => {
   // Buttons
@@ -71,8 +74,8 @@ const dealCard = (ev: JQuery.Event) => {
   $(document).trigger(EV.JUGADA_AFTER);
 };
 
-function canDropInPila(fromCardId: tCardId) {
-  if (typeof fromCardId === 'undefined') return -1;
+function canDropInPila(fromCardId: tCardId): tCanDrop {
+  if (typeof fromCardId === 'undefined') return false;
   const fromCarta = baraja[fromCardId];
   for (let slot = 0; slot < numPilas; slot++) {
     const toCarta = baraja[datos.pilas[slot][0]];
@@ -86,11 +89,31 @@ function canDropInPila(fromCardId: tCardId) {
       if (fromCarta.valor === 'A') return slot;
     }
   }
-  return -1;
+  return false;
 }
 
-async function vistaToPila(toSlot: number): Promise<boolean> {
-  if (toSlot === -1) return false;
+function canDropInHueco(fromCardId: tCardId): tCanDrop {
+  if (typeof fromCardId === 'undefined') return false;
+  const fromCarta = baraja[fromCardId];
+  for (let toSlot = 0; toSlot < numHuecos; toSlot++) {
+    const toCardId = datos.huecos[toSlot][0];
+    if (toCardId) {
+      const toCarta = baraja[toCardId];
+      if (
+        fromCarta.color !== toCarta.color &&
+        fromCarta.index === toCarta.index - 1
+      ) {
+        return toSlot;
+      }
+    } else {
+      if (fromCarta.valor === 'K') return toSlot;
+    }
+  }
+  return false;
+}
+
+async function vistaToPila(toSlot: tCanDrop): Promise<boolean> {
+  if (toSlot === false) return false;
   $(document).trigger(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.vista.shift());
   await animateMove(
@@ -111,8 +134,11 @@ function raiseFromVista(ev: JQuery.Event) {
   }
 }
 
-async function huecoToPila(fromSlot: number, toSlot: number): Promise<boolean> {
-  if (toSlot === -1) return false;
+async function huecoToPila(
+  fromSlot: number,
+  toSlot: tCanDrop
+): Promise<boolean> {
+  if (toSlot === false) return false;
   $(document).trigger(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   await animateMove(
@@ -200,27 +226,135 @@ function slideDown() {
   );
 }
 
-function guessNext() {
-  const huecos = datos.huecos;
-  const longestSlot = huecos.reduce(
-    (slot, current, index, h) =>
-      current.length > h[slot].length ? index : slot,
-    0
-  );
-  // debugger;
-  const cartaInLongestSlot = baraja[huecos[longestSlot][0]];
+// type tCardToCheck = [tCardId, number?, number?];
+type tGuess = {
+  fromPos: POS;
+  fromCardId: tCardId;
+  fromSlot: number;
+  fromIndex: number;
+  toPos?: POS;
+  toSlot?: number;
+  toCardId?: tCardId;
+};
 
-  huecos.forEach((hueco, slot) => {
-    const thisCarta = baraja[hueco[0]];
-    if (thisCarta) {
-      if (
-        thisCarta.color !== cartaInLongestSlot.color &&
-        thisCarta.index === cartaInLongestSlot.index - 1
-      ) {
-        $('.guess').text(
-          `Move ${cartaInLongestSlot.name} in slot ${longestSlot} to ${thisCarta.name} in slot ${slot}`
-        );
-      }
+function guessFirstHuecoToPila(): tGuess[] {
+  const cardsToCheck: tGuess[] = [];
+  datos.huecos.forEach((hueco, slot) => {
+    if (hueco[0]) {
+      cardsToCheck.push({
+        fromPos: POS.HUECO,
+        fromCardId: hueco[0],
+        fromSlot: slot,
+        fromIndex: hueco.length,
+      });
     }
   });
+  cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
+  cardsToCheck.forEach((move) => {
+    const toSlot = canDropInPila(move.fromCardId);
+    if (toSlot !== false) {
+      move.toPos = POS.PILA;
+      move.toSlot = toSlot;
+      move.toCardId = datos.pilas[toSlot][0];
+    }
+  });
+  return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
+}
+
+function guessVistaToPila(): tGuess[] {
+  const cardId = datos.vista[0];
+  if (cardId) {
+    const toSlot = canDropInPila(cardId);
+    if (toSlot !== false) {
+      return [
+        {
+          fromCardId: cardId,
+          fromPos: POS.VISTA,
+          fromSlot: 0,
+          fromIndex: 0,
+          toPos: POS.PILA,
+          toSlot,
+          toCardId: datos.pilas[toSlot][0],
+        },
+      ];
+    }
+  }
+  return [];
+}
+
+function guessVistaToHueco(): tGuess[] {
+  const cardId = datos.vista[0];
+  if (cardId) {
+    const toSlot = canDropInHueco(cardId);
+    if (toSlot !== false) {
+      return [
+        {
+          fromCardId: cardId,
+          fromPos: POS.VISTA,
+          fromSlot: 0,
+          fromIndex: 0,
+          toPos: POS.HUECO,
+          toSlot,
+          toCardId: datos.huecos[toSlot][0],
+        },
+      ];
+    }
+  }
+  return [];
+}
+
+function guessHuecoToHueco(): tGuess[] {
+  const cardsToCheck: tGuess[] = [];
+  datos.huecos.forEach((hueco, slot) => {
+    const firstShown = datos.firstShown[slot];
+    const fromIndex = hueco.length - firstShown - 1;
+    if (hueco[firstShown]) {
+      cardsToCheck.push({
+        fromPos: POS.HUECO,
+        fromCardId: hueco[fromIndex],
+        fromSlot: slot,
+        fromIndex,
+      });
+    }
+  });
+  cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
+  cardsToCheck.forEach((move) => {
+    const toSlot = canDropInHueco(move.fromCardId);
+    if (toSlot !== false) {
+      move.toPos = POS.HUECO;
+      move.toSlot = toSlot;
+      move.toCardId = datos.huecos[toSlot][0];
+    }
+  });
+  return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
+}
+
+function formatGuess(guess: tGuess): string {
+  function formatPos(pos: POS, slot?: number) {
+    switch (pos) {
+      case POS.HUECO:
+        return `hueco, columna ${slot + 1}`;
+      case POS.VISTA:
+        return 'vista';
+      case POS.PILA:
+        return `pila, columna ${slot + 1}`;
+    }
+  }
+  return `<li>Mover ${guess.fromCardId} en ${formatPos(
+    guess.fromPos,
+    guess.fromSlot
+  )} 
+  sobre ${guess.toCardId || 'vacío'} en ${formatPos(
+    guess.toPos,
+    guess.toSlot
+  )}</li>`;
+}
+function guessNext() {
+  const guesses: tGuess[] = guessFirstHuecoToPila().concat(
+    guessHuecoToHueco(),
+    guessVistaToPila(),
+    guessVistaToHueco()
+  );
+
+  $('.guess').html(`<ul>${guesses.map(formatGuess).join('\n')}</ul>`);
 }
