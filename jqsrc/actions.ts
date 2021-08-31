@@ -13,9 +13,13 @@ import {
 
 import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
-import { shuffle, fixFirstShown } from './utils.js';
-
-type tCanDrop = number | false;
+import {
+  shuffle,
+  fixFirstShown,
+  canDropInSomeHueco,
+  canDropInSomePila,
+  tCanDrop,
+} from './utils.js';
 
 export const initActions = () => {
   // Buttons
@@ -75,44 +79,6 @@ const dealCard = (ev: JQuery.Event) => {
   $(document).trigger(EV.JUGADA_AFTER);
 };
 
-function canDropInPila(fromCardId: tCardId): tCanDrop {
-  if (typeof fromCardId === 'undefined') return false;
-  const fromCarta = baraja[fromCardId];
-  for (let slot = 0; slot < numPilas; slot++) {
-    const toCarta = baraja[datos.pilas[slot][0]];
-    if (toCarta) {
-      if (
-        fromCarta.palo === toCarta.palo &&
-        fromCarta.index === toCarta.index + 1
-      )
-        return slot;
-    } else {
-      if (fromCarta.valor === 'A') return slot;
-    }
-  }
-  return false;
-}
-
-function canDropInHueco(fromCardId: tCardId): tCanDrop {
-  if (typeof fromCardId === 'undefined') return false;
-  const fromCarta = baraja[fromCardId];
-  for (let toSlot = 0; toSlot < numHuecos; toSlot++) {
-    const toCardId = datos.huecos[toSlot][0];
-    if (toCardId) {
-      const toCarta = baraja[toCardId];
-      if (
-        fromCarta.color !== toCarta.color &&
-        fromCarta.index === toCarta.index - 1
-      ) {
-        return toSlot;
-      }
-    } else {
-      if (fromCarta.valor === 'K') return toSlot;
-    }
-  }
-  return false;
-}
-
 async function vistaToPila(toSlot: tCanDrop): Promise<boolean> {
   if (toSlot === false) return false;
   $(document).trigger(EV.JUGADA_BEFORE);
@@ -130,7 +96,7 @@ async function vistaToPila(toSlot: tCanDrop): Promise<boolean> {
 
 function raiseFromVista(ev: JQuery.Event) {
   if (ev.buttons === 4) {
-    vistaToPila(canDropInPila(datos.vista[0]));
+    vistaToPila(canDropInSomePila(datos.vista[0]));
     return false;
   }
 }
@@ -157,7 +123,7 @@ async function huecoToPila(
 function raiseFromHueco(ev: JQuery.Event) {
   if (ev.buttons === 4) {
     const fromSlot = $(this).data('slot');
-    const toSlot = canDropInPila(datos.huecos[fromSlot][0]);
+    const toSlot = canDropInSomePila(datos.huecos[fromSlot][0]);
     huecoToPila(fromSlot, toSlot);
     // stop propagation
     return false;
@@ -191,11 +157,11 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
 
 async function raiseAll() {
   loop: while (true) {
-    if (await vistaToPila(canDropInPila(datos.vista[0]))) continue;
+    if (await vistaToPila(canDropInSomePila(datos.vista[0]))) continue;
     const huecos = datos.huecos;
     const l = huecos.length;
     for (let fromSlot = 0; fromSlot < l; fromSlot++) {
-      if (await huecoToPila(fromSlot, canDropInPila(huecos[fromSlot][0])))
+      if (await huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])))
         continue loop;
     }
     break;
@@ -252,7 +218,7 @@ function guessFirstHuecoToPila(): tGuess[] {
   });
   cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
   cardsToCheck.forEach((move) => {
-    const toSlot = canDropInPila(move.fromCardId);
+    const toSlot = canDropInSomePila(move.fromCardId);
     if (toSlot !== false) {
       move.toPos = POS.PILA;
       move.toSlot = toSlot;
@@ -265,7 +231,7 @@ function guessFirstHuecoToPila(): tGuess[] {
 function guessVistaToPila(): tGuess[] {
   const cardId = datos.vista[0];
   if (cardId) {
-    const toSlot = canDropInPila(cardId);
+    const toSlot = canDropInSomePila(cardId);
     if (toSlot !== false) {
       return [
         {
@@ -286,7 +252,7 @@ function guessVistaToPila(): tGuess[] {
 function guessVistaToHueco(): tGuess[] {
   const cardId = datos.vista[0];
   if (cardId) {
-    const toSlot = canDropInHueco(cardId);
+    const toSlot = canDropInSomeHueco(cardId);
     if (toSlot !== false) {
       return [
         {
@@ -320,7 +286,7 @@ function guessHuecoToHueco(): tGuess[] {
   });
   cardsToCheck.sort((a: tGuess, b: tGuess) => a.fromIndex - b.fromIndex);
   cardsToCheck.forEach((move) => {
-    const toSlot = canDropInHueco(move.fromCardId);
+    const toSlot = canDropInSomeHueco(move.fromCardId);
     if (toSlot !== false) {
       move.toPos = POS.HUECO;
       move.toSlot = toSlot;

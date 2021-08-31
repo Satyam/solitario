@@ -1,6 +1,6 @@
 import { renderPila, renderVista, renderHueco } from './render.js';
-import { POS, SEL, EV, datos, baraja } from './datos.js';
-import { fixFirstShown } from './utils.js';
+import { POS, SEL, EV, datos } from './datos.js';
+import { fixFirstShown, canDropInPila, canDropInHueco } from './utils.js';
 
 export const initDrag = () => {
   $(SEL.MAZO).data({
@@ -58,33 +58,11 @@ function accept(source: JQuery) {
     case POS.VISTA: {
       const fromCardId = datos.vista[0];
       if (!fromCardId) return false;
-      const fromCarta = baraja[fromCardId];
-
       switch (toPos) {
-        case POS.PILA: {
-          const toCardId = datos.pilas[toSlot][0];
-          if (toCardId) {
-            const toCarta = baraja[toCardId];
-            return (
-              toCarta.palo === fromCarta.palo &&
-              toCarta.index === fromCarta.index - 1
-            );
-          } else {
-            return fromCarta.valor === 'A';
-          }
-        }
-        case POS.HUECO: {
-          const toCardId = datos.huecos[toSlot][0];
-          if (toCardId) {
-            const toCarta = baraja[toCardId];
-            return (
-              fromCarta.color !== toCarta.color &&
-              fromCarta.index === toCarta.index - 1
-            );
-          } else {
-            return fromCarta.valor === 'K';
-          }
-        }
+        case POS.PILA:
+          return canDropInPila(fromCardId, toSlot);
+        case POS.HUECO:
+          return canDropInHueco(fromCardId, toSlot);
         default:
           return false;
       }
@@ -92,20 +70,9 @@ function accept(source: JQuery) {
     case POS.PILA: {
       const fromCardId = datos.pilas[fromSlot][0];
       if (!fromCardId) return false;
-      const fromCarta = baraja[fromCardId];
       switch (toPos) {
-        case POS.HUECO: {
-          const toCardId = datos.huecos[toSlot][0];
-          if (toCardId) {
-            const toCarta = baraja[toCardId];
-            return (
-              fromCarta.color !== toCarta.color &&
-              fromCarta.index === toCarta.index - 1
-            );
-          } else {
-            return fromCarta.valor === 'K';
-          }
-        }
+        case POS.HUECO:
+          return canDropInHueco(fromCardId, toSlot);
         default:
           return false;
       }
@@ -113,33 +80,12 @@ function accept(source: JQuery) {
     case POS.HUECO: {
       const fromCardId = datos.huecos[fromSlot][fromIndex];
       if (!fromCardId) return false;
-      const fromCarta = baraja[fromCardId];
       switch (toPos) {
-        case POS.PILA: {
+        case POS.PILA:
           if (fromIndex > 0) return false;
-          const toCardId = datos.pilas[toSlot][0];
-          if (toCardId) {
-            const toCarta = baraja[toCardId];
-            return (
-              fromCarta.palo === toCarta.palo &&
-              fromCarta.index === toCarta.index + 1
-            );
-          } else {
-            return fromCarta.valor === 'A';
-          }
-        }
-        case POS.HUECO: {
-          const toCardId = datos.huecos[toSlot][0];
-          if (toCardId) {
-            const toCarta = baraja[toCardId];
-            return (
-              fromCarta.color !== toCarta.color &&
-              fromCarta.index === toCarta.index - 1
-            );
-          } else {
-            return fromCarta.valor === 'K';
-          }
-        }
+          return canDropInPila(fromCardId, toSlot);
+        case POS.HUECO:
+          return canDropInHueco(fromCardId, toSlot);
         default:
           return false;
       }
