@@ -34,7 +34,8 @@ export const initActions = () => {
     .on(EV.JUGADA_AFTER, checkGameover)
     .on(EV.JUGADA_AFTER, guessNext)
     .on(EV.NEWGAME_BEFORE, startNewGame)
-    .on(EV.NEWGAME_AFTER, guessNext);
+    .on(EV.NEWGAME_AFTER, guessNext)
+    .on(EV.NEWGAME_AFTER, checkGameover);
 };
 
 const startNewGame = (): void => {
