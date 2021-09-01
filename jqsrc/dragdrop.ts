@@ -112,6 +112,7 @@ function drop(ev: JQuery.Event, ui: any) {
           break;
         case POS.HUECO:
           datos.huecos[toSlot].unshift(datos.vista.shift());
+          fixFirstShown(fromSlot);
           renderVista();
           renderHueco(toSlot);
           break;
@@ -121,6 +122,7 @@ function drop(ev: JQuery.Event, ui: any) {
       switch (toPos) {
         case POS.HUECO:
           datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
+          fixFirstShown(fromSlot);
           renderPila(fromSlot);
           renderHueco(toSlot);
           break;
@@ -140,6 +142,7 @@ function drop(ev: JQuery.Event, ui: any) {
             ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
           );
           fixFirstShown(fromSlot);
+          fixFirstShown(toSlot);
           renderHueco(fromSlot);
           renderHueco(toSlot);
           break;

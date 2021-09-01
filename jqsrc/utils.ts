@@ -9,8 +9,12 @@ export function shuffle<T extends any[]>(a: T): T {
 
 export function fixFirstShown(slot: number) {
   const lastCardIndex = datos.huecos[slot].length - 1;
-  if (datos.firstShown[slot] > lastCardIndex) {
+  const firstShown = datos.firstShown[slot];
+  if (firstShown > lastCardIndex) {
     datos.firstShown[slot] = lastCardIndex;
+  }
+  if (firstShown === -1 && lastCardIndex !== -1) {
+    datos.firstShown[slot] = 0;
   }
 }
 
