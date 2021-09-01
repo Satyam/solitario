@@ -79,7 +79,10 @@ export const initBoard = () => {
     boardEl.append(emptyHuecoContainer);
   }
 
-  $(document).on(EV.NEWGAME_AFTER, renderAll);
+  $(document).on(
+    [EV.NEWGAME_AFTER, EV.UNDO_AFTER, EV.REDO_AFTER].join(' '),
+    renderAll
+  );
 };
 
 export const renderMazo = () => {
@@ -193,7 +196,7 @@ export const renderHueco = (slot: number) => {
   renderOneHueco($(SEL.HUECOS).eq(slot), slot);
 };
 
-export const renderAll = () => {
+const renderAll = () => {
   renderMazo();
   renderVista();
   renderHuecos();

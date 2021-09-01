@@ -84,6 +84,8 @@ export enum EV {
   JUGADA_AFTER = 'after_jugada',
   NEWGAME_BEFORE = 'before_new_game',
   NEWGAME_AFTER = 'after_new_game',
+  UNDO_AFTER = 'after_undo',
+  REDO_AFTER = 'after_redo',
 }
 export const numPilas = 4;
 export const numHuecos = 7;
