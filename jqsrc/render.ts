@@ -21,9 +21,9 @@ const s = getComputedStyle(document.documentElement);
 const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
 const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
 
-export const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
+const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
-export const cardImg = (cardId: tCardId, className: string = ''): string =>
+const cardImg = (cardId: tCardId, className: string = ''): string =>
   `<img  draggable="false" class="card ${className}" src="${imgSrc(
     cardId
   )}" />`;

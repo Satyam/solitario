@@ -8,7 +8,9 @@ let redos = 0;
 export const initStats = () => {
   $(document)
     .on(EV.JUGADA_BEFORE, incJugadas)
-    .on(EV.NEWGAME_BEFORE, resetStats);
+    .on(EV.NEWGAME_BEFORE, resetStats)
+    .on(EV.REDO_AFTER, incRedos)
+    .on(EV.UNDO_AFTER, incUndos);
 };
 
 const renderStats = () => {
@@ -28,7 +30,7 @@ const resetStats = () => {
   renderStats();
 };
 
-export const incJugadas = () => {
+const incJugadas = () => {
   jugadas += 1;
   renderStats();
 };
@@ -37,11 +39,12 @@ export const incRondas = () => {
   rondas += 1;
   renderStats();
 };
-export const incUndos = () => {
+const incUndos = () => {
   undos += 1;
   renderStats();
 };
-export const incRedos = () => {
+
+const incRedos = () => {
   redos += 1;
   renderStats();
 };

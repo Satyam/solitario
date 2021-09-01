@@ -1,5 +1,4 @@
 import { datos, tDatos, EV } from './datos.js';
-import { incUndos, incRedos } from './stats.js';
 
 const undoStack: string[] = [];
 let previous = -1;
@@ -25,7 +24,6 @@ const pushState = () => {
 
 const undo = () => {
   if (previous < 0) return;
-  incUndos();
   undoStack[previous + 1] = JSON.stringify(datos);
   Object.assign(datos, JSON.parse(undoStack[previous]) as tDatos);
   previous -= 1;
@@ -35,14 +33,13 @@ const undo = () => {
 
 const redo = () => {
   if (previous >= undoStack.length - 2) return;
-  incRedos();
   previous += 1;
   Object.assign(datos, JSON.parse(undoStack[previous + 1]) as tDatos);
   setButtons();
   $(document).trigger(EV.REDO_AFTER);
 };
 
-export const setButtons = () => {
+const setButtons = () => {
   $('#undo').prop('disabled', previous < 0);
   $('#redo').prop('disabled', previous >= undoStack.length - 2);
 };
