@@ -125,7 +125,7 @@ export const renderPila = (slot: number) => {
   renderVoP($(SEL.PILAS).eq(slot), cardId, datos.pilas[slot][1]);
 };
 
-export const renderPilas = () => $(SEL.PILAS).each(renderPila);
+const renderPilas = () => $(SEL.PILAS).each(renderPila);
 
 const renderHuecoStack = (
   el: JQuery,
@@ -186,13 +186,25 @@ const renderOneHueco = (h: JQuery, slot: number) => {
   enableDraggable(h, cardIds.length > 0);
 };
 
-export const renderHuecos = () => {
+const renderHuecos = () => {
   $(SEL.HUECOS).each(function (slot) {
     renderOneHueco($(this), slot);
   });
 };
 
+function fixFirstShown(slot: number) {
+  const lastCardIndex = datos.huecos[slot].length - 1;
+  const firstShown = datos.firstShown[slot];
+  if (firstShown > lastCardIndex) {
+    datos.firstShown[slot] = lastCardIndex;
+  }
+  if (firstShown === -1 && lastCardIndex !== -1) {
+    datos.firstShown[slot] = 0;
+  }
+}
+
 export const renderHueco = (slot: number) => {
+  fixFirstShown(slot);
   renderOneHueco($(SEL.HUECOS).eq(slot), slot);
 };
 

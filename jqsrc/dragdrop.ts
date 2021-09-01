@@ -1,6 +1,6 @@
 import { renderPila, renderVista, renderHueco } from './render.js';
 import { POS, SEL, EV, datos } from './datos.js';
-import { fixFirstShown, canDropInPila, canDropInHueco } from './utils.js';
+import { canDropInPila, canDropInHueco } from './utils.js';
 
 export const initDrag = () => {
   $(SEL.MAZO).data({
@@ -112,7 +112,6 @@ function drop(ev: JQuery.Event, ui: any) {
           break;
         case POS.HUECO:
           datos.huecos[toSlot].unshift(datos.vista.shift());
-          fixFirstShown(fromSlot);
           renderVista();
           renderHueco(toSlot);
           break;
@@ -122,7 +121,6 @@ function drop(ev: JQuery.Event, ui: any) {
       switch (toPos) {
         case POS.HUECO:
           datos.huecos[toSlot].unshift(datos.pilas[fromSlot].shift());
-          fixFirstShown(fromSlot);
           renderPila(fromSlot);
           renderHueco(toSlot);
           break;
@@ -132,7 +130,6 @@ function drop(ev: JQuery.Event, ui: any) {
       switch (toPos) {
         case POS.PILA:
           datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
-          fixFirstShown(fromSlot);
           renderHueco(fromSlot);
           renderPila(toSlot);
           break;
@@ -141,8 +138,6 @@ function drop(ev: JQuery.Event, ui: any) {
           datos.huecos[toSlot].unshift(
             ...datos.huecos[fromSlot].splice(0, fromIndex + 1)
           );
-          fixFirstShown(fromSlot);
-          fixFirstShown(toSlot);
           renderHueco(fromSlot);
           renderHueco(toSlot);
           break;

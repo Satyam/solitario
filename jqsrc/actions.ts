@@ -12,12 +12,7 @@ import {
 
 import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
-import {
-  shuffle,
-  fixFirstShown,
-  canDropInSomePila,
-  tCanDrop,
-} from './utils.js';
+import { shuffle, canDropInSomePila, tCanDrop } from './utils.js';
 
 export const initActions = () => {
   // Buttons
@@ -108,7 +103,6 @@ async function huecoToPila(
     $(SEL.HUECOS).eq(fromSlot).find(SEL.IMG).last(),
     $(SEL.PILAS).eq(toSlot).find(SEL.TOP)
   );
-  fixFirstShown(fromSlot);
   renderHueco(fromSlot);
   renderPila(toSlot);
   $(document).trigger(EV.JUGADA_AFTER);

@@ -7,17 +7,6 @@ export function shuffle<T extends any[]>(a: T): T {
   return a.sort(() => Math.random() - 0.5);
 }
 
-export function fixFirstShown(slot: number) {
-  const lastCardIndex = datos.huecos[slot].length - 1;
-  const firstShown = datos.firstShown[slot];
-  if (firstShown > lastCardIndex) {
-    datos.firstShown[slot] = lastCardIndex;
-  }
-  if (firstShown === -1 && lastCardIndex !== -1) {
-    datos.firstShown[slot] = 0;
-  }
-}
-
 export type tCanDrop = number | false;
 
 export function canDropInPila(fromCardId: tCardId, toSlot: number) {
