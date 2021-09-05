@@ -132,6 +132,9 @@ tr.desde td {
 .guess {
   background-color: wheat;
   border-radius: 1em;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: var(--cardHeight);
 }
 .noHint {
   text-align: center;
