@@ -1,22 +1,69 @@
-import { POS, EV, tCardId, datos } from './datos.js';
+import { POS, EV, tCardId, datos, baraja } from './datos.js';
 import { canDropInSomeHueco, canDropInSomePila } from './utils.js';
 type tGuess = {
   fromPos: POS;
   fromCardId: tCardId;
   fromSlot: number;
   firstShown: number;
+  isLast?: boolean;
   toPos?: POS;
   toSlot?: number;
   toCardId?: tCardId;
 };
 
+let guessOn: boolean = false;
+
 export function initGuess() {
-  $('#hint').on('click', guessNext);
-  $(document).on(EV.JUGADA_AFTER, hideHint).on(EV.NEWGAME_AFTER, hideHint);
+  const setOnDemand = () => {
+    guessOn = false;
+    hideHint();
+    $('#hint').on('click', guessNext).removeClass('buttonPressed');
+    $(document)
+      .on(EV.JUGADA_AFTER, hideHint)
+      .on(EV.NEWGAME_AFTER, hideHint)
+      .off(EV.JUGADA_AFTER, guessNext);
+  };
+
+  function setPermanent() {
+    guessOn = true;
+    $('#hint').addClass('buttonPressed');
+    guessNext();
+    $(document)
+      .off(EV.JUGADA_AFTER, hideHint)
+      .off(EV.NEWGAME_AFTER, hideHint)
+      .on(EV.JUGADA_AFTER, guessNext);
+  }
+
+  $('#hint').on('dblclick', () => {
+    if (guessOn) setOnDemand();
+    else setPermanent();
+  });
+  setOnDemand();
 }
+
 function hideHint() {
+  if (guessOn) return;
   $('.guess').css('visibility', 'hidden');
 }
+
+function checkAnyKingAround() {
+  const cartaPila = baraja[datos.vista[0]];
+  return (
+    (cartaPila && cartaPila.valor === 'K') ||
+    datos.huecos.some((hueco, slot) => {
+      const length = hueco.length;
+      if (length) {
+        const firstShown = datos.firstShown[slot];
+        for (let index = 0; index < length - (firstShown || 1); index++) {
+          const carta = baraja[hueco[index]];
+          if (carta && carta.valor === 'K') return true;
+        }
+      }
+      return false;
+    })
+  );
+}
+
 function guessFirstHuecoToPila(): tGuess[] {
   const cardsToCheck: tGuess[] = [];
   datos.huecos.forEach((hueco, slot) => {
@@ -26,12 +73,19 @@ function guessFirstHuecoToPila(): tGuess[] {
         fromCardId: hueco[0],
         fromSlot: slot,
         firstShown: datos.firstShown[slot],
+        isLast: hueco.length === 1,
       });
     }
   });
   cardsToCheck.sort((a: tGuess, b: tGuess) => b.firstShown - a.firstShown);
   cardsToCheck.forEach((move) => {
-    const toSlot = canDropInSomePila(move.fromCardId);
+    const fromCardId = move.fromCardId;
+    if (move.isLast) {
+      const fromCarta = baraja[fromCardId];
+      // except for aces and twos, others only are worth it if there is a king to fill the hueco
+      if (fromCarta.index > 1 && !checkAnyKingAround()) return false;
+    }
+    const toSlot = canDropInSomePila(fromCardId);
     if (toSlot !== false) {
       move.toPos = POS.PILA;
       move.toSlot = toSlot;
@@ -94,13 +148,21 @@ function guessHuecoToHueco(): tGuess[] {
         fromCardId: hueco[fromIndex],
         fromSlot: slot,
         firstShown,
+        isLast: hueco.length === fromIndex + 1,
       });
     }
   });
   // sort in decreasing order by firstShown so it lists the longest stack to uncover first
   cardsToCheck.sort((a: tGuess, b: tGuess) => b.firstShown - a.firstShown);
   cardsToCheck.forEach((move) => {
-    const toSlot = canDropInSomeHueco(move.fromCardId);
+    const fromCardId = move.fromCardId;
+    if (move.isLast) {
+      const fromCarta = baraja[fromCardId];
+      // except for aces and twos, others only are worth it if there is a king to fill the hueco
+      if (fromCarta.index > 1 && !checkAnyKingAround()) return false;
+    }
+
+    const toSlot = canDropInSomeHueco(fromCardId);
     if (toSlot !== false) {
       move.toPos = POS.HUECO;
       move.toSlot = toSlot;
