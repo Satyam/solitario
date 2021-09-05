@@ -161,7 +161,11 @@ function guessHuecoToHueco(): tGuess[] {
     if (move.isLast) {
       const fromCarta = baraja[fromCardId];
       // except for aces and twos, others only are worth it if there is a king to fill the hueco
-      if (fromCarta.index > 1 && !checkAnyKingAround()) return false;
+      if (
+        fromCarta.valor === 'K' ||
+        (fromCarta.index > 1 && !checkAnyKingAround())
+      )
+        return false;
     }
 
     const toSlot = canDropInSomeHueco(fromCardId);
