@@ -89,6 +89,9 @@ button:disabled {
   opacity: 70%;
 }
 
+.buttonPressed {
+  background-color: darkred;
+}
 .ui-droppable .cardContainer {
   border: medium solid darkgreen;
 }
