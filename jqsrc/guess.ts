@@ -1,4 +1,4 @@
-import { POS, EV, tCardId, datos, baraja } from './datos.js';
+import { POS, EV, tCardId, datos, baraja, charPalos, COLOR } from './datos.js';
 import { canDropInSomeHueco, canDropInSomePila } from './utils.js';
 type tGuess = {
   fromPos: POS;
@@ -189,20 +189,35 @@ function formatGuess(guess: tGuess): string {
   function formatPos(pos: POS, slot?: number) {
     switch (pos) {
       case POS.HUECO:
-        return `<td>hueco</td><td>${slot + 1}</td>`;
+        return `<td>hueco</td><td align="center">${slot + 1}</td>`;
       case POS.VISTA:
         return '<td colspan="2">vista</td>';
       case POS.PILA:
-        return `<td>pila</td><td>${slot + 1}</td>`;
+        return `<td>pila</td><td align="center">${slot + 1}</td>`;
     }
+  }
+  function formatCardId(cardId: tCardId) {
+    if (cardId) {
+      const carta = baraja[cardId];
+      const valor = carta.valor.replace('T', '10');
+      const palo = charPalos[carta.palo];
+      return (
+        valor +
+        (carta.color === COLOR.ROJO
+          ? `<span style="color: red;">${palo}</span>`
+          : palo)
+      );
+    }
+    return 'vacío';
   }
   return `<tr class="desde"><td>De:</td>${formatPos(
     guess.fromPos,
     guess.fromSlot
-  )}<td>${guess.fromCardId}</td></tr>  
-  <tr class="hasta"><td>A:</td>${formatPos(guess.toPos, guess.toSlot)}<td>${
-    guess.toCardId || 'vacío'
-  }</td></tr>`;
+  )}<td align="right">${formatCardId(guess.fromCardId)}</td></tr>  
+  <tr class="hasta"><td>A:</td>${formatPos(
+    guess.toPos,
+    guess.toSlot
+  )}<td align="right">${formatCardId(guess.toCardId)}</td></tr>`;
 }
 
 function guessNext() {

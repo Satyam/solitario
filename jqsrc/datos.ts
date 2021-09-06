@@ -26,6 +26,13 @@ type tValor = typeof valores[number];
 
 const palos = ['C', 'D', 'H', 'S'] as const;
 
+export const charPalos = {
+  H: '&hearts;',
+  D: '&diams;',
+  S: '&spades;',
+  C: '&clubs;',
+};
+
 type tPalo = typeof palos[number];
 export const REVERSO = '2B';
 export const HUECO = 'hueco';
