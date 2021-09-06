@@ -14,5 +14,15 @@ export const main = () => {
   initStats();
   initGuess();
 
+  $('.help').dialog({
+    autoOpen: false,
+    modal: true,
+    closeText: 'Cerrar',
+    width: $(window).width() * 0.8,
+  });
+  $('#helpOpener').on('click', () => {
+    $('.help').dialog('open');
+  });
+
   $(document).trigger(EV.NEWGAME_BEFORE);
 };
