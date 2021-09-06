@@ -17,7 +17,11 @@ export function initGuess() {
   const setOnDemand = () => {
     guessOn = false;
     hideHint();
-    $('#hint').on('click', guessNext).removeClass('buttonPressed');
+    $('#hint')
+      .on('click', guessNext)
+      .removeClass('buttonPressed')
+      .find('img')
+      .attr('src', 'assets/icons/quiz_black_24dp.svg');
     $(document)
       .on(EV.JUGADA_AFTER, hideHint)
       .on(EV.NEWGAME_AFTER, hideHint)
@@ -27,7 +31,10 @@ export function initGuess() {
 
   function setPermanent() {
     guessOn = true;
-    $('#hint').addClass('buttonPressed');
+    $('#hint')
+      .addClass('buttonPressed')
+      .find('img')
+      .attr('src', 'assets/icons/quiz_white_24dp.svg');
     guessNext();
     $(document)
       .off(EV.JUGADA_AFTER, hideHint)
