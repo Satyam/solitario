@@ -17,8 +17,8 @@ const renderStats = () => {
   $('.stats').html(`
     <div >Jugadas: ${jugadas}</div>
     <div>Rondas: ${rondas}</div>
-    <div>Undos: ${undos}</div>
-    <div>Redos: ${redos}</div>
+    <div>Deshechos: ${undos}</div>
+    <div>Rehechos: ${redos}</div>
   `);
 };
 
