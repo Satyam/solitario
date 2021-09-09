@@ -34,6 +34,7 @@ export const initActions = () => {
 };
 
 const startNewGame = (): void => {
+  stopSlideDown();
   datos.vista = [];
   for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
@@ -158,6 +159,7 @@ async function raiseAll() {
   }
 }
 
+let slidingDown = false;
 function slidePilaDown(slot: number, pila: tCardId[]) {
   return new Promise((resolve) => {
     if (pila.length) {
@@ -167,7 +169,7 @@ function slidePilaDown(slot: number, pila: tCardId[]) {
         .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
           pila.shift();
           renderPila(slot);
-          resolve(slidePilaDown(slot, pila));
+          resolve(slidingDown && slidePilaDown(slot, pila));
         });
     } else {
       resolve(true);
@@ -176,9 +178,14 @@ function slidePilaDown(slot: number, pila: tCardId[]) {
 }
 
 function slideDown() {
+  slidingDown = true;
   Promise.all(datos.pilas.map((pila, slot) => slidePilaDown(slot, pila))).then(
     () => {
       $(document).trigger(EV.GAMEOVER_AFTER);
+      slidingDown = false;
     }
   );
+}
+function stopSlideDown() {
+  slidingDown = false;
 }
