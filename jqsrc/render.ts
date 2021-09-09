@@ -8,6 +8,7 @@ import {
   tCardId,
   numPilas,
   numHuecos,
+  baraja,
 } from './datos.js';
 
 import { enableDraggable, setDraggable } from './dragdrop.js';
@@ -65,6 +66,10 @@ const setCardId = (el: JQuery, cardId: tCardId) => {
 };
 
 export const initBoard = () => {
+  // Image preload
+  Object.keys(baraja).forEach((cardId) => {
+    new Image().src = `assets/cards/${cardId}.svg`;
+  });
   const boardEl = $('.grid');
 
   boardEl.append(createContainer(POS.MAZO));
