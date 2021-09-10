@@ -162,14 +162,14 @@ async function raiseAll() {
 let slidingDown = false;
 function slidePilaDown(slot: number, pila: tCardId[]) {
   return new Promise((resolve) => {
-    if (pila.length) {
+    if (slidingDown && pila.length) {
       $(SEL.PILAS)
         .eq(slot)
         .find(SEL.TOP)
         .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
           pila.shift();
           renderPila(slot);
-          resolve(slidingDown && slidePilaDown(slot, pila));
+          resolve(slidePilaDown(slot, pila));
         });
     } else {
       resolve(true);
