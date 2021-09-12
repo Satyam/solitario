@@ -38,12 +38,11 @@ export const main = () => {
         const [x1, y1] = polarToXY(MAX_RADIUS, angle);
         const [xc1, yc1] = polarToXY(MAX_RADIUS * 0.9, angle);
 
-        return `<path class="pepe" id="p${index}"
-          fill="none"
-          stroke="green"
+        return `<path class="spline"
           d="M ${x0},${y0}
             C ${xc0},${yc0} ${xc1},${yc1} ${x1},${y1}"
-        />`;
+        />
+        <line class="linea" x1=${x0} y1=${y0} x2=${x0} y2=${y0} />`;
       })
       .join(' ')
   );
@@ -51,11 +50,15 @@ export const main = () => {
   $(window).on('mousemove mousedown', (ev) => {
     if (ev.buttons === 0) return;
     const [x, y] = mouseToXy(ev);
-    $('.pepe').each(function (i) {
+    $('.spline').each(function (i) {
       const [x0, y0] = polarToXY(MAX_RADIUS * 0.1, angles[i]);
       $(this).attr('d', (_, val) =>
         val.replace(rexp, `M ${x + x0},${y + y0} $1`)
       );
+    });
+    $('.linea').each(function (i) {
+      const [x0, y0] = polarToXY(MAX_RADIUS * 0.1, angles[i]);
+      $(this).attr({ x1: x0 + x, y1: y0 + y });
     });
     $('#c').attr({
       cx: x,
