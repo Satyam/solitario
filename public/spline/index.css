@@ -1,0 +1,17 @@
+.spline {
+  fill: none;
+  stroke: green;
+}
+
+.linea {
+  fill: none;
+  stroke: red;
+  stroke-opacity: 50%;
+  stroke-width: 1px;
+}
+
+.center {
+  fill: yellow;
+  stroke: darkgreen;
+  stroke-width: 1px;
+}
