@@ -1,14 +1,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Solitario</title>
-    <link rel="stylesheet" href="assets/jquery/jquery-ui.min.css" />
-    <script src="assets/jquery/jquery-3.6.0.min.js"></script>
-    <script src="assets/jquery/jquery-ui.min.js"></script>
+    <title>Splines</title>
     <link rel="stylesheet" href="spline/index.css" />
   </head>
   <body>
     <svg
+      id="svg"
       viewBox="-200 -100 400 200"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -16,9 +14,6 @@
       <circle class="center" id="c" cx="0" cy="0" r="1.5" />
       <g id="g"><line x1="0" y1="0" x2="10" y2="10" /></g>
     </svg>
-    <script type="module">
-      import { main } from './spline/index.js';
-      $(main);
-    </script>
+    <script src="spline/index.js"></script>
   </body>
 </html>
