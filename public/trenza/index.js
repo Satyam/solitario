@@ -62,11 +62,11 @@ const redraw = () => {
 
   for (let ciclo = 0; ciclo < CICLOS; ciclo++) {
     const baseX = ciclo * longitudDeOnda;
-    for (let seg = 0; seg < 4; seg++) {
-      const punto = puntos[seg];
-      const next = puntos[seg + 1];
-      for (let fase = 0; fase < 3; fase++) {
-        const fx = Math.round((longitudDeOnda * fase) / 3);
+    for (let fase = 0; fase < 3; fase++) {
+      const fx = Math.round((longitudDeOnda * fase) / 3);
+      for (let seg = 0; seg < 4; seg++) {
+        const punto = puntos[seg];
+        const next = puntos[seg + 1];
         svgEl.appendChild(
           createSvgPath(
             {
