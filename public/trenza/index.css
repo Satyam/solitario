@@ -1,0 +1,19 @@
+path {
+  fill: none;
+  stroke-width: 5px;
+}
+.uno {
+  stroke: magenta;
+}
+.dos {
+  stroke: green;
+}
+.tres {
+  stroke: yellow;
+}
+.cuatro {
+  stroke: blue;
+}
+circle {
+  fill: red;
+}
