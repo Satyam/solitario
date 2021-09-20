@@ -16,7 +16,7 @@ const createSvgPath = (points, className = '') => {
   return newEl;
 };
 
-const createSvgCircle = (x, y, title) => {
+const createSvgCircle = (x, y, title = '') => {
   const newEl = document.createElementNS(NS_SVG, 'circle');
   newEl.setAttribute('cx', x);
   newEl.setAttribute('cy', y);
@@ -30,11 +30,17 @@ const createSvgCircle = (x, y, title) => {
 const redraw = () => {
   const svgEl = document.getElementById('svg');
 
-  // svg = svgEl.getBoundingClientRect();
+  const svg = svgEl.getBoundingClientRect();
+
   const [minX, minY, width, height] = svgEl
     .getAttribute('viewBox')
     .split(' ')
     .map(Number);
+
+  const mouseToXy = (ev) => [
+    Math.round(((ev.pageX - svg.left) * width) / svg.width + minX),
+    Math.round(((ev.pageY - svg.top) * height) / svg.height + minY),
+  ];
 
   const yMax = height * PORC_ANCHO;
   const longitudDeOnda = width / CICLOS;
@@ -60,27 +66,71 @@ const redraw = () => {
     },
   ];
 
-  for (let ciclo = 0; ciclo < CICLOS; ciclo++) {
-    const baseX = ciclo * longitudDeOnda;
-    for (let fase = 0; fase < 3; fase++) {
-      const fx = Math.round((longitudDeOnda * fase) / 3);
-      for (let seg = 0; seg < 4; seg++) {
-        const punto = puntos[seg];
-        const next = puntos[seg + 1];
-        svgEl.appendChild(
-          createSvgPath(
-            {
-              p0: [punto.x + baseX + fx, punto.y],
-              p1: [next.x + baseX + fx, next.y],
-              cp0: [punto.cpx + punto.x + baseX + fx, punto.cpy + punto.y],
-              cp1: [-next.cpx + next.x + baseX + fx, -next.cpy + next.y],
-            },
-            CLASSNAMES[fase % CLASSNAMES.length]
-          )
-        );
+  const draw = (mX = 0, mY = 0) => {
+    for (let ciclo = 0; ciclo < CICLOS; ciclo++) {
+      const baseX = ciclo * longitudDeOnda;
+      for (let fase = 0; fase < 3; fase++) {
+        const fx = Math.round((longitudDeOnda * fase) / 3);
+        for (let seg = 0; seg < 4; seg++) {
+          const offsetX = baseX + fx;
+          const punto = puntos[seg];
+          const next = puntos[seg + 1];
+          const pX = punto.x + offsetX;
+          const nX = next.x + offsetX;
+          const offsetpY = Math.max(
+            Math.min(Math.max(2 * step - Math.abs(mX - pX), 0) * mY, 2 * yMax),
+            -2 * yMax
+          );
+          const offsetnY = Math.max(
+            Math.min(Math.max(2 * step - Math.abs(mX - nX), 0) * mY, 2 * yMax),
+            -2 * yMax
+          );
+          svgEl.appendChild(
+            createSvgPath(
+              {
+                p0: [pX, punto.y - offsetpY],
+                p1: [nX, next.y - offsetnY],
+                cp0: [punto.cpx + pX, punto.cpy + punto.y - offsetpY],
+                cp1: [-next.cpx + nX, -next.cpy + next.y - offsetnY],
+              },
+              CLASSNAMES[fase % CLASSNAMES.length]
+            )
+          );
+          if (fase === 0) {
+            svgEl.appendChild(createSvgCircle(pX, offsetpY), 'p0');
+            svgEl.appendChild(createSvgCircle(nX, offsetnY), 'p1');
+          }
+        }
       }
     }
-  }
+  };
+
+  const removeAll = () => {
+    while (svgEl.firstChild) {
+      svgEl.removeChild(svgEl.firstChild);
+    }
+  };
+
+  draw();
+
+  const mouseOnHandler = (ev) => {
+    if (ev.buttons === 0) return;
+    ev.preventDefault();
+    const [mX, mY] = mouseToXy(ev);
+    removeAll();
+    draw(mX, mY);
+  };
+
+  const mouseOffHandler = (ev) => {
+    ev.preventDefault();
+    removeAll();
+    draw(0, 0);
+  };
+
+  window.onmousemove = mouseOnHandler;
+  window.onmousedown = mouseOnHandler;
+  window.onmouseup = mouseOffHandler;
 };
+
 window.onresize = redraw;
 window.onload = redraw;
