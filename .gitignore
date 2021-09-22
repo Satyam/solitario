@@ -24,4 +24,6 @@ yarn-error.log*
 
 #satyam
 public/assets/*
-!public/assets/jq.css
+public/jq/*
+!public/jq/index.css
+!public/jq/index.html
