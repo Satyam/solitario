@@ -3,3 +3,7 @@ main {
   grid-template-columns: 800px;
   justify-content: center;
 }
+
+text {
+  font-size: 4px;
+}
