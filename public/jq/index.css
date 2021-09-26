@@ -139,3 +139,7 @@ tr.desde td {
 .noHint {
   text-align: center;
 }
+
+.help {
+  display: none;
+}
