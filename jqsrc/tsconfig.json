@@ -8,7 +8,7 @@
         "moduleResolution": "node",
         "sourceMap": true,
         "declaration": true,
-        "outDir": "../public/jq",
+        "outDir": "../public/solitario",
         "baseUrl": ".",
         "paths": {
             "*": [

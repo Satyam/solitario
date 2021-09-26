@@ -24,6 +24,6 @@ yarn-error.log*
 
 #satyam
 public/assets/*
-public/jq/*
-!public/jq/index.css
-!public/jq/index.html
+public/solitario/*
+!public/solitario/index.css
+!public/solitario/index.html
