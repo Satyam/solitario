@@ -14,7 +14,10 @@ import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
 import { shuffle, canDropInSomePila, tCanDrop } from './utils.js';
 
+let animationActive = false;
+
 export const initActions = () => {
+  animationActive = false;
   // Buttons
   $('#newGame').on('click', () => {
     $(document).trigger(EV.NEWGAME_BEFORE);
@@ -27,14 +30,21 @@ export const initActions = () => {
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
   $(document)
-    .on(EV.GAMEOVER_BEFORE, slideDown)
+    .on(EV.GAMEOVER_BEFORE, endAnimation)
     .on(EV.JUGADA_AFTER, checkGameover)
     .on(EV.NEWGAME_BEFORE, startNewGame)
     .on(EV.NEWGAME_AFTER, checkGameover);
 };
 
 const startNewGame = (): void => {
-  stopSlideDown();
+  $(SEL.VISTA).stop(true);
+  $(SEL.PILAS).each(function () {
+    $(this).stop(true);
+  });
+  $(SEL.HUECOS).each(function () {
+    $(this).stop(true);
+  });
+  animationActive = false;
   datos.vista = [];
   for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
@@ -147,29 +157,30 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
 }
 
 async function raiseAll() {
-  loop: while (true) {
+  animationActive = true;
+  loop: while (animationActive) {
     if (await vistaToPila(canDropInSomePila(datos.vista[0]))) continue;
     const huecos = datos.huecos;
     const l = huecos.length;
-    for (let fromSlot = 0; fromSlot < l; fromSlot++) {
+    for (let fromSlot = 0; fromSlot < l && animationActive; fromSlot++) {
       if (await huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])))
         continue loop;
     }
     break;
   }
+  animationActive = false;
 }
 
-let slidingDown = false;
-function slidePilaDown(slot: number, pila: tCardId[]) {
+function endAnimationOnePila(slot: number, pila: tCardId[]) {
   return new Promise((resolve) => {
-    if (slidingDown && pila.length) {
+    if (animationActive && pila.length) {
       $(SEL.PILAS)
         .eq(slot)
         .find(SEL.TOP)
         .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
           pila.shift();
           renderPila(slot);
-          resolve(slidePilaDown(slot, pila));
+          resolve(endAnimationOnePila(slot, pila));
         });
     } else {
       resolve(true);
@@ -177,15 +188,12 @@ function slidePilaDown(slot: number, pila: tCardId[]) {
   });
 }
 
-function slideDown() {
-  slidingDown = true;
-  Promise.all(datos.pilas.map((pila, slot) => slidePilaDown(slot, pila))).then(
-    () => {
-      $(document).trigger(EV.GAMEOVER_AFTER);
-      slidingDown = false;
-    }
-  );
-}
-function stopSlideDown() {
-  slidingDown = false;
+function endAnimation() {
+  animationActive = true;
+  Promise.all(
+    datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
+  ).then(() => {
+    $(document).trigger(EV.GAMEOVER_AFTER);
+    animationActive = false;
+  });
 }
