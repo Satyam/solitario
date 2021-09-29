@@ -14,15 +14,14 @@ import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
 import { shuffle, canDropInSomePila, tCanDrop } from './utils.js';
 
-let animationActive = false;
+const animationQueue = Promise.resolve();
 
 export const initActions = () => {
-  animationActive = false;
   // Buttons
   $('#newGame').on('click', () => {
     $(document).trigger(EV.NEWGAME_BEFORE);
   });
-  $('#raise').on('click', raiseAll);
+  $('#raise').on('click', () => animationQueue.then(raiseAll));
 
   // cards
   $(SEL.MAZO).on('click', dealCard);
@@ -30,21 +29,15 @@ export const initActions = () => {
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
   $(document)
-    .on(EV.GAMEOVER_BEFORE, endAnimation)
+    .on(EV.GAMEOVER_BEFORE, () => animationQueue.then(endAnimation))
     .on(EV.JUGADA_AFTER, checkGameover)
-    .on(EV.NEWGAME_BEFORE, startNewGame)
+    .on(EV.NEWGAME_BEFORE, () => animationQueue.then(startNewGame))
     .on(EV.NEWGAME_AFTER, checkGameover);
 };
 
-const startNewGame = (): void => {
-  $(SEL.VISTA).stop(true);
-  $(SEL.PILAS).each(function () {
-    $(this).stop(true);
-  });
-  $(SEL.HUECOS).each(function () {
-    $(this).stop(true);
-  });
-  animationActive = false;
+const startNewGame = async () => {
+  $.fx.off = true;
+
   datos.vista = [];
   for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
@@ -57,7 +50,7 @@ const startNewGame = (): void => {
 
   // Place the remaining cards in the mazo.
   datos.mazo = cardIds;
-
+  $.fx.off = false;
   $(document).trigger(EV.NEWGAME_AFTER);
 };
 
@@ -157,23 +150,21 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
 }
 
 async function raiseAll() {
-  animationActive = true;
-  loop: while (animationActive) {
+  loop: while (true) {
     if (await vistaToPila(canDropInSomePila(datos.vista[0]))) continue;
     const huecos = datos.huecos;
     const l = huecos.length;
-    for (let fromSlot = 0; fromSlot < l && animationActive; fromSlot++) {
+    for (let fromSlot = 0; fromSlot < l; fromSlot++) {
       if (await huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])))
         continue loop;
     }
     break;
   }
-  animationActive = false;
 }
 
 function endAnimationOnePila(slot: number, pila: tCardId[]) {
   return new Promise((resolve) => {
-    if (animationActive && pila.length) {
+    if (pila.length) {
       $(SEL.PILAS)
         .eq(slot)
         .find(SEL.TOP)
@@ -189,11 +180,9 @@ function endAnimationOnePila(slot: number, pila: tCardId[]) {
 }
 
 function endAnimation() {
-  animationActive = true;
   Promise.all(
     datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
   ).then(() => {
     $(document).trigger(EV.GAMEOVER_AFTER);
-    animationActive = false;
   });
 }
