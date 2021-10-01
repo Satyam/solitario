@@ -14,14 +14,19 @@ import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
 import { shuffle, canDropInSomePila, tCanDrop } from './utils.js';
 
-const animationQueue = Promise.resolve();
+let animationQueue = Promise.resolve();
 
+const addQ = (operation: () => Promise<any> | any) => {
+  animationQueue = animationQueue.then(operation).catch((err) => {
+    console.error(err);
+  });
+};
 export const initActions = () => {
   // Buttons
   $('#newGame').on('click', () => {
     $(document).trigger(EV.NEWGAME_BEFORE);
   });
-  $('#raise').on('click', () => animationQueue.then(raiseAll));
+  $('#raise').on('click', () => addQ(raiseAll));
 
   // cards
   $(SEL.MAZO).on('click', dealCard);
@@ -29,29 +34,30 @@ export const initActions = () => {
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
   $(document)
-    .on(EV.GAMEOVER_BEFORE, () => animationQueue.then(endAnimation))
+    .on(EV.GAMEOVER_BEFORE, () => addQ(endAnimation))
     .on(EV.JUGADA_AFTER, checkGameover)
-    .on(EV.NEWGAME_BEFORE, () => animationQueue.then(startNewGame))
+    .on(EV.NEWGAME_BEFORE, startNewGame)
     .on(EV.NEWGAME_AFTER, checkGameover);
 };
 
-const startNewGame = async () => {
+const startNewGame = () => {
   $.fx.off = true;
+  addQ(() => {
+    datos.vista = [];
+    for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
-  datos.vista = [];
-  for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
+    const cardIds = shuffle<tCardId[]>(Object.keys(baraja) as tCardId[]);
 
-  const cardIds = shuffle<tCardId[]>(Object.keys(baraja) as tCardId[]);
+    for (let slot = 0; slot < numHuecos; slot++) {
+      datos.huecos[slot] = cardIds.splice(0, slot + 1);
+      datos.firstShown[slot] = slot;
+    }
 
-  for (let slot = 0; slot < numHuecos; slot++) {
-    datos.huecos[slot] = cardIds.splice(0, slot + 1);
-    datos.firstShown[slot] = slot;
-  }
-
-  // Place the remaining cards in the mazo.
-  datos.mazo = cardIds;
-  $.fx.off = false;
-  $(document).trigger(EV.NEWGAME_AFTER);
+    // Place the remaining cards in the mazo.
+    datos.mazo = cardIds;
+    $.fx.off = false;
+    $(document).trigger(EV.NEWGAME_AFTER);
+  });
 };
 
 const checkGameover = () => {
@@ -149,12 +155,12 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
   });
 }
 
-async function raiseAll() {
-  loop: while (true) {
+async function raiseAll(): Promise<any> {
+  loop: while (!$.fx.off) {
     if (await vistaToPila(canDropInSomePila(datos.vista[0]))) continue;
+
     const huecos = datos.huecos;
-    const l = huecos.length;
-    for (let fromSlot = 0; fromSlot < l; fromSlot++) {
+    for (let fromSlot = 0; fromSlot < numHuecos && !$.fx.off; fromSlot++) {
       if (await huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])))
         continue loop;
     }
@@ -164,23 +170,19 @@ async function raiseAll() {
 
 function endAnimationOnePila(slot: number, pila: tCardId[]) {
   return new Promise((resolve) => {
-    if (pila.length) {
-      $(SEL.PILAS)
-        .eq(slot)
-        .find(SEL.TOP)
-        .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
-          pila.shift();
-          renderPila(slot);
-          resolve(endAnimationOnePila(slot, pila));
-        });
-    } else {
-      resolve(true);
-    }
+    $(SEL.PILAS)
+      .eq(slot)
+      .find(SEL.TOP)
+      .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
+        pila.shift();
+        renderPila(slot);
+        resolve(pila.length ? endAnimationOnePila(slot, pila) : true);
+      });
   });
 }
 
 function endAnimation() {
-  Promise.all(
+  return Promise.all(
     datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
   ).then(() => {
     $(document).trigger(EV.GAMEOVER_AFTER);
