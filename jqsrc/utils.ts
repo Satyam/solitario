@@ -50,3 +50,15 @@ export function canDropInSomeHueco(fromCardId: tCardId): tCanDrop {
   }
   return false;
 }
+
+export class ExecutionQueue {
+  q: Promise<void>;
+  constructor() {
+    this.q = Promise.resolve();
+  }
+  add(operation: () => Promise<any> | any) {
+    this.q = this.q.then(operation).catch((err) => {
+      console.error(err, operation.toString());
+    });
+  }
+}

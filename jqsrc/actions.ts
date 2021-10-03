@@ -12,21 +12,21 @@ import {
 
 import { renderMazo, renderPila, renderVista, renderHueco } from './render.js';
 
-import { shuffle, canDropInSomePila, tCanDrop } from './utils.js';
+import {
+  shuffle,
+  canDropInSomePila,
+  tCanDrop,
+  ExecutionQueue,
+} from './utils.js';
 
-let animationQueue = Promise.resolve();
+const Q = new ExecutionQueue();
 
-const addQ = (operation: () => Promise<any> | any) => {
-  animationQueue = animationQueue.then(operation).catch((err) => {
-    console.error(err);
-  });
-};
 export const initActions = () => {
   // Buttons
   $('#newGame').on('click', () => {
     $(document).trigger(EV.NEWGAME_BEFORE);
   });
-  $('#raise').on('click', () => addQ(raiseAll));
+  $('#raise').on('click', () => Q.add(raiseAll));
 
   // cards
   $(SEL.MAZO).on('click', dealCard);
@@ -34,7 +34,7 @@ export const initActions = () => {
   $(SEL.HUECOS).on('mousedown', raiseFromHueco);
 
   $(document)
-    .on(EV.GAMEOVER_BEFORE, () => addQ(endAnimation))
+    .on(EV.GAMEOVER_BEFORE, () => Q.add(endAnimation))
     .on(EV.JUGADA_AFTER, checkGameover)
     .on(EV.NEWGAME_BEFORE, startNewGame)
     .on(EV.NEWGAME_AFTER, checkGameover);
@@ -42,7 +42,7 @@ export const initActions = () => {
 
 const startNewGame = () => {
   $.fx.off = true;
-  addQ(() => {
+  Q.add(() => {
     datos.vista = [];
     for (let slot = 0; slot < numPilas; slot++) datos.pilas[slot] = [];
 
