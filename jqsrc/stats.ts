@@ -1,7 +1,7 @@
 import { EV } from './datos.js';
 
 let jugadas = 0;
-let rondas = 0;
+let rondas = 1;
 let undos = 0;
 let redos = 0;
 
@@ -24,7 +24,7 @@ const renderStats = () => {
 
 const resetStats = () => {
   jugadas = 0;
-  rondas = 0;
+  rondas = 1;
   undos = 0;
   redos = 0;
   renderStats();
