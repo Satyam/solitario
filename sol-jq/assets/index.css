@@ -1,0 +1,145 @@
+:root {
+  --cardWidth: 120px;
+  --cardHeight: 168px;
+  --shortCardHeight: 40px;
+}
+
+body {
+  background-color: darkgreen;
+}
+
+.App header {
+  margin: 1em;
+}
+.App header button {
+  margin: 0 1em;
+}
+
+.card {
+  width: var(--cardWidth);
+  height: var(--cardHeight);
+}
+
+.top {
+  position: relative;
+  top: calc(var(--cardHeight) * -1);
+}
+
+.single {
+  height: var(--cardHeight);
+}
+.stack {
+  position: relative;
+}
+
+.stack.offset {
+  top: calc(var(--shortCardHeight) - var(--cardHeight));
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  column-gap: 1rem;
+  row-gap: 3rem;
+}
+
+.cardContainer {
+  margin-left: auto;
+  margin-right: auto;
+  width: var(--cardWidth);
+}
+
+.celda {
+  width: 100%;
+  background-color: transparent;
+}
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 1rem;
+  row-gap: 3rem;
+}
+
+.leftNav {
+  text-align: left;
+}
+.centerNav {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.rightNav {
+  text-align: right;
+}
+
+.heading {
+  color: wheat;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+button {
+  border-radius: 25%;
+  background-color: wheat;
+  border: thin solid silver;
+}
+
+button:disabled {
+  opacity: 70%;
+}
+
+.buttonPressed {
+  background-color: darkred;
+}
+.ui-droppable .cardContainer {
+  border: medium solid darkgreen;
+}
+.ui-droppable-active .cardContainer {
+  border-color: cyan;
+}
+
+.stats {
+  color: wheat;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 1rem;
+}
+/* for debugging 
+
+.ui-droppable {
+  border: medium solid green;
+}
+.ui-droppable-active {
+  border-color: white;
+}
+
+.ui-draggable {
+  border: thin solid yellow;
+}
+.ui-draggable-dragging {
+  border-color: magenta;
+}
+*/
+
+tr.hasta td {
+  border-bottom: solid black thin;
+}
+tr.desde td {
+  border-top: solid black thin;
+}
+
+.guess {
+  background-color: wheat;
+  border-radius: 1em;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: var(--cardHeight);
+}
+.noHint {
+  text-align: center;
+}
+
+.help {
+  display: none;
+}

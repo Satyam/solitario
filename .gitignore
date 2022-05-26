@@ -23,7 +23,8 @@ yarn-debug.log*
 yarn-error.log*
 
 #satyam
-public/assets/*
+assets/*
 public/solitario/*
 !public/solitario/index.css
 !public/solitario/index.html
+sol-jq/public/*

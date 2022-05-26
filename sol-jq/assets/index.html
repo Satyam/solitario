@@ -1,0 +1,200 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Solitario</title>
+    <link rel="stylesheet" href="assets/jquery/jquery-ui.min.css" />
+    <script src="assets/jquery/jquery-3.6.0.min.js"></script>
+    <script src="assets/jquery/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="/solitario/index.css" />
+  </head>
+  <body>
+    <div class="App">
+      <header class="nav">
+        <div id="toolbox" class="leftNav">
+          <button id="newGame" title="Partida nueva">
+            <img
+              draggable="false"
+              src="assets/icons/autorenew_black_24dp.svg"
+            />
+          </button>
+          <button id="undo" title="Deshacer jugada">
+            <img draggable="false" src="assets/icons/undo_black_24dp.svg" />
+          </button>
+          <button id="redo" title="Rehacer jugada">
+            <img draggable="false" src="assets/icons/redo_black_24dp.svg" />
+          </button>
+          <button id="raise" title="Subir todo lo que se pueda">
+            <img
+              draggable="false"
+              src="assets/icons/trending_up_black_24dp.svg"
+            />
+          </button>
+          <button
+            id="hint"
+            title="Sugerencias (doble click para dejarlas fija)"
+          >
+            <img draggable="false" src="assets/icons/quiz_black_24dp.svg" />
+          </button>
+          <button id="helpOpener" title="Ayuda" )>
+            <img
+              draggable="false"
+              src="assets/icons/help_outline_black_24dp.svg"
+            />
+          </button>
+        </div>
+        <div class="centerNav">
+          <div class="heading">Solitario Klondike</div>
+          <div class="gameover heading">Game Over</div>
+        </div>
+        <div class="rightNav">
+          <div class="stats"></div>
+        </div>
+      </header>
+      <main>
+        <div class="grid"></div>
+      </main>
+    </div>
+
+    <div class="help" title="Ayuda">
+      <p>
+        Esta ayuda describe solamente el uso de la interfaz de esta
+        implementación, no al juego en sí.
+      </p>
+      <h3>Mouse</h3>
+      <ul>
+        <li>
+          Al hacer clic sobre el mazo de cartas de arriba a la izquierda, se
+          expondrá una nueva carta para jugar. Si el mazo se hubiera descubierto
+          por completo, haciendo clic sobre el hueco que ocupaba, volverá a
+          poner boca abajo las cartas restantes por jugar, sin cambiar su orden.
+        </li>
+        <li>
+          Arrastrar para mover las cartas. Se pueden arrastrar cartas
+          individuales o pilas de cartas, en tanto estén boca arriba. Los
+          destinos posibles se resaltarán al comenzar el movimiento. Se puede
+          dejar caer la carta en cualquiera de ellos. Soltando la carta en
+          cualquier otro lugar cancela el movimiento.
+        </li>
+        <li>
+          Al hacer clic con el botón central (la ruedita) sobre una carta, se
+          enviará automáticamente a una de las cuatro pilas, si el movimiento
+          fuera válido.
+        </li>
+      </ul>
+      <h3>Botones en la barra de herramientas</h3>
+      <ul>
+        <li
+          style="list-style-image: url('assets/icons/autorenew_black_24dp.svg')"
+        >
+          <b>Partida nueva</b> Inicia una nueva partida, cancelando la partida
+          en curso.
+        </li>
+        <li style="list-style-image: url('assets/icons/undo_black_24dp.svg')">
+          <b>Deshacer jugada</b> vuelve atrás la movida más reciente. Se pueden
+          deshacer jugadas hasta el inicio del juego. El botón aparecer grisado
+          al inicio al no haber ninguna jugada que se pueda deshacer.
+        </li>
+        <li style="list-style-image: url('assets/icons/redo_black_24dp.svg')">
+          <b>Rehacer jugada</b> Rehace la jugada deshecha más recientemente. El
+          botón aparece grisado cuando no haya jugadas que rehacer.
+        </li>
+        <li
+          style="
+            list-style-image: url('assets/icons/trending_up_black_24dp.svg');
+          "
+        >
+          <b>Subir todo lo que se pueda</b> Eleva a las pilas de resultados
+          todas las cartas que sean posibles. Se detiene cuando no encuentra
+          cartas que sean válidas para subir. Muy útil al final de la partida
+          cuando ya está resuelta y sólo falta la formalidad de subir las
+          cartas.
+        </li>
+        <li style="list-style-image: url('assets/icons/quiz_black_24dp.svg')">
+          <b>Sugerencias</b> Muestra una lista de sugerencias de jugadas
+          posibles, en orden de preferencia. Esta facilidad es experimental y al
+          momento no es exahustiva. Ver
+          <a href="#sugerencias">más abajo para su interpretación.</a><br />(Se
+          puede hacer doble clic sobre este botón para que la lista permanezca
+          siempre a la vista. Esta opción es fundamentalmente para uso en
+          desarrollo.)
+        </li>
+        <li
+          style="
+            list-style-image: url('assets/icons/help_outline_black_24dp.svg');
+          "
+        >
+          <b>Ayuda</b> Esta ayuda.
+        </li>
+      </ul>
+      <h3>Estadísticas</h3>
+      Arriba a la derecha se muestran algunas estadísticas del juego en curso.
+      <ul>
+        <li>
+          <b>Jugadas</b> La cantidad de jugadas en esta partida. Arrastrar
+          múltiples cartas a la vez cuenta como una sola jugada.
+        </li>
+        <li>
+          <b>Rondas</b> La cantidad de veces que el mazo se ha terminado y
+          vuelto a jugar. En ciertas versiones de este juego, la partida se
+          bloquea tras la tercera ronda, no así en esta.
+        </li>
+        <li>
+          <b>Deshechos</b> La cantidad de veces que se ha pulsado el botón de
+          deshacer
+        </li>
+        <li>
+          <b>Rehechos</b> La cantidad de veces que se ha pulsado el botón de
+          rehacer
+        </li>
+      </ul>
+      <h3><a name="sugerencias"></a>Interpretación de las sugerencias</h3>
+      <p>
+        Cada sugerencia se muestra en dos filas indicando en la primera el
+        origen del movimiento <b>De</b> e inmediatamente abajo el destino
+        <b>A</b>. Pueden mostrarse varias sugerencias en el mismo cuadro que se
+        muestran por orden de preferencia, según lo entiende el programa.
+      </p>
+      <p>La información se muestra en columnas con los siguentes rótulos:</p>
+      <ul>
+        <li>
+          <b>Donde</b> el grupo de cartas, a saber
+          <ul>
+            <li>
+              <b>Vista</b> en la fila de arriba, la segunda posición. Es donde
+              quedan a la <i>vista</i> las cartas que se van sacando del mazo.
+            </li>
+            <li><b>Hueco</b> la zona de trabajo en la fila inferior.</li>
+            <li>
+              <b>Pila</b> el grupo de cuatro posiciones arriba a la derecha,
+              donde se arman las pilas finales
+            </li>
+          </ul>
+        </li>
+        <li>
+          <b>Columna</b> En los grupos Hueco y Pila, cuál de las pilas en ese
+          grupo
+        </li>
+        <li>
+          <b>Carta</b>
+          Indica tanto la carta a mover como la carta sobre la cual hay que
+          ubicarla. Si no hubiera cartas presentes en la posición de destino,
+          mostrará 'vacío'
+          <ul>
+            <li>
+              <b>Valor</b> Va desde la A, los números del 2 al 10 y los
+              habituales J, Q y K
+            </li>
+            <li>
+              <b>Palo</b> el símbolo del palo
+              <span style="color: red">&hearts; &diams;</span> &spades; &clubs;
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <script type="module">
+      import { main } from '/solitario/index.js';
+      $(main);
+    </script>
+  </body>
+</html>
