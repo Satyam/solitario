@@ -140,6 +140,6 @@ tr.desde td {
   text-align: center;
 }
 
-.help {
+.help, .allcards {
   display: none;
 }

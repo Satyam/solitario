@@ -25,9 +25,15 @@ const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
 const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
 
 const cardImg = (cardId: tCardId, className: string = ''): string =>
-  `<img  draggable="false" class="card ${className}" src="${imgSrc(
-    cardId
-  )}" />`;
+  // `<img  draggable="false" class="card ${className}" src="${imgSrc(
+  //   cardId
+  // )}" />`;
+  `<svg xmlns="http://www.w3.org/2000/svg" 
+      draggable="false" 
+      class="${className}"
+  >
+    <use href="assets/cards.svg#card_${cardId}" class="card" />
+  </svg>`;
 
 const createContainer = (
   name: string,
@@ -62,14 +68,12 @@ const emptyHuecoContainer = `
 `;
 
 const setCardId = (el: JQuery, cardId: tCardId) => {
-  el.find(SEL.IMG).add(el.filter(SEL.IMG)).prop('src', imgSrc(cardId));
+  el.find(SEL.IMG)
+    .add(el.filter(SEL.IMG))
+    .prop('src', imgSrc(cardId));
 };
 
 export const initBoard = () => {
-  // Image preload
-  Object.keys(baraja).forEach((cardId) => {
-    new Image().src = `assets/cards/${cardId}.svg`;
-  });
   const boardEl = $('.grid');
 
   boardEl.append(createContainer(POS.MAZO));
@@ -192,7 +196,7 @@ const renderOneHueco = (h: JQuery, slot: number) => {
 };
 
 const renderHuecos = () => {
-  $(SEL.HUECOS).each(function (slot) {
+  $(SEL.HUECOS).each(function(slot) {
     renderOneHueco($(this), slot);
   });
 };

@@ -3,21 +3,22 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.24",
     "@types/node": "^12.20.19",
     "jquery": "^3.6.0",
-    "typescript": "^4.3.5",
-    "web-vitals": "^1.1.2"
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "server": "serve public",
-    "build": "tsc --watch"
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.3",
     "@types/jquery": "^3.5.6",
-    "@types/jqueryui": "^1.12.16"
+    "@types/jqueryui": "^1.12.16",
+    "rollup": "^2.75.6",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-copy": "^3.4.0"
   }
 }
