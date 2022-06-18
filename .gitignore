@@ -28,3 +28,4 @@ public/solitario/*
 !public/solitario/index.css
 !public/solitario/index.html
 sol-jq/public/*
+sol-jq/assets/*
