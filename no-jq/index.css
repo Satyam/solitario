@@ -25,9 +25,10 @@ body {
   top: calc(var(--cardHeight) * -1);
 }
 
-.single {
+.singleRow {
   height: var(--cardHeight);
 }
+
 .stack {
   position: relative;
 }
@@ -44,8 +45,7 @@ body {
 }
 
 .cardContainer {
-  margin-left: auto;
-  margin-right: auto;
+  justify-self: center;
   width: var(--cardWidth);
 }
 
@@ -64,11 +64,13 @@ body {
 .leftNav {
   text-align: left;
 }
+
 .centerNav {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
+
 .rightNav {
   text-align: right;
 }
@@ -138,8 +140,4 @@ tr.desde td {
 }
 .noHint {
   text-align: center;
-}
-
-.help {
-  /* display: none; */
 }
