@@ -26,7 +26,7 @@ export const initActions = () => {
     .addEventListener('mousedown', raiseFromVista);
   document
     .querySelectorAll(SEL.HUECOS)
-    .forEach(el => el.addEventListener('mousedown', raiseFromHueco));
+    .forEach((el) => el.addEventListener('mousedown', raiseFromHueco));
   onEV(EV.GAMEOVER_BEFORE, () => Q.add(endAnimation));
   onEV(EV.JUGADA_AFTER, checkGameover);
   onEV(EV.NEWGAME_BEFORE, startNewGame);
@@ -49,12 +49,12 @@ const startNewGame = () => {
 };
 
 const checkGameover = () => {
-  const gameover = datos.pilas.every(pila => pila.length === 13);
+  const gameover = datos.pilas.every((pila) => pila.length === 13);
   document.querySelector('.gameover').toggleAttribute('hidden', !gameover);
   if (gameover) fireEV(EV.GAMEOVER_BEFORE);
 };
 
-const dealCard = ev => {
+const dealCard = (ev) => {
   fireEV(EV.JUGADA_BEFORE);
   if (datos.mazo.length) {
     datos.vista.unshift(datos.mazo.shift());
@@ -73,15 +73,8 @@ async function vistaToPila(toSlot) {
   fireEV(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.vista.shift());
   await animateMove(
-    // $(SEL.VISTA).find(SEL.TOP),
     document.querySelector(`${SEL.VISTA} ${SEL.TOP}`),
-    // $(SEL.PILAS)
-    //   .eq(toSlot)
-    //   .find(SEL.TOP)
-    document
-      .querySelectorAll(SEL.PILAS)
-      .item(toSlot)
-      .querySelector(SEL.TOP)
+    document.querySelectorAll(SEL.PILAS).item(toSlot).querySelector(SEL.TOP)
   );
   renderPila(toSlot);
   renderVista();
@@ -101,22 +94,13 @@ async function huecoToPila(fromSlot, toSlot) {
   fireEV(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift());
   await animateMove(
-    // $(SEL.HUECOS)
-    //   .eq(fromSlot)
-    //   .find(SEL.IMG)
-    //   .last(),
     document
       .querySelectorAll(SEL.HUECOS)
       .item(fromSlot)
-      .querySelector('img:last-of-type'),
-    // $(SEL.PILAS)
-    //   .eq(toSlot)
-    //   .find(SEL.TOP)
-    document
-      .querySelectorAll(SEL.PILAS)
-      .item(toSlot)
-      .querySelector(SEL.TOP)
+      .querySelector('div[data-start="0"] img'),
+    document.querySelectorAll(SEL.PILAS).item(toSlot).querySelector(SEL.TOP)
   );
+
   renderHueco(fromSlot);
   renderPila(toSlot);
   fireEV(EV.JUGADA_AFTER);
@@ -125,7 +109,7 @@ async function huecoToPila(fromSlot, toSlot) {
 
 function raiseFromHueco(ev) {
   if (ev.buttons === 4) {
-    const fromSlot = ev.currentTarget.dataset.slot;
+    const fromSlot = parseInt(ev.currentTarget.dataset.slot, 10);
     const toSlot = canDropInSomePila(datos.huecos[fromSlot][0]);
     huecoToPila(fromSlot, toSlot);
     // stop propagation
@@ -134,19 +118,19 @@ function raiseFromHueco(ev) {
 }
 
 function animateMove(srcEl, destEl) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const srcPos = srcEl.getBoundingClientRect();
-    srcEl.style.position = 'relative';
-    srcEl.style.zIndex = 10;
     const destPos = destEl.getBoundingClientRect();
     const anim = srcEl.animate(
       {
-        left: `+=${destPos.left - srcPos.left}`,
-        top: `+=${destPos.top - srcPos.top}`,
+        transform: `translate(
+          ${destPos.left - srcPos.left}px,
+          ${destPos.top - srcPos.top}px
+        )`,
       },
       {
         duration: 300,
-        easing: 'ease-in',
+        easing: 'ease-in-out',
       }
     );
     anim.addEventListener('finish', () => {
@@ -165,7 +149,7 @@ async function raiseAll() {
 }
 
 function endAnimationOnePila(slot, pila) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     $(SEL.PILAS)
       .eq(slot)
       .find(SEL.TOP)
@@ -176,6 +160,7 @@ function endAnimationOnePila(slot, pila) {
       });
   });
 }
+
 function endAnimation() {
   return Promise.all(
     datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
