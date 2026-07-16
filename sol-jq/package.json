@@ -8,7 +8,7 @@
     "typescript": "^4.3.5"
   },
   "scripts": {
-    "server": "serve public",
+    "server": "serve -d public",
     "build": "rollup -c",
     "watch": "rollup -c -w"
   },

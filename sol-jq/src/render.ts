@@ -22,19 +22,26 @@ const s = getComputedStyle(document.documentElement);
 const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
 const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
 
-const imgSrc = (cardId: tCardId): string => `assets/cards/${cardId}.svg`;
+const imgSrc = (cardId: tCardId): string => `assets/cards.svg#card_${cardId}`;
 
 const cardImg = (cardId: tCardId, className: string = ''): string =>
   // `<img  draggable="false" class="card ${className}" src="${imgSrc(
   //   cardId
   // )}" />`;
   `<svg xmlns="http://www.w3.org/2000/svg" 
+      viewBox="-120 -168 240 336"
       draggable="false" 
-      class="${className}"
+      class="card ${className}"
   >
-    <use href="assets/cards.svg#card_${cardId}" class="card" />
+    <use href="assets/cards.svg#card_${cardId}" />
   </svg>`;
-
+/*
+  <svg xmlns="http://www.w3.org/2000/svg" height="3.5in" preserveAspectRatio="none" viewBox="-120 -168 240 336" width="2.5in">
+  <!-- <image href="assets/cards.svg" /> -->
+  <!-- <use href="#card_2H" height="346" width="240" x="-114.4" y="-156" /> -->
+  <use href="assets/cards.svg#card_2H" height="346" width="240" x="-114.4" y="-156"></use>
+</svg>
+*/
 const createContainer = (
   name: string,
   draggable?: boolean,
@@ -70,7 +77,7 @@ const emptyHuecoContainer = `
 const setCardId = (el: JQuery, cardId: tCardId) => {
   el.find(SEL.IMG)
     .add(el.filter(SEL.IMG))
-    .prop('src', imgSrc(cardId));
+    .prop('href', imgSrc(cardId));
 };
 
 export const initBoard = () => {

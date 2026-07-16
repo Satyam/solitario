@@ -61,7 +61,7 @@ const startNewGame = () => {
 };
 
 const checkGameover = () => {
-  const gameover = datos.pilas.every((pila) => pila.length === 13);
+  const gameover = datos.pilas.every(pila => pila.length === 13);
   $('.gameover').toggle(gameover);
   if (gameover) $(document).trigger(EV.GAMEOVER_BEFORE);
 };
@@ -86,7 +86,9 @@ async function vistaToPila(toSlot: tCanDrop): Promise<boolean> {
   datos.pilas[toSlot].unshift(datos.vista.shift()!);
   await animateMove(
     $(SEL.VISTA).find(SEL.TOP),
-    $(SEL.PILAS).eq(toSlot).find(SEL.TOP)
+    $(SEL.PILAS)
+      .eq(toSlot)
+      .find(SEL.TOP)
   );
   renderPila(toSlot);
   renderVista();
@@ -110,8 +112,13 @@ async function huecoToPila(
   $(document).trigger(EV.JUGADA_BEFORE);
   datos.pilas[toSlot].unshift(datos.huecos[fromSlot].shift()!);
   await animateMove(
-    $(SEL.HUECOS).eq(fromSlot).find(SEL.IMG).last(),
-    $(SEL.PILAS).eq(toSlot).find(SEL.TOP)
+    $(SEL.HUECOS)
+      .eq(fromSlot)
+      .find(SEL.IMG)
+      .last(),
+    $(SEL.PILAS)
+      .eq(toSlot)
+      .find(SEL.TOP)
   );
   renderHueco(fromSlot);
   renderPila(toSlot);
@@ -131,7 +138,7 @@ function raiseFromHueco(ev: JQuery.Event) {
 }
 
 function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const srcPos = srcEl.offset();
     srcEl.css({
       position: 'relative',
@@ -158,11 +165,11 @@ function animateMove(srcEl: JQuery, destEl: JQuery): Promise<void> {
 }
 
 async function raiseAll(): Promise<any> {
-  loop: while (!$.fx.off) {
+  loop: while (true) {
     if (await vistaToPila(canDropInSomePila(datos.vista[0]))) continue;
 
     const huecos = datos.huecos;
-    for (let fromSlot = 0; fromSlot < numHuecos && !$.fx.off; fromSlot++) {
+    for (let fromSlot = 0; fromSlot < numHuecos; fromSlot++) {
       if (await huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])))
         continue loop;
     }
@@ -171,7 +178,7 @@ async function raiseAll(): Promise<any> {
 }
 
 function endAnimationOnePila(slot: number, pila: tCardId[]) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     $(SEL.PILAS)
       .eq(slot)
       .find(SEL.TOP)

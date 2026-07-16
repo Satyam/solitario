@@ -34,7 +34,7 @@ export const charPalos = {
 };
 
 type tPalo = typeof palos[number];
-export const REVERSO = '2B';
+export const REVERSO = 'back';
 export const HUECO = 'hueco';
 
 export type tCardId = `${tValor}${tPalo}` | typeof REVERSO | typeof HUECO;
@@ -80,7 +80,7 @@ export enum SEL {
   DRAGGABLE = '.draggable',
   CELDA = '.celda',
   TOP = '.top',
-  IMG = 'img',
+  IMG = 'use',
   STACK = '.stack',
 }
 

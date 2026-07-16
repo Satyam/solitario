@@ -20,6 +20,11 @@ body {
   height: var(--cardHeight);
 }
 
+.card use {
+  x: -114.4; 
+  y: -156 
+}
+
 .top {
   position: relative;
   top: calc(var(--cardHeight) * -1);
@@ -140,6 +145,6 @@ tr.desde td {
   text-align: center;
 }
 
-.help, .allcards {
+.help {
   display: none;
 }
