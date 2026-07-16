@@ -21,7 +21,7 @@ const s = getComputedStyle(document.documentElement);
 const cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
 const shortCardHeight = parseInt(s.getPropertyValue('--shortCardHeight'), 10);
 
-const imgSrc = cardId => `assets/cards/${cardId}.svg`;
+const imgSrc = (cardId) => `assets/cards/${cardId}.svg`;
 
 const cardImg = (cardId, className = '', draggable = false) => {
   const img = document.createElement('img');
@@ -46,7 +46,7 @@ const createDiv = (className, contents) => {
         break;
       }
       if (Array.isArray(contents)) {
-        contents.forEach(el => {
+        contents.forEach((el) => {
           if (el instanceof HTMLElement) {
             div.appendChild(el);
           } else {
@@ -67,7 +67,7 @@ const createGuessContainer = () => createDiv('celda guess');
 const createContainer = (name, draggable, droppable) =>
   createDiv(
     `celda ${name} ${droppable ? 'droppable' : ''}`,
-    createDiv('cardContainer single', [
+    createDiv('cardContainer singleRow', [
       cardImg(HUECO, 'behind'),
       cardImg(REVERSO, 'top', draggable),
     ])
@@ -92,14 +92,14 @@ const setCardId = (el, cardId) => {
   if (el.nodeName == 'IMG') {
     el.setAttribute('src', imgSrc(cardId));
   }
-  el.querySelectorAll('img').forEach(el =>
+  el.querySelectorAll('img').forEach((el) =>
     el.setAttribute('src', imgSrc(cardId))
   );
 };
 
 export const initBoard = () => {
   // Image preload
-  Object.keys(baraja).forEach(cardId => {
+  Object.keys(baraja).forEach((cardId) => {
     new Image().src = `assets/cards/${cardId}.svg`;
   });
   const boardEl = document.querySelector('.grid');
@@ -129,15 +129,15 @@ const renderVoP = (containerEl, cardIdTop = HUECO, cardIdNext = HUECO) => {
   const imgBehind = containerEl.querySelector('.behind');
   if (imgTop) {
     setCardId(imgTop, cardIdTop);
+    setCardId(imgBehind, cardIdNext);
   } else {
-    // Never gets here
-    debugger;
-    document
-      .querySelectorAll(`${cardIdTop}.draggable.top`)
-      .forEach(el => setDraggable(el.appendTo(containerEl.children())));
-    enableDraggable(imgTop, cardIdTop !== HUECO);
+    containerEl.firstElementChild.insertBefore(
+      cardImg(cardIdNext, 'behind'),
+      imgBehind
+    );
+    imgBehind.classList.replace('behind', 'top');
+    imgBehind.draggable = cardIdTop != HUECO;
   }
-  setCardId(imgBehind, cardIdNext);
 };
 
 export const renderVista = () => {
@@ -147,7 +147,7 @@ export const renderVista = () => {
   renderVoP(document.querySelector(SEL.VISTA), cardId, datos.vista[1]);
 };
 
-export const renderPila = slot => {
+export const renderPila = (slot) => {
   const cardId = datos.pilas[slot][0] || HUECO;
   if (cardId === topPilas[slot]) return;
   topPilas[slot] = cardId;
@@ -161,6 +161,7 @@ export const renderPila = slot => {
 const renderPilas = () => {
   for (let slot = 0; slot < numPilas; slot++) renderPila(slot);
 };
+
 const renderHuecoStack = (el, cardIds, firstShown, stackLength) => {
   const [cardId, ...rest] = cardIds;
   const index = stackLength - rest.length;
@@ -196,7 +197,7 @@ const renderOneHueco = (h, slot) => {
   topHuecos[slot] = cardId;
   let stack = h.querySelector(SEL.STACK);
   if (!stack) {
-    // Never gets here
+    // Never gets here (probably does)
     debugger;
     stack = h.appendChild(emptyHuecoStackPosition());
   }
@@ -229,7 +230,7 @@ function fixFirstShown(slot) {
   }
 }
 
-export const renderHueco = slot => {
+export const renderHueco = (slot) => {
   fixFirstShown(slot);
   renderOneHueco(document.querySelectorAll(SEL.HUECOS).item(slot), slot);
 };
