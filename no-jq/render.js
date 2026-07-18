@@ -9,7 +9,6 @@ import {
   numHuecos,
   baraja,
 } from './datos.js';
-import { enableDraggable, setDraggable } from './dragdrop.js';
 import { onEV } from './utils.js';
 
 let topMazo;
@@ -62,7 +61,7 @@ const createDiv = (className, contents) => {
   return div;
 };
 
-const createGuessContainer = () => createDiv('celda guess');
+const createGuessContainer = () => createDiv('celda guess notVisible');
 
 const createContainer = (name, draggable, droppable) =>
   createDiv(
@@ -125,19 +124,20 @@ export const renderMazo = () => {
 };
 
 const renderVoP = (containerEl, cardIdTop = HUECO, cardIdNext = HUECO) => {
-  const imgTop = containerEl.querySelector(SEL.TOP);
-  const imgBehind = containerEl.querySelector('.behind');
+  let imgTop = containerEl.querySelector(SEL.TOP);
+  let imgBehind = containerEl.querySelector('.behind');
   if (imgTop) {
     setCardId(imgTop, cardIdTop);
     setCardId(imgBehind, cardIdNext);
+    imgTop.draggable = cardIdTop !== HUECO;
   } else {
-    containerEl.firstElementChild.insertBefore(
-      cardImg(cardIdNext, 'behind'),
-      imgBehind
-    );
-    imgBehind.classList.replace('behind', 'top');
-    imgBehind.draggable = cardIdTop != HUECO;
+    imgTop = imgBehind;
+    imgBehind = cardImg(cardIdNext, 'behind');
+    containerEl.firstElementChild.insertBefore(imgBehind, imgTop);
+    imgTop.classList.replace('behind', 'top');
   }
+  imgTop.draggable = cardIdTop !== HUECO;
+  imgTop.dataset.cardid = cardIdTop;
 };
 
 export const renderVista = () => {
@@ -170,6 +170,7 @@ const renderHuecoStack = (el, cardIds, firstShown, stackLength) => {
   el.dataset.start = rest.length;
   el.dataset.cardid = cardId || HUECO;
   el.classList.toggle('draggable', isVisible);
+  el.draggable = isVisible;
   el.classList.toggle('offset', index > 1);
   if (!el.querySelector(SEL.IMG)) {
     el.appendChild(cardImg(HUECO));
@@ -209,8 +210,6 @@ const renderOneHueco = (h, slot) => {
   );
   h.querySelector('.cardContainer').style.height =
     ((cardIds.length || 1) - 1) * shortCardHeight + cardHeight;
-  setDraggable(h.querySelector(SEL.DRAGGABLE));
-  enableDraggable(h, cardIds.length > 0);
 };
 
 const renderHuecos = () => {
