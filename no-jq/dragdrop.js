@@ -20,40 +20,6 @@ export const initDrag = () => {
     el.dataset.slot = slot;
   });
 
-  // document.querySelectorAll('.droppable').forEach((el, i) => {
-  //   console.log('v', i, el.nodeName);
-  //   const attrs = el.attributes;
-  //   for (let i = 0; i < attrs.length; i++) {
-  //     console.log(attrs.item(i).name, '=', attrs.item(i).value);
-  //   }
-  // });
-
-  // document.querySelectorAll('.draggable').forEach((el, i) => {
-  //   console.log('^', i, el.nodeName);
-  //   const attrs = el.attributes;
-  //   for (let i = 0; i < attrs.length; i++) {
-  //     console.log(attrs.item(i).name, '=', attrs.item(i).value);
-  //   }
-  //   el.draggable = true;
-  // });
-
-  // document.querySelectorAll('.droppable').forEach(el =>
-  //   el.addEventListener('dragover', ev => {
-  //     console.log('-------------');
-  //     const t = ev.target;
-  //     console.log(t.nodeName, t.className);
-  //     const container = t.closest('.droppable');
-  //     if (container) {
-  //       console.log(container.nodeName, container.className);
-  //       const attrs = container.attributes;
-  //       for (let i = 0; i < attrs.length; i++) {
-  //         console.log(attrs.item(i).name, '=', attrs.item(i).value);
-  //       }
-  //       ev.preventDefault();
-  //     }
-  //   })
-  // );
-  document.querySelectorAll(SEL.DRAGGABLE).forEach(el => setDraggable(el));
   // TODO
   // $(SEL.DROPPABLE)
   //   .droppable({
@@ -63,22 +29,71 @@ export const initDrag = () => {
   //   .on('drop', drop);
 };
 
-export const enableDraggable = (el, enabled) => {
-  console.log('enableDraggable', el.nodeName, el.className, enabled);
-  el.draggable = enabled;
-  // debugger;
-  // el.find(SEL.DRAGGABLE).draggable(enabled ? 'enable' : 'disable');
-};
+let sourceEl = null;
+let sourceCeldaEl = null;
+let cardId = null;
+let start = null;
+let pos = null;
+let slot = null;
 
-export const setDraggable = el => {
-  // debugger;
-  // el.draggable({
-  //   zIndex: 100,
-  //   scroll: false,
-  //   revert: 'invalid',
-  //   revertDuration: 50,
-  // });
-};
+document.addEventListener('dragstart', (ev) => {
+  // console.log(ev.target);
+  sourceEl = ev.target;
+  sourceCeldaEl = sourceEl.closest('.celda');
+  cardId = sourceEl.dataset.cardid;
+  start = sourceEl.dataset.start;
+  const celda = sourceEl.closest('.celda');
+  pos = celda.dataset.pos;
+  slot = celda.dataset.slot;
+  log('dragStart', ev);
+  sourceEl.classList.add('dragging');
+});
+
+document.addEventListener('dragover', (ev) => {
+  const celdaEl = ev.target.closest('.celda');
+  if (
+    celdaEl &&
+    celdaEl !== sourceCeldaEl &&
+    celdaEl.classList.contains('droppable')
+  ) {
+    log('dragover', ev);
+    ev.preventDefault();
+  }
+});
+
+document.addEventListener('drop', (ev) => {
+  const celdaEl = ev.target.closest('.celda');
+  if (
+    celdaEl &&
+    celdaEl !== sourceCeldaEl &&
+    celdaEl.classList.contains('droppable')
+  ) {
+    log('drop', ev);
+    ev.preventDefault();
+  } else {
+    console.log('no-drop', ev.target);
+  }
+});
+
+document.addEventListener('dragend', (ev) => {
+  log('dragend', ev);
+  console.log('success', ev.dataTransfer.dropEffect !== 'none');
+  ev.target.classList.remove('dragging');
+});
+
+function log(name, ev) {
+  const celdaEl = ev.target.closest('.celda');
+  console.log(
+    name,
+    `${ev.target.nodeName}.${ev.target.className}=>${celdaEl ? celdaEl.className : '?'}`,
+    {
+      cardId,
+      start,
+      pos,
+      slot,
+    }
+  );
+}
 
 function accept(source) {
   const celda = source.closest(SEL.CELDA);
