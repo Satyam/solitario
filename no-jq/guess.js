@@ -7,7 +7,7 @@ export function initGuess() {
   const setOnDemand = () => {
     guessOn = false;
     hideHint();
-    hintEl.removeEventListener('click', guessNext);
+    hintEl.addEventListener('click', guessNext);
     hintEl.classList.remove('buttonPressed');
     hintEl
       .querySelector('img')
@@ -40,7 +40,7 @@ export function initGuess() {
 
 function hideHint() {
   if (guessOn) return;
-  document.querySelector('.guess').style.visibility = 'hidden';
+  document.querySelector('.guess').classList.add('notVisible');
 }
 
 function checkAnyKingAround() {
@@ -75,7 +75,7 @@ function guessFirstHuecoToPila() {
     }
   });
   cardsToCheck.sort((a, b) => b.firstShown - a.firstShown);
-  cardsToCheck.forEach(move => {
+  cardsToCheck.forEach((move) => {
     const fromCardId = move.fromCardId;
     if (move.isLast) {
       const fromCarta = baraja[fromCardId];
@@ -89,7 +89,7 @@ function guessFirstHuecoToPila() {
       move.toCardId = datos.pilas[toSlot][0];
     }
   });
-  return cardsToCheck.filter(move => typeof move.toPos !== 'undefined');
+  return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
 }
 
 function guessVistaToPila() {
@@ -151,7 +151,7 @@ function guessHuecoToHueco() {
   });
   // sort in decreasing order by firstShown so it lists the longest stack to uncover first
   cardsToCheck.sort((a, b) => b.firstShown - a.firstShown);
-  cardsToCheck.forEach(move => {
+  cardsToCheck.forEach((move) => {
     const fromCardId = move.fromCardId;
     if (move.isLast) {
       const fromCarta = baraja[fromCardId];
@@ -169,7 +169,7 @@ function guessHuecoToHueco() {
       move.toCardId = datos.huecos[toSlot][0];
     }
   });
-  return cardsToCheck.filter(move => typeof move.toPos !== 'undefined');
+  return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
 }
 
 function formatGuess(guess) {
@@ -216,12 +216,10 @@ function guessNext() {
   );
 
   const guessEl = document.querySelector('.guess');
-  guessEl.style.visibility = 'visible';
-  guessEl.innerHTML(
-    guesses.length
-      ? `<table>
+  guessEl.classList.remove('notVisible');
+  guessEl.innerHTML = guesses.length
+    ? `<table>
   <tr><th></th><th>Donde</th><th>Columna</th><th>Carta</th></tr>
   ${guesses.map(formatGuess).join('\n')}</table>`
-      : '<p class="noHint">No hay sugerencias</p>'
-  );
+    : '<p class="noHint">No hay sugerencias</p>';
 }

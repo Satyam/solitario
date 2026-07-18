@@ -141,3 +141,11 @@ tr.desde td {
 .noHint {
   text-align: center;
 }
+
+.dragging {
+  opacity: 0.5;
+}
+
+.notVisible {
+  visibility: hidden;
+}
