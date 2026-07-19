@@ -19,14 +19,6 @@ export const initDrag = () => {
     el.dataset.pos = POS.HUECO;
     el.dataset.slot = slot;
   });
-
-  // TODO
-  // $(SEL.DROPPABLE)
-  //   .droppable({
-  //     accept,
-  //     tolerance: 'pointer',
-  //   })
-  //   .on('drop', drop);
 };
 
 let fromEl = null;
@@ -43,7 +35,6 @@ document.addEventListener('dragstart', (ev) => {
   fromIndex = parseInt(fromEl.dataset.start, 10);
   fromPos = fromCeldaEl.dataset.pos;
   fromSlot = parseInt(fromCeldaEl.dataset.slot, 10);
-  // log('dragStart', ev);
   fromEl.classList.add('dragging');
   checkDropTargets();
 });
@@ -55,7 +46,6 @@ document.addEventListener('dragover', (ev) => {
     celdaEl !== fromCeldaEl &&
     celdaEl.classList.contains('droppable')
   ) {
-    // log('dragover', ev);
     ev.preventDefault();
   }
 });
@@ -67,18 +57,12 @@ document.addEventListener('drop', (ev) => {
     celdaEl !== fromCeldaEl &&
     celdaEl.classList.contains('droppable')
   ) {
-    // log('drop', ev);
     drop(celdaEl.dataset.pos, celdaEl.dataset.slot);
-
     ev.preventDefault();
-  } else {
-    console.log('no-drop', ev.target);
   }
 });
 
 document.addEventListener('dragend', (ev) => {
-  // log('dragend', ev);
-  console.log('success', ev.dataTransfer.dropEffect !== 'none');
   ev.target.classList.remove('dragging');
   clearDropTargets();
   fromEl = null;
@@ -88,20 +72,6 @@ document.addEventListener('dragend', (ev) => {
   fromPos = null;
   fromSlot = null;
 });
-
-function log(name, ev) {
-  const celdaEl = ev.target.closest('.celda');
-  console.log(
-    name,
-    `${ev.target.nodeName}.${ev.target.className}=>${celdaEl ? celdaEl.className : '?'}`,
-    {
-      fromCardId,
-      fromIndex,
-      fromPos,
-      fromSlot,
-    }
-  );
-}
 
 function checkDropTargets() {
   document.querySelectorAll('.droppable').forEach((dropEl) => {
