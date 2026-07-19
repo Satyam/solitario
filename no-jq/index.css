@@ -94,10 +94,10 @@ button:disabled {
 .buttonPressed {
   background-color: darkred;
 }
-.ui-droppable .cardContainer {
+.droppable .cardContainer {
   border: medium solid darkgreen;
 }
-.ui-droppable-active .cardContainer {
+.droppable-active .cardContainer {
   border-color: cyan;
 }
 

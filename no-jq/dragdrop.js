@@ -1,6 +1,6 @@
 import { renderPila, renderVista, renderHueco } from './render.js';
 import { POS, SEL, EV, datos } from './datos.js';
-import { canDropInPila, canDropInHueco } from './utils.js';
+import { canDropInPila, canDropInHueco, fireEV } from './utils.js';
 
 export const initDrag = () => {
   let el = document.querySelector(SEL.MAZO);
@@ -29,34 +29,33 @@ export const initDrag = () => {
   //   .on('drop', drop);
 };
 
-let sourceEl = null;
-let sourceCeldaEl = null;
-let cardId = null;
-let start = null;
-let pos = null;
-let slot = null;
+let fromEl = null;
+let fromCeldaEl = null;
+let fromCardId = null;
+let fromIndex = null;
+let fromPos = null;
+let fromSlot = null;
 
 document.addEventListener('dragstart', (ev) => {
-  // console.log(ev.target);
-  sourceEl = ev.target;
-  sourceCeldaEl = sourceEl.closest('.celda');
-  cardId = sourceEl.dataset.cardid;
-  start = sourceEl.dataset.start;
-  const celda = sourceEl.closest('.celda');
-  pos = celda.dataset.pos;
-  slot = celda.dataset.slot;
-  log('dragStart', ev);
-  sourceEl.classList.add('dragging');
+  fromEl = ev.target;
+  fromCeldaEl = fromEl.closest('.celda');
+  fromCardId = fromEl.dataset.cardid;
+  fromIndex = parseInt(fromEl.dataset.start, 10);
+  fromPos = fromCeldaEl.dataset.pos;
+  fromSlot = parseInt(fromCeldaEl.dataset.slot, 10);
+  // log('dragStart', ev);
+  fromEl.classList.add('dragging');
+  checkDropTargets();
 });
 
 document.addEventListener('dragover', (ev) => {
   const celdaEl = ev.target.closest('.celda');
   if (
     celdaEl &&
-    celdaEl !== sourceCeldaEl &&
+    celdaEl !== fromCeldaEl &&
     celdaEl.classList.contains('droppable')
   ) {
-    log('dragover', ev);
+    // log('dragover', ev);
     ev.preventDefault();
   }
 });
@@ -65,10 +64,12 @@ document.addEventListener('drop', (ev) => {
   const celdaEl = ev.target.closest('.celda');
   if (
     celdaEl &&
-    celdaEl !== sourceCeldaEl &&
+    celdaEl !== fromCeldaEl &&
     celdaEl.classList.contains('droppable')
   ) {
-    log('drop', ev);
+    // log('drop', ev);
+    drop(celdaEl.dataset.pos, celdaEl.dataset.slot);
+
     ev.preventDefault();
   } else {
     console.log('no-drop', ev.target);
@@ -76,9 +77,16 @@ document.addEventListener('drop', (ev) => {
 });
 
 document.addEventListener('dragend', (ev) => {
-  log('dragend', ev);
+  // log('dragend', ev);
   console.log('success', ev.dataTransfer.dropEffect !== 'none');
   ev.target.classList.remove('dragging');
+  clearDropTargets();
+  fromEl = null;
+  fromCeldaEl = null;
+  fromCardId = null;
+  fromIndex = null;
+  fromPos = null;
+  fromSlot = null;
 });
 
 function log(name, ev) {
@@ -87,23 +95,35 @@ function log(name, ev) {
     name,
     `${ev.target.nodeName}.${ev.target.className}=>${celdaEl ? celdaEl.className : '?'}`,
     {
-      cardId,
-      start,
-      pos,
-      slot,
+      fromCardId,
+      fromIndex,
+      fromPos,
+      fromSlot,
     }
   );
 }
 
-function accept(source) {
-  const celda = source.closest(SEL.CELDA);
-  if (celda.length === 0) return false;
-  const { pos: fromPos, slot: fromSlot } = celda.data();
-  const fromIndex = source.data('start') || 0;
-  const { pos: toPos, slot: toSlot } = $(this).data();
+function checkDropTargets() {
+  document.querySelectorAll('.droppable').forEach((dropEl) => {
+    const toPos = dropEl.dataset.pos;
+    const toSlot = dropEl.dataset.slot;
+    if (accept(toPos, toSlot)) {
+      dropEl.classList.add('droppable-active');
+    }
+  });
+}
+
+function clearDropTargets() {
+  document.querySelectorAll('.droppable').forEach((dropEl) => {
+    dropEl.classList.remove('droppable-active');
+  });
+}
+
+function accept(toPos, toSlot) {
+  if (!fromCeldaEl) return false;
+
   switch (fromPos) {
     case POS.VISTA: {
-      const fromCardId = datos.vista[0];
       if (!fromCardId) return false;
       switch (toPos) {
         case POS.PILA:
@@ -115,7 +135,6 @@ function accept(source) {
       }
     }
     case POS.PILA: {
-      const fromCardId = datos.pilas[fromSlot][0];
       if (!fromCardId) return false;
       switch (toPos) {
         case POS.HUECO:
@@ -125,7 +144,6 @@ function accept(source) {
       }
     }
     case POS.HUECO: {
-      const fromCardId = datos.huecos[fromSlot][fromIndex];
       if (!fromCardId) return false;
       switch (toPos) {
         case POS.PILA:
@@ -141,14 +159,8 @@ function accept(source) {
   console.error('should not be here');
 }
 
-function drop(ev, ui) {
-  const { pos: fromPos, slot: fromSlot } = ui.draggable
-    .closest(SEL.CELDA)
-    .data();
-  const { pos: toPos, slot: toSlot } = $(this).data();
-  const fromIndex = ui.draggable.data('start') || 0;
+function drop(toPos, toSlot) {
   fireEV(EV.JUGADA_BEFORE);
-  ui.helper.remove();
   switch (fromPos) {
     case POS.VISTA:
       switch (toPos) {
@@ -191,5 +203,4 @@ function drop(ev, ui) {
       break;
   }
   fireEV(EV.JUGADA_AFTER);
-  $('.ui-droppable-active').removeClass('ui-droppable-active');
 }
