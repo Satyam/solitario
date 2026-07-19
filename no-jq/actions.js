@@ -153,14 +153,7 @@ async function raiseAll() {
   }
 }
 
-// async function raiseAll() {
-//   const chain = vistaToPila(canDropInSomePila(datos.vista[0]));
-//   const huecos = datos.huecos;
-//   for (let fromSlot = 0; fromSlot < numHuecos; fromSlot++) {
-//     chain.then(huecoToPila(fromSlot, canDropInSomePila(huecos[fromSlot][0])));
-//   }
-// }
-
+// TODO see: https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Tips#waiting_for_an_animation_to_complete_before_stopping
 function endAnimationOnePila(slot, pila) {
   return new Promise((resolve) => {
     $(SEL.PILAS)
@@ -176,6 +169,7 @@ function endAnimationOnePila(slot, pila) {
 
 function endAnimation() {
   return Promise.all(
+    // disabled:
     [] // datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
   ).then(() => {
     fireEV(EV.GAMEOVER_AFTER);
