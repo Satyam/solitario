@@ -31,6 +31,11 @@ export const initActions = () => {
   onEV(EV.JUGADA_AFTER, checkGameover);
   onEV(EV.NEWGAME_BEFORE, startNewGame);
   onEV(EV.NEWGAME_AFTER, checkGameover);
+
+  // This is so that I can test the end animation at anytime.
+  // document
+  //   .getElementById('hint')
+  //   .addEventListener('click', () => Q.add(endAnimation));
 };
 
 const startNewGame = () => {
@@ -156,21 +161,39 @@ async function raiseAll() {
 // TODO see: https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Tips#waiting_for_an_animation_to_complete_before_stopping
 function endAnimationOnePila(slot, pila) {
   return new Promise((resolve) => {
-    $(SEL.PILAS)
-      .eq(slot)
-      .find(SEL.TOP)
-      .effect('bounce', { times: 3 }, Math.random() * 200 + 300, () => {
-        pila.shift();
-        renderPila(slot);
-        resolve(pila.length ? endAnimationOnePila(slot, pila) : true);
-      });
+    const card = document
+      .querySelectorAll(SEL.PILAS)
+      .item(slot)
+      .querySelector(SEL.TOP);
+    if (card.dataset.cardid === 'hueco') {
+      resolve(true);
+      return;
+    }
+    const anim = card.animate(
+      [
+        {
+          transform: 'rotate(0) translate(0, 0)',
+          opacity: 1,
+        },
+        {
+          transform: 'rotate(180deg) translate(-200px, 400px)',
+          opacity: 0,
+        },
+      ],
+      { duration: Math.random() * 3000 + 1000 }
+    );
+
+    anim.addEventListener('finish', (event) => {
+      pila.shift();
+      renderPila(slot);
+      resolve(pila.length ? endAnimationOnePila(slot, pila) : true);
+    });
   });
 }
 
 function endAnimation() {
   return Promise.all(
-    // disabled:
-    [] // datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
+    datos.pilas.map((pila, slot) => endAnimationOnePila(slot, pila))
   ).then(() => {
     fireEV(EV.GAMEOVER_AFTER);
   });
