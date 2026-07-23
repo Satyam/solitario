@@ -1,3 +1,10 @@
+import { Board } from './board.js';
+
+export const main = () => {
+  globalThis.board = new Board(document.getElementById('grid'));
+};
+
+/*
 import { initBoard } from './render.js';
 import { initActions } from './actions.js';
 import { initDrag } from './dragdrop.js';
@@ -20,3 +27,4 @@ export const main = () => {
 
   fireEV(EV.NEWGAME_BEFORE);
 };
+*/
