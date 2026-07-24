@@ -1,3 +1,10 @@
+export const TIPOS_CELDA = {
+  MAZO: 'mazo',
+  VISTA: 'vista',
+  PILA: 'pila',
+  BASE: 'base',
+};
+
 export class Celda {
   #type = '';
   #slot = 0;
@@ -34,8 +41,12 @@ export class Celda {
   update() {
     // To be implemented by subclasses
   }
-  push(...cards) {
-    this.#cards.unshift(...cards);
+  push(cards) {
+    if (Array.isArray(cards)) {
+      this.#cards.unshift(...cards);
+    } else {
+      this.#cards.unshift(...arguments);
+    }
     this.update();
   }
   get top() {
@@ -48,5 +59,14 @@ export class Celda {
         : this.#cards.slice(0, qty);
     this.update();
     return ret;
+  }
+  clear() {
+    this.#cards.forEach((card) => {
+      card.el.remove();
+    });
+    this.#cards.length = 0;
+  }
+  get cards() {
+    return this.#cards;
   }
 }

@@ -2,6 +2,7 @@ import { Board } from './board.js';
 
 export const main = () => {
   globalThis.board = new Board(document.getElementById('grid'));
+  board.startGame();
 };
 
 /*

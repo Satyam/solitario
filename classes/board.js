@@ -3,6 +3,7 @@ import { Vista } from './vista.js';
 import { Base } from './base.js';
 import { Pila } from './pila.js';
 import { Guess } from './guess.js';
+import { Game } from './game.js';
 import { NUM_BASES, NUM_PILAS } from './constants.js';
 
 export class Board extends EventTarget {
@@ -13,6 +14,8 @@ export class Board extends EventTarget {
   #guess;
   #bases = [];
   #pilas = [];
+
+  #game;
 
   constructor(el) {
     super();
@@ -31,10 +34,12 @@ export class Board extends EventTarget {
       this.#pilas[slot] = new Pila(slot);
       el.appendChild(this.#pilas[slot].el);
     }
-
     // onEV(EV.NEWGAME_AFTER, renderAll);
     // onEV(EV.UNDO_AFTER, renderAll);
     // onEV(EV.REDO_AFTER, renderAll);
+  }
+  startGame() {
+    this.#game = new Game();
   }
   get el() {
     return this.#el;
