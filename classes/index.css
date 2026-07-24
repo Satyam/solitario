@@ -149,3 +149,8 @@ tr.desde td {
 .notVisible {
   visibility: hidden;
 }
+
+.hueco {
+  border: thin solid lightgreen;
+  background-color: green;
+}
