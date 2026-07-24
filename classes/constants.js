@@ -1,15 +1,5 @@
-export const HUECO = 'hueco';
-export const REVERSO = 'back';
-
 export const NUM_BASES = 4;
 export const NUM_PILAS = 7;
 
-// names temporary changed to avoid conflicts with classNames in use elsewhere.
-export const CELDA = {
-  MAZO: 'mazo',
-  VISTA: 'vista',
-  PILA: 'pila',
-  BASE: 'base',
-};
-
 export const SVG_NS = 'http://www.w3.org/2000/svg';
+export const SVG_CARD_PREFIX = 'assets/cards.svg#card_';
