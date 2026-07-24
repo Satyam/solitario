@@ -1,23 +1,16 @@
-import { Celda } from './celda.js';
-import { Card } from './card.js';
-import { HUECO, CELDA } from './constants.js';
+import { TIPOS_CELDA } from './celda.js';
+import { Superpuesta } from './superpuestas.js';
 
-export class Vista extends Celda {
-  #card;
+export class Vista extends Superpuesta {
   constructor() {
-    super(CELDA.VISTA);
-    this.container.classList.add('singleRow');
-    this.container.setAttribute('draggable', true);
-    this.#card = new Card(HUECO);
-    super.container.appendChild(this.#card.el);
+    super(TIPOS_CELDA.VISTA);
   }
-  get card() {
-    return this.#card;
-  }
-
-  update() {
-    const cardId = this.top || HUECO;
-    if (cardId === this.#card.id) return;
-    this.#card.id = cardId;
+  push(cards) {
+    if (Array.isArray(cards)) {
+      cards.forEach((card) => (card.reverso = false));
+    } else {
+      cards.reverso = false;
+    }
+    super.push(cards);
   }
 }

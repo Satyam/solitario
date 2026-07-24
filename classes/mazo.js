@@ -1,22 +1,16 @@
-import { Celda } from './celda.js';
-import { Card } from './card.js';
-import { HUECO, REVERSO, CELDA } from './constants.js';
+import { TIPOS_CELDA } from './celda.js';
+import { Superpuesta } from './superpuestas.js';
 
-export class Mazo extends Celda {
-  #card;
+export class Mazo extends Superpuesta {
   constructor() {
-    super(CELDA.MAZO);
-    this.container.classList.add('singleRow');
-    this.#card = new Card(HUECO);
-    super.container.appendChild(this.#card.el);
+    super(TIPOS_CELDA.MAZO);
   }
-  get card() {
-    return this.#card;
-  }
-
-  update() {
-    const cardId = this.top ? REVERSO : HUECO;
-    if (cardId === this.#card.id) return;
-    this.#card.id = cardId;
+  push(cards) {
+    if (Array.isArray(cards)) {
+      cards.forEach((card) => (card.reverso = true));
+    } else {
+      cards.reverso = true;
+    }
+    super.push(cards);
   }
 }
