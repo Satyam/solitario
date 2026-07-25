@@ -1,17 +1,16 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
-import { Card } from './card.js';
 import { HUECO } from './baraja.js';
 
 export class Superpuesta extends Celda {
-  #card;
+  #cartaTop;
   constructor(tipo, slot) {
     super(tipo, slot);
     this.container.classList.add('singleRow');
     if (this.top) {
       this.container.classList.remove(HUECO);
       this.container.draggable = true;
-      this.#card = this.top;
-      super.container.appendChild(this.#card.el);
+      this.#cartaTop = this.top;
+      super.container.appendChild(this.#cartaTop.el);
     } else {
       this.container.classList.add(HUECO);
       this.container.draggable = false;
@@ -19,26 +18,24 @@ export class Superpuesta extends Celda {
   }
 
   update() {
+    const container = this.container;
     if (this.top) {
-      if (this.top === this.#card) return;
-      this.container.classList.remove(HUECO);
-      if (this.#card) {
-        this.#card.id = this.top.id;
-      } else {
-        this.#card = this.top;
-        this.container.appendChild(this.#card.el);
-      }
+      if (this.top === this.#cartaTop) return;
+      container.classList.remove(HUECO);
+      this.#cartaTop = this.top;
+      container.firstChild?.remove();
+      container.appendChild(this.#cartaTop.el);
     } else {
-      if (this.#card) {
-        this.#card.el.remove();
-        this.#card = null;
+      if (this.#cartaTop) {
+        this.#cartaTop.el.remove();
+        this.#cartaTop = null;
       }
-      this.container.classList.add(HUECO);
-      this.container.draggable = false;
+      container.classList.add(HUECO);
+      container.draggable = false;
     }
   }
 
-  get cardShown() {
-    return this.#card;
+  get cardTop() {
+    return this.#cartaTop;
   }
 }

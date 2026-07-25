@@ -1,7 +1,6 @@
 import { Board } from './board.js';
 import { NUM_PILAS } from './constants.js';
-import { baraja } from './baraja.js';
-import { Card } from './card.js';
+import { Carta, Cartas } from './baraja.js';
 
 export class Game {
   constructor() {
@@ -32,6 +31,7 @@ export class Game {
   #dealCard() {
     if (board.mazo.top) {
       board.vista.push(board.mazo.pop());
+      board.vista.top.reverso = false;
     }
   }
   #raiseAll() {}
@@ -46,16 +46,14 @@ export class Game {
     board.bases.forEach((base) => base.clear());
     board.pilas.forEach((pila) => pila.clear());
 
-    // Shuffle the cards
-    const cards = Object.keys(baraja)
-      .sort(() => Math.random() - 0.5)
-      .map((id) => new Card(id));
+    const baraja = new Cartas(true);
+    baraja.shuffle();
 
     // put some of the pilas
-    board.pilas.forEach((pila, slot) => pila.push(cards.splice(0, slot + 1)));
+    board.pilas.forEach((pila, slot) => pila.push(baraja.pop(slot + 1)));
 
     // Place the remaining cards in the mazo.
-    board.mazo.push(cards);
+    board.mazo.push(baraja.cartas);
     Board.fire(Board.NEWGAME_AFTER);
   }
 }

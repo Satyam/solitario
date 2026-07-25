@@ -1,5 +1,4 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
-import { Card } from './card.js';
 import { HUECO } from './baraja.js';
 
 export class Pila extends Celda {
@@ -26,28 +25,28 @@ export class Pila extends Celda {
     );
   }
 
-  #oneLevel(cards, container, next = false) {
-    const card = cards.pop();
-    const isVisible = cards.length <= this.#index;
-    card.reverso = !isVisible;
+  #oneLevel(cartas, container, next = false) {
+    const carta = cartas.pop();
+    const isVisible = cartas.length <= this.#index;
+    carta.reverso = !isVisible;
     const subPila = document.createElement('div');
     subPila.classList.add('stack');
     if (next) subPila.classList.add('offset');
     subPila.draggable = isVisible;
 
-    subPila.appendChild(card.el);
-    if (cards.length) {
-      this.#oneLevel(cards, subPila, true);
+    subPila.appendChild(carta.el);
+    if (cartas.length) {
+      this.#oneLevel(cartas, subPila, true);
     }
     container.appendChild(subPila);
   }
   update() {
-    const cards = this.cards.toReversed();
-    if (cards.length) {
+    const cartas = this.cartas.toReversed();
+    if (cartas.length) {
       this.container.style.height =
-        ((cards.length || 1) - 1) * this.#shortCardHeight + this.#cardHeight;
+        ((cartas.length || 1) - 1) * this.#shortCardHeight + this.#cardHeight;
       this.container.classList.remove(HUECO);
-      this.#oneLevel(cards, this.container);
+      this.#oneLevel(cartas, this.container);
     } else {
       this.container.classList.add(HUECO);
       this.container.draggable = false;
@@ -59,6 +58,6 @@ export class Pila extends Celda {
     this.#index = 0;
   }
   get visible() {
-    this.cards.filter((card, index) => index < this.#index);
+    this.cartas.filter((carta, index) => index < this.#index);
   }
 }
