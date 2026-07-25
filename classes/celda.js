@@ -1,3 +1,5 @@
+import { Cartas } from './baraja.js';
+
 export const TIPOS_CELDA = {
   MAZO: 'mazo',
   VISTA: 'vista',
@@ -5,14 +7,14 @@ export const TIPOS_CELDA = {
   BASE: 'base',
 };
 
-export class Celda {
+export class Celda extends Cartas {
   #type = '';
   #slot = 0;
   #el = null;
   #container = null;
-  #cards = [];
 
   constructor(type, slot = 0) {
+    super();
     this.#type = type;
     this.#slot = slot;
 
@@ -42,31 +44,18 @@ export class Celda {
     // To be implemented by subclasses
   }
   push(cards) {
-    if (Array.isArray(cards)) {
-      this.#cards.unshift(...cards);
-    } else {
-      this.#cards.unshift(...arguments);
-    }
+    super.push(cards);
     this.update();
   }
-  get top() {
-    return this.#cards[0] ?? null;
-  }
+
   pop(qty) {
-    const ret =
-      typeof qty === 'undefined'
-        ? this.#cards.shift()
-        : this.#cards.slice(0, qty);
+    const ret = super.pop(qty);
     this.update();
     return ret;
   }
+
   clear() {
-    this.#cards.forEach((card) => {
-      card.el.remove();
-    });
-    this.#cards.length = 0;
-  }
-  get cards() {
-    return this.#cards;
+    super.clear();
+    this.update();
   }
 }
