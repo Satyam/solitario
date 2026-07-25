@@ -140,6 +140,6 @@ export class Cartas {
 
   shuffle() {
     this.#cartas.sort(() => Math.random() - 0.5);
-    return this.#cartas;
+    return this;
   }
 }

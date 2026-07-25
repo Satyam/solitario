@@ -46,8 +46,7 @@ export class Game {
     board.bases.forEach((base) => base.clear());
     board.pilas.forEach((pila) => pila.clear());
 
-    const baraja = new Cartas(true);
-    baraja.shuffle();
+    const baraja = new Cartas(true).shuffle();
 
     // put some of the pilas
     board.pilas.forEach((pila, slot) => pila.push(baraja.pop(slot + 1)));
