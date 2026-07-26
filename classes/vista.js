@@ -1,10 +1,11 @@
 import { TIPOS_CELDA } from './celda.js';
 import { PilaSimple } from './pilaSimple.js';
+import { Tablero } from './tablero.js';
 
 export class Vista extends PilaSimple {
   constructor() {
     super(TIPOS_CELDA.VISTA);
-    this.el.addEventListener('mousedown', this.#raiseFromVista.bind(this));
+    this.el.addEventListener('mousedown', this.#raise.bind(this));
   }
 
   push(cartas) {
@@ -16,10 +17,20 @@ export class Vista extends PilaSimple {
     super.push(cartas);
   }
 
-  #raiseFromVista(ev) {
+  #raise(ev) {
     if (ev.buttons === 4) {
-      vistaToPila(canDropInSomePila(datos.vista[0]));
-      return false;
+      ev.preventDefault();
+      const destino = tablero.bases.canMoveIntoAny(this.top);
+      if (destino) this.#toBase(destino);
     }
+  }
+  async #toBase(base) {
+    Tablero.fire(Tablero.JUGADA_BEFORE);
+    base.push(this.pop());
+    // await animateMove(
+    //   document.querySelector(`${SEL.VISTA} ${SEL.TOP}`),
+    //   document.querySelectorAll(SEL.PILAS).item(toSlot).querySelector(SEL.TOP)
+    // );
+    Tablero.fire(Tablero.JUGADA_AFTER);
   }
 }

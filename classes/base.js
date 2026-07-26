@@ -15,6 +15,14 @@ export class Base extends PilaSimple {
     }
     super.push(cards);
   }
+  canMoveInto(carta) {
+    const top = this.top;
+    if (top) {
+      return carta.palo === top.palo && carta.index === top.index + 1;
+    } else {
+      return carta.valor === 'A';
+    }
+  }
 }
 
 export class Bases extends Array {
@@ -26,5 +34,9 @@ export class Bases extends Array {
   }
   clear() {
     this.forEach((base) => base.clear());
+  }
+  canMoveIntoAny(carta) {
+    if (typeof carta === 'undefined') return false;
+    return this.find((base) => base.canMoveInto(carta));
   }
 }
