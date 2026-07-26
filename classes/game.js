@@ -1,5 +1,4 @@
 import { Tablero } from './tablero.js';
-import { NUM_TABLONES } from './constants.js';
 import { Carta, Cartas } from './baraja.js';
 
 export class Game {
@@ -11,15 +10,6 @@ export class Game {
     document
       .getElementById('raise')
       .addEventListener('click', this.#raiseAll.bind(this));
-    // cards
-    tablero.mazo.el.addEventListener('click', this.#dealCard.bind(this));
-    tablero.vista.el.addEventListener(
-      'mousedown',
-      this.#raiseFromVista.bind(this)
-    );
-    tablero.tablones.forEach((tablon) =>
-      tablon.el.addEventListener('mousedown', this.#raiseFromTablon.bind(this))
-    );
 
     Tablero.on(Tablero.GAMEOVER_BEFORE, this.#endAnimation.bind(this));
     Tablero.on(Tablero.JUGADA_AFTER, this.#checkGameover.bind(this));
@@ -28,23 +18,16 @@ export class Game {
     Tablero.fire(Tablero.NEWGAME_BEFORE);
   }
 
-  #dealCard() {
-    if (tablero.mazo.top) {
-      tablero.vista.push(tablero.mazo.pop());
-      tablero.vista.top.reverso = false;
-    }
-  }
   #raiseAll() {}
-  #raiseFromVista() {}
-  #raiseFromTablon() {}
+
   #endAnimation() {}
   #checkGameover() {}
 
   #startNewGame() {
     tablero.mazo.clear();
     tablero.vista.clear();
-    tablero.bases.forEach((base) => base.clear());
-    tablero.tablones.forEach((tablon) => tablon.clear());
+    tablero.bases.clear();
+    tablero.tablones.clear();
 
     const baraja = new Cartas(true).shuffle();
 

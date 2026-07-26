@@ -4,13 +4,22 @@ import { PilaSimple } from './pilaSimple.js';
 export class Vista extends PilaSimple {
   constructor() {
     super(TIPOS_CELDA.VISTA);
+    this.el.addEventListener('mousedown', this.#raiseFromVista.bind(this));
   }
-  push(cards) {
-    if (Array.isArray(cards)) {
-      cards.forEach((card) => (card.reverso = false));
+
+  push(cartas) {
+    if (Array.isArray(cartas)) {
+      cartas.forEach((carta) => (carta.reverso = false));
     } else {
-      cards.reverso = false;
+      cartas.reverso = false;
     }
-    super.push(cards);
+    super.push(cartas);
+  }
+
+  #raiseFromVista(ev) {
+    if (ev.buttons === 4) {
+      vistaToPila(canDropInSomePila(datos.vista[0]));
+      return false;
+    }
   }
 }
