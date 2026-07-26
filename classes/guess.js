@@ -1,8 +1,8 @@
-import { baraja, charPalos, COLOR } from './baraja.js';
-// import { canDropInSomeHueco, canDropInSomePila, onEV, offEV } from './utils.js';
-import { TIPOS_CELDA } from './celda.js';
+// import { baraja, charPalos, COLOR } from './baraja.js';
+// // import { canDropInSomeHueco, canDropInSomePila, onEV, offEV } from './utils.js';
+// import { TIPOS_CELDA } from './celda.js';
 
-import { Board } from './board.js';
+import { Tablero } from './tablero.js';
 
 export class Guess {
   #visible = false;
@@ -18,8 +18,8 @@ export class Guess {
     this.#hintBtn.addEventListener('click', this.#handleClick.bind(this));
 
     this.#setOnDemand();
-    Board.on(Board.JUGADA_AFTER, this.#hideOrGuess.bind(this));
-    Board.on(Board.NEWGAME_AFTER, this.#hideOrGuess.bind(this));
+    Tablero.on(Tablero.JUGADA_AFTER, this.#hideOrGuess.bind(this));
+    Tablero.on(Tablero.NEWGAME_AFTER, this.#hideOrGuess.bind(this));
   }
 
   get el() {
@@ -72,10 +72,10 @@ export class Guess {
   }
 
   checkAnyKingAround() {
-    const cartaVista = baraja[board.vista.top];
+    const cartaVista = baraja[tablero.vista.top];
     return (
       (cartaVista && cartaVista.valor === 'K') ||
-      board.pilas.some((pila, slot) => {
+      tablero.pilas.some((pila, slot) => {
         const length = pila.cards.length;
         if (length) {
           // **** TODO: Can't figure it out yet!!!!
@@ -92,7 +92,7 @@ export class Guess {
 
   guessFirstPilaToBase() {
     const cardsToCheck = [];
-    board.pilas.forEach((pila, slot) => {
+    tablero.pilas.forEach((pila, slot) => {
       if (pila.top) {
         cardsToCheck.push({
           fromPos: TIPOS_CELDA.PILA,

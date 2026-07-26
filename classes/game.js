@@ -1,4 +1,4 @@
-import { Board } from './board.js';
+import { Tablero } from './tablero.js';
 import { NUM_TABLONES } from './constants.js';
 import { Carta, Cartas } from './baraja.js';
 
@@ -6,32 +6,32 @@ export class Game {
   constructor() {
     // Buttons
     document.getElementById('newGame').addEventListener('click', () => {
-      Board.fire(Board.NEWGAME_BEFORE);
+      Tablero.fire(Tablero.NEWGAME_BEFORE);
     });
     document
       .getElementById('raise')
       .addEventListener('click', this.#raiseAll.bind(this));
     // cards
-    board.mazo.el.addEventListener('click', this.#dealCard.bind(this));
-    board.vista.el.addEventListener(
+    tablero.mazo.el.addEventListener('click', this.#dealCard.bind(this));
+    tablero.vista.el.addEventListener(
       'mousedown',
       this.#raiseFromVista.bind(this)
     );
-    board.tablones.forEach((tablon) =>
+    tablero.tablones.forEach((tablon) =>
       tablon.el.addEventListener('mousedown', this.#raiseFromTablon.bind(this))
     );
 
-    Board.on(Board.GAMEOVER_BEFORE, this.#endAnimation.bind(this));
-    Board.on(Board.JUGADA_AFTER, this.#checkGameover.bind(this));
-    Board.on(Board.NEWGAME_BEFORE, this.#startNewGame.bind(this));
-    Board.on(Board.NEWGAME_AFTER, this.#checkGameover.bind(this));
-    Board.fire(Board.NEWGAME_BEFORE);
+    Tablero.on(Tablero.GAMEOVER_BEFORE, this.#endAnimation.bind(this));
+    Tablero.on(Tablero.JUGADA_AFTER, this.#checkGameover.bind(this));
+    Tablero.on(Tablero.NEWGAME_BEFORE, this.#startNewGame.bind(this));
+    Tablero.on(Tablero.NEWGAME_AFTER, this.#checkGameover.bind(this));
+    Tablero.fire(Tablero.NEWGAME_BEFORE);
   }
 
   #dealCard() {
-    if (board.mazo.top) {
-      board.vista.push(board.mazo.pop());
-      board.vista.top.reverso = false;
+    if (tablero.mazo.top) {
+      tablero.vista.push(tablero.mazo.pop());
+      tablero.vista.top.reverso = false;
     }
   }
   #raiseAll() {}
@@ -41,18 +41,20 @@ export class Game {
   #checkGameover() {}
 
   #startNewGame() {
-    board.mazo.clear();
-    board.vista.clear();
-    board.bases.forEach((base) => base.clear());
-    board.tablones.forEach((tablon) => tablon.clear());
+    tablero.mazo.clear();
+    tablero.vista.clear();
+    tablero.bases.forEach((base) => base.clear());
+    tablero.tablones.forEach((tablon) => tablon.clear());
 
     const baraja = new Cartas(true).shuffle();
 
     // put some of the tablones
-    board.tablones.forEach((tablon, slot) => tablon.push(baraja.pop(slot + 1)));
+    tablero.tablones.forEach((tablon, slot) =>
+      tablon.push(baraja.pop(slot + 1))
+    );
 
     // Place the remaining cards in the mazo.
-    board.mazo.push(baraja.cartas);
-    Board.fire(Board.NEWGAME_AFTER);
+    tablero.mazo.push(baraja.cartas);
+    Tablero.fire(Tablero.NEWGAME_AFTER);
   }
 }

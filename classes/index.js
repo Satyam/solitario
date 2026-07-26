@@ -1,12 +1,12 @@
-import { Board } from './board.js';
+import { Tablero } from './tablero.js';
 
 export const main = () => {
-  globalThis.board = new Board(document.getElementById('grid'));
-  board.startGame();
+  globalThis.tablero = new Tablero(document.getElementById('grid'));
+  tablero.startGame();
 };
 
 /*
-import { initBoard } from './render.js';
+import { initTablero } from './render.js';
 import { initActions } from './actions.js';
 import { initDrag } from './dragdrop.js';
 import { initUndo } from './undoStack.js';
@@ -18,7 +18,7 @@ import { fireEV } from './utils.js';
 import { test } from './classes/test.js';
 
 export const main = () => {
-  initBoard();
+  initTablero();
   initActions();
   initDrag();
   initUndo();

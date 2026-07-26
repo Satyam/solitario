@@ -6,7 +6,7 @@ import { Guess } from './guess.js';
 import { Game } from './game.js';
 import { NUM_BASES, NUM_TABLONES } from './constants.js';
 
-export class Board extends EventTarget {
+export class Tablero extends EventTarget {
   #el;
 
   #mazo;
