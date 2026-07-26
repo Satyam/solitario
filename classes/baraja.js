@@ -1,4 +1,5 @@
-import { SVG_NS, SVG_CARD_PREFIX } from './constants.js';
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const SVG_CARD_PREFIX = 'assets/cards.svg#card_';
 
 // Types and constants related to cards.
 export const COLOR = {
