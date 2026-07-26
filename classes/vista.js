@@ -20,10 +20,17 @@ export class Vista extends PilaSimple {
   #raise(ev) {
     if (ev.buttons === 4) {
       ev.preventDefault();
-      const destino = tablero.bases.canMoveIntoAny(this.top);
-      if (destino) this.#toBase(destino);
+      this.raise();
     }
   }
+
+  async raise() {
+    if (!this.top) return false;
+    const destino = tablero.bases.canMoveIntoAny(this.top);
+    if (destino) await this.#toBase(destino);
+    return !!destino;
+  }
+
   async #toBase(base) {
     Tablero.fire(Tablero.JUGADA_BEFORE);
     base.push(this.pop());

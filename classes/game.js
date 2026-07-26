@@ -18,7 +18,15 @@ export class Game {
     Tablero.fire(Tablero.NEWGAME_BEFORE);
   }
 
-  #raiseAll() {}
+  async #raiseAll() {
+    loop: while (true) {
+      if (await tablero.vista.raise()) continue;
+      for await (const tablon of tablero.tablones) {
+        if (await tablon.raise()) continue loop;
+      }
+      break;
+    }
+  }
 
   #endAnimation() {}
   #checkGameover() {}
