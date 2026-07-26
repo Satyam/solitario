@@ -1,6 +1,8 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
 
+export const NUM_TABLONES = 7;
+
 export class Tablon extends Celda {
   #index = 0;
   #cardHeight;
@@ -23,6 +25,7 @@ export class Tablon extends Celda {
       s.getPropertyValue('--shortCardHeight'),
       10
     );
+    this.el.addEventListener('mousedown', this.#raiseFromTablon.bind(this));
   }
 
   #oneLevel(cartas, container, next = false) {
@@ -59,5 +62,18 @@ export class Tablon extends Celda {
   }
   get visible() {
     this.cartas.filter((carta, index) => index < this.#index);
+  }
+  #raiseFromTablon() {}
+}
+
+export class Tablones extends Array {
+  constructor() {
+    super();
+    for (let slot = 0; slot < NUM_TABLONES; slot++) {
+      this[slot] = new Tablon(slot);
+    }
+  }
+  clear() {
+    this.forEach((tablon) => tablon.clear());
   }
 }

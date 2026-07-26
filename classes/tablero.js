@@ -1,10 +1,9 @@
 import { Mazo } from './mazo.js';
 import { Vista } from './vista.js';
-import { Base } from './base.js';
-import { Tablon } from './tablon.js';
+import { Base, Bases } from './base.js';
+import { Tablon, Tablones } from './tablon.js';
 import { Guess } from './guess.js';
 import { Game } from './game.js';
-import { NUM_BASES, NUM_TABLONES } from './constants.js';
 
 export class Tablero extends EventTarget {
   #el;
@@ -26,14 +25,13 @@ export class Tablero extends EventTarget {
     el.appendChild(this.#vista.el);
     this.#guess = new Guess();
     el.appendChild(this.#guess.el);
-    for (let slot = 0; slot < NUM_BASES; slot++) {
-      this.#bases[slot] = new Base(slot);
-      el.appendChild(this.#bases[slot].el);
-    }
-    for (let slot = 0; slot < NUM_TABLONES; slot++) {
-      this.#tablones[slot] = new Tablon(slot);
-      el.appendChild(this.#tablones[slot].el);
-    }
+
+    this.#bases = new Bases();
+    this.#bases.forEach((base) => el.appendChild(base.el));
+
+    this.#tablones = new Tablones();
+    this.#tablones.forEach((tablon) => el.appendChild(tablon.el));
+
     // onEV(EV.NEWGAME_AFTER, renderAll);
     // onEV(EV.UNDO_AFTER, renderAll);
     // onEV(EV.REDO_AFTER, renderAll);
