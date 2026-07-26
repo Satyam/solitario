@@ -1,10 +1,10 @@
 import { Mazo } from './mazo.js';
 import { Vista } from './vista.js';
 import { Base } from './base.js';
-import { Pila } from './pila.js';
+import { Tablon } from './tablon.js';
 import { Guess } from './guess.js';
 import { Game } from './game.js';
-import { NUM_BASES, NUM_PILAS } from './constants.js';
+import { NUM_BASES, NUM_TABLONES } from './constants.js';
 
 export class Board extends EventTarget {
   #el;
@@ -13,7 +13,7 @@ export class Board extends EventTarget {
   #vista;
   #guess;
   #bases = [];
-  #pilas = [];
+  #tablones = [];
 
   #game;
 
@@ -30,9 +30,9 @@ export class Board extends EventTarget {
       this.#bases[slot] = new Base(slot);
       el.appendChild(this.#bases[slot].el);
     }
-    for (let slot = 0; slot < NUM_PILAS; slot++) {
-      this.#pilas[slot] = new Pila(slot);
-      el.appendChild(this.#pilas[slot].el);
+    for (let slot = 0; slot < NUM_TABLONES; slot++) {
+      this.#tablones[slot] = new Tablon(slot);
+      el.appendChild(this.#tablones[slot].el);
     }
     // onEV(EV.NEWGAME_AFTER, renderAll);
     // onEV(EV.UNDO_AFTER, renderAll);
@@ -56,8 +56,8 @@ export class Board extends EventTarget {
   get bases() {
     return this.#bases;
   }
-  get pilas() {
-    return this.#pilas;
+  get tablones() {
+    return this.#tablones;
   }
   static fire(EV) {
     document.dispatchEvent(new Event(EV));

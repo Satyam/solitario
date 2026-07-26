@@ -1,5 +1,5 @@
 import { Board } from './board.js';
-import { NUM_PILAS } from './constants.js';
+import { NUM_TABLONES } from './constants.js';
 import { Carta, Cartas } from './baraja.js';
 
 export class Game {
@@ -17,8 +17,8 @@ export class Game {
       'mousedown',
       this.#raiseFromVista.bind(this)
     );
-    board.pilas.forEach((pila) =>
-      pila.el.addEventListener('mousedown', this.#raiseFromHueco.bind(this))
+    board.tablones.forEach((tablon) =>
+      tablon.el.addEventListener('mousedown', this.#raiseFromTablon.bind(this))
     );
 
     Board.on(Board.GAMEOVER_BEFORE, this.#endAnimation.bind(this));
@@ -36,7 +36,7 @@ export class Game {
   }
   #raiseAll() {}
   #raiseFromVista() {}
-  #raiseFromHueco() {}
+  #raiseFromTablon() {}
   #endAnimation() {}
   #checkGameover() {}
 
@@ -44,12 +44,12 @@ export class Game {
     board.mazo.clear();
     board.vista.clear();
     board.bases.forEach((base) => base.clear());
-    board.pilas.forEach((pila) => pila.clear());
+    board.tablones.forEach((tablon) => tablon.clear());
 
     const baraja = new Cartas(true).shuffle();
 
-    // put some of the pilas
-    board.pilas.forEach((pila, slot) => pila.push(baraja.pop(slot + 1)));
+    // put some of the tablones
+    board.tablones.forEach((tablon, slot) => tablon.push(baraja.pop(slot + 1)));
 
     // Place the remaining cards in the mazo.
     board.mazo.push(baraja.cartas);

@@ -3,7 +3,7 @@ import { Cartas } from './baraja.js';
 export const TIPOS_CELDA = {
   MAZO: 'mazo',
   VISTA: 'vista',
-  PILA: 'pila',
+  TABLON: 'tablon',
   BASE: 'base',
 };
 

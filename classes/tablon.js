@@ -1,13 +1,13 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
 
-export class Pila extends Celda {
+export class Tablon extends Celda {
   #index = 0;
   #cardHeight;
   #shortCardHeight;
 
   constructor(slot) {
-    super(TIPOS_CELDA.PILA, slot);
+    super(TIPOS_CELDA.TABLON, slot);
     this.container.draggable = true;
 
     if (this.top) {
