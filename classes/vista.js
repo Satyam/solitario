@@ -1,7 +1,7 @@
 import { TIPOS_CELDA } from './celda.js';
-import { Superpuesta } from './superpuestas.js';
+import { PilaSimple } from './pilaSimple.js';
 
-export class Vista extends Superpuesta {
+export class Vista extends PilaSimple {
   constructor() {
     super(TIPOS_CELDA.VISTA);
   }

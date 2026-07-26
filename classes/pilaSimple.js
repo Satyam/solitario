@@ -1,7 +1,7 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
 
-export class Superpuesta extends Celda {
+export class PilaSimple extends Celda {
   #cartaTop;
   constructor(tipo, slot) {
     super(tipo, slot);
