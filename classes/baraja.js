@@ -76,6 +76,9 @@ export class Carta {
   get valor() {
     return this.#valor;
   }
+  get index() {
+    return this.#index;
+  }
   get color() {
     return this.#palo === 'D' || this.#palo === 'H' ? COLOR.ROJO : COLOR.NEGRO;
   }

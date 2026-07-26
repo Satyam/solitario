@@ -1,6 +1,6 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
-
+import { Tablero } from './tablero.js';
 export const NUM_TABLONES = 7;
 
 export class Tablon extends Celda {
@@ -25,11 +25,11 @@ export class Tablon extends Celda {
       s.getPropertyValue('--shortCardHeight'),
       10
     );
-    this.el.addEventListener('mousedown', this.#raiseFromTablon.bind(this));
+    this.container.addEventListener('mousedown', this.#raise.bind(this));
   }
 
   #oneLevel(cartas, container, next = false) {
-    const carta = cartas.pop();
+    const carta = cartas.shift();
     const isVisible = cartas.length <= this.#index;
     carta.reverso = !isVisible;
     const subPila = document.createElement('div');
@@ -63,7 +63,22 @@ export class Tablon extends Celda {
   get visible() {
     this.cartas.filter((carta, index) => index < this.#index);
   }
-  #raiseFromTablon() {}
+  #raise(ev) {
+    if (ev.buttons === 4) {
+      ev.preventDefault();
+      const destino = tablero.bases.canMoveIntoAny(this.top);
+      if (destino) this.#toBase(destino);
+    }
+  }
+  async #toBase(base) {
+    Tablero.fire(Tablero.JUGADA_BEFORE);
+    base.push(this.pop());
+    // await animateMove(
+    //   document.querySelector(`${SEL.VISTA} ${SEL.TOP}`),
+    //   document.querySelectorAll(SEL.PILAS).item(toSlot).querySelector(SEL.TOP)
+    // );
+    Tablero.fire(Tablero.JUGADA_AFTER);
+  }
 }
 
 export class Tablones extends Array {
