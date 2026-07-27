@@ -10,6 +10,7 @@ export class Tablon extends Celda {
   constructor(slot) {
     super(TIPOS_CELDA.TABLON, slot);
     this.container.draggable = true;
+    this.el.classList.add('droppable');
 
     if (this.top) {
       this.container.classList.remove(HUECO);
@@ -73,6 +74,10 @@ export class Tablon extends Celda {
     const destino = tablero.bases.canMoveIntoAny(this.top);
     if (destino) await this.top2Base(destino);
     return !!destino;
+  }
+  canDrop(carta) {
+    console.log(carta);
+    return Math.random() > 0.5;
   }
 }
 

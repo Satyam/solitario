@@ -14,6 +14,9 @@ export class Tablero extends EventTarget {
   #bases = [];
   #tablones = [];
 
+  #dragCelda;
+  #dragCarta;
+
   #game;
 
   constructor(el) {
@@ -57,6 +60,18 @@ export class Tablero extends EventTarget {
   get tablones() {
     return this.#tablones;
   }
+
+  dragStart(celda, carta) {
+    this.#dragCelda = celda;
+    this.#dragCarta = carta;
+    this.#bases.forEach((base) => {
+      base.el.classList.toggle('droppable-active', base.canDrop(carta));
+    });
+    this.#tablones.forEach((tablon) => {
+      tablon.el.classList.toggle('droppable-active', tablon.canDrop(carta));
+    });
+  }
+
   static fire(EV) {
     document.dispatchEvent(new Event(EV));
   }

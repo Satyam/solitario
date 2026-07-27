@@ -5,6 +5,7 @@ export class Vista extends PilaSimple {
   constructor() {
     super(TIPOS_CELDA.VISTA);
     this.el.addEventListener('mousedown', this.#raise.bind(this));
+    this.el.addEventListener('dragstart', this.#dragStart.bind(this));
   }
 
   push(cartas) {
@@ -14,6 +15,11 @@ export class Vista extends PilaSimple {
       cartas.reverso = false;
     }
     super.push(cartas);
+  }
+
+  update() {
+    super.update();
+    if (this.top) this.container.draggable = true;
   }
 
   #raise(ev) {
@@ -28,5 +34,10 @@ export class Vista extends PilaSimple {
     const destino = tablero.bases.canMoveIntoAny(this.top);
     if (destino) await this.top2Base(destino);
     return !!destino;
+  }
+
+  #dragStart(ev) {
+    this.el.classList.add('dragging');
+    tablero.dragStart(this, this.top);
   }
 }

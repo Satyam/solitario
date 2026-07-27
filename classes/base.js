@@ -6,6 +6,7 @@ export const NUM_BASES = 4;
 export class Base extends PilaSimple {
   constructor(slot) {
     super(TIPOS_CELDA.BASE, slot);
+    this.el.classList.add('droppable');
   }
   push(cards) {
     if (Array.isArray(cards)) {
@@ -22,6 +23,11 @@ export class Base extends PilaSimple {
     } else {
       return carta.valor === 'A';
     }
+  }
+
+  canDrop(carta) {
+    console.log(carta);
+    return Math.random() > 0.5;
   }
 }
 
