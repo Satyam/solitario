@@ -1,6 +1,5 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
-import { Tablero } from './tablero.js';
 export const NUM_TABLONES = 7;
 
 export class Tablon extends Celda {
@@ -72,17 +71,8 @@ export class Tablon extends Celda {
   async raise() {
     if (!this.top) return false;
     const destino = tablero.bases.canMoveIntoAny(this.top);
-    if (destino) await this.#toBase(destino);
+    if (destino) await this.top2Base(destino);
     return !!destino;
-  }
-  async #toBase(base) {
-    Tablero.fire(Tablero.JUGADA_BEFORE);
-    base.push(this.pop());
-    // await animateMove(
-    //   document.querySelector(`${SEL.VISTA} ${SEL.TOP}`),
-    //   document.querySelectorAll(SEL.PILAS).item(toSlot).querySelector(SEL.TOP)
-    // );
-    Tablero.fire(Tablero.JUGADA_AFTER);
   }
 }
 

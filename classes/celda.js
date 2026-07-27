@@ -1,4 +1,5 @@
 import { Cartas } from './baraja.js';
+import { Tablero } from './tablero.js';
 
 export const TIPOS_CELDA = {
   MAZO: 'mazo',
@@ -57,5 +58,36 @@ export class Celda extends Cartas {
   clear() {
     super.clear();
     this.update();
+  }
+
+  async top2Base(base) {
+    Tablero.fire(Tablero.JUGADA_BEFORE);
+    await this.#animateMove(base);
+    base.push(this.pop());
+    Tablero.fire(Tablero.JUGADA_AFTER);
+  }
+
+  async #animateMove(destCarta, duration = 300) {
+    const topEl = this.top.el;
+    if (!topEl) return true;
+    return new Promise((resolve) => {
+      const srcPos = topEl.getBoundingClientRect();
+      const destPos = destCarta.el.getBoundingClientRect();
+      const anim = topEl.animate(
+        {
+          transform: `translate(
+          ${destPos.left - srcPos.left}px,
+          ${destPos.top - srcPos.top}px
+        )`,
+        },
+        {
+          duration,
+          easing: 'ease-in-out',
+        }
+      );
+      anim.addEventListener('finish', () => {
+        resolve();
+      });
+    });
   }
 }
