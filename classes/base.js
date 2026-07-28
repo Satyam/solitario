@@ -7,6 +7,8 @@ export class Base extends PilaSimple {
   constructor(slot) {
     super(TIPOS_CELDA.BASE, slot);
     this.el.classList.add('droppable');
+    this.el.addEventListener('dragstart', this.#dragStart.bind(this));
+    this.el.addEventListener('dragover', this.#dragover.bind(this));
   }
   push(cards) {
     if (Array.isArray(cards)) {
@@ -24,6 +26,15 @@ export class Base extends PilaSimple {
     } else {
       return carta.valor === 'A';
     }
+  }
+  #dragover() {
+    if (this.canMoveInto(tablero.dragCarta)) {
+      ev.preventDefault();
+    }
+  }
+  #dragStart(ev) {
+    this.el.classList.add('dragging');
+    tablero.dragStart(this, this.top);
   }
 }
 

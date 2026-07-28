@@ -27,6 +27,7 @@ export class Tablon extends Celda {
     );
     this.container.addEventListener('mousedown', this.#raise.bind(this));
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
+    this.el.addEventListener('dragover', this.#dragover.bind(this));
   }
 
   #oneLevel(cartas, container, next = false) {
@@ -80,6 +81,11 @@ export class Tablon extends Celda {
   #dragStart(ev) {
     this.el.classList.add('dragging');
     tablero.dragStart(this, this.top);
+  }
+
+  #dragover () {
+    if (this.canMoveInto(tabler.dragCarta)){
+    ev.preventDefault();
   }
 
   canMoveInto(carta) {

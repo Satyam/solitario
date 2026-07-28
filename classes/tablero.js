@@ -71,6 +71,12 @@ export class Tablero extends EventTarget {
       tablon.el.classList.toggle('droppable-active', tablon.canMoveInto(carta));
     });
   }
+  get dragCelda() {
+    return this.#dragCelda;
+  }
+  get dragCarta() {
+    return this.#dragCarta;
+  }
 
   static fire(EV) {
     document.dispatchEvent(new Event(EV));
