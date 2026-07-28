@@ -65,10 +65,10 @@ export class Tablero extends EventTarget {
     this.#dragCelda = celda;
     this.#dragCarta = carta;
     this.#bases.forEach((base) => {
-      base.el.classList.toggle('droppable-active', base.canDrop(carta));
+      base.el.classList.toggle('droppable-active', base.canMoveInto(carta));
     });
     this.#tablones.forEach((tablon) => {
-      tablon.el.classList.toggle('droppable-active', tablon.canDrop(carta));
+      tablon.el.classList.toggle('droppable-active', tablon.canMoveInto(carta));
     });
   }
 

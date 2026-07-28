@@ -26,6 +26,7 @@ export class Tablon extends Celda {
       10
     );
     this.container.addEventListener('mousedown', this.#raise.bind(this));
+    this.el.addEventListener('dragstart', this.#dragStart.bind(this));
   }
 
   #oneLevel(cartas, container, next = false) {
@@ -75,9 +76,19 @@ export class Tablon extends Celda {
     if (destino) await this.top2Base(destino);
     return !!destino;
   }
-  canDrop(carta) {
-    console.log(carta);
-    return Math.random() > 0.5;
+
+  #dragStart(ev) {
+    this.el.classList.add('dragging');
+    tablero.dragStart(this, this.top);
+  }
+
+  canMoveInto(carta) {
+    const top = this.top;
+    if (top) {
+      return carta.color !== top.color && carta.index + 1 === top.index;
+    } else {
+      return carta.valor === 'K';
+    }
   }
 }
 
