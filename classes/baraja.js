@@ -33,17 +33,14 @@ export const REVERSO = 'back';
 export const HUECO = 'hueco';
 
 export class Carta {
-  #name;
   #palo;
-  #valor;
   #index;
   #el = null;
   #use = null;
   #reverso = false;
 
-  constructor(palo, valor, index) {
+  constructor(palo, index) {
     this.#palo = palo;
-    this.#valor = valor;
     this.#index = index;
   }
 
@@ -65,7 +62,7 @@ export class Carta {
   }
 
   get name() {
-    return `${this.#valor}${this.#palo}`;
+    return `${this.valor}${this.#palo}`;
   }
   get el() {
     return (this.#el ??= this.#createEl());
@@ -74,7 +71,7 @@ export class Carta {
     return this.#palo;
   }
   get valor() {
-    return this.#valor;
+    return valores[this.#index];
   }
   get index() {
     return this.#index;
@@ -105,7 +102,10 @@ export class Cartas {
     if (full) {
       this.#cartas = palos
         .map((palo) =>
-          valores.map((valor, index) => new Carta(palo, valor, index))
+          Array.from(
+            { length: valores.length },
+            (_, index) => new Carta(palo, index)
+          )
         )
         .flat();
     }
