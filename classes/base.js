@@ -8,9 +8,9 @@ export class Base extends PilaSimple {
     super(TIPOS_CELDA.BASE, slot);
     this.el.classList.add('droppable');
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
-    this.el.addEventListener('dragover', this.#dragover.bind(this));
-    this.el.addEventListener('drop', this.#drop.bind(this));
-    this.el.addEventListener('dragend', this.#dragend.bind(this));
+    this.el.addEventListener('dragover', this.#dragOver.bind(this));
+    this.el.addEventListener('drop', this.#dragDrop.bind(this));
+    this.el.addEventListener('dragend', this.#dragEnd.bind(this));
   }
 
   push(cards) {
@@ -36,22 +36,22 @@ export class Base extends PilaSimple {
     tablero.dragStart(this, this.top);
   }
 
-  #dragover(ev) {
+  #dragOver(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       ev.preventDefault();
     }
   }
 
-  #drop(ev) {
+  #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop());
+      this.push(tablero.dragCelda.pop(tablero.cartaIndex + 1));
       Tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }
   }
 
-  #dragend() {
+  #dragEnd() {
     this.el.classList.remove('dragging');
     tablero.clearDropTargets();
   }

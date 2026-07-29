@@ -29,9 +29,9 @@ export class Tablon extends Celda {
     );
     this.container.addEventListener('mousedown', this.#raise.bind(this));
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
-    this.el.addEventListener('dragover', this.#dragover.bind(this));
-    this.el.addEventListener('drop', this.#drop.bind(this));
-    this.el.addEventListener('dragend', this.#dragend.bind(this));
+    this.el.addEventListener('dragover', this.#dragOver.bind(this));
+    this.el.addEventListener('drop', this.#dragDrop.bind(this));
+    this.el.addEventListener('dragend', this.#dragEnd.bind(this));
   }
 
   push(cards, first = false) {
@@ -55,21 +55,22 @@ export class Tablon extends Celda {
 
   #oneLevel(cartas, container, next = false) {
     const carta = cartas.shift();
-    console.log(
-      'slot',
-      this.slot,
-      'next',
-      next,
-      'numV',
-      this.#numVisible,
-      'length',
-      cartas.length
-    );
+    // console.log(
+    //   'slot',
+    //   this.slot,
+    //   'next',
+    //   next,
+    //   'numV',
+    //   this.#numVisible,
+    //   'length',
+    //   cartas.length
+    // );
 
-    const isVisible = cartas.length <= this.#numVisible;
+    const isVisible = cartas.length < this.#numVisible;
     carta.reverso = !isVisible;
     const subPila = document.createElement('div');
     subPila.classList.add('stack');
+    subPila.dataset.cartaIndex = cartas.length;
     if (next) subPila.classList.add('offset');
     subPila.draggable = isVisible;
 
@@ -115,27 +116,27 @@ export class Tablon extends Celda {
     return !!destino;
   }
 
-  #dragStart() {
+  #dragStart(ev) {
     this.el.classList.add('dragging');
-    tablero.dragStart(this, this.top);
+    tablero.dragStart(this, this.top, ev.target.dataset.cartaIndex);
   }
 
-  #dragover(ev) {
+  #dragOver(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       ev.preventDefault();
     }
   }
 
-  #drop(ev) {
+  #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop());
+      this.push(tablero.dragCelda.pop(tablero.cartaIndex + 1));
       Tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }
   }
 
-  #dragend() {
+  #dragEnd() {
     this.el.classList.remove('dragging');
     tablero.clearDropTargets();
   }
