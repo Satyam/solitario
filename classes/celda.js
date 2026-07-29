@@ -49,7 +49,7 @@ export class Celda extends Cartas {
     this.update();
   }
 
-  pop(qty) {
+  pop(qty = 1) {
     const ret = super.pop(qty);
     this.update();
     return ret;

@@ -123,12 +123,8 @@ export class Cartas {
     return this.#cartas[0] ?? null;
   }
 
-  pop(qty) {
-    const ret =
-      typeof qty === 'undefined'
-        ? this.#cartas.shift()
-        : this.#cartas.splice(0, qty);
-    return ret;
+  pop(qty = 1) {
+    return qty === 1 ? this.#cartas.shift() : this.#cartas.splice(0, qty);
   }
 
   clear() {

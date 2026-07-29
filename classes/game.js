@@ -41,7 +41,7 @@ export class Game {
 
     // put some of the tablones
     tablero.tablones.forEach((tablon, slot) =>
-      tablon.push(baraja.pop(slot + 1))
+      tablon.push(baraja.pop(slot + 1), true)
     );
 
     // Place the remaining cards in the mazo.

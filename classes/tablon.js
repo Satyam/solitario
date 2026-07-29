@@ -1,9 +1,11 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
+import { Tablero } from './tablero.js';
+
 export const NUM_TABLONES = 7;
 
 export class Tablon extends Celda {
-  #index = 0;
+  #numVisible = 1;
   #cardHeight;
   #shortCardHeight;
 
@@ -28,11 +30,43 @@ export class Tablon extends Celda {
     this.container.addEventListener('mousedown', this.#raise.bind(this));
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
     this.el.addEventListener('dragover', this.#dragover.bind(this));
+    this.el.addEventListener('drop', this.#drop.bind(this));
+    this.el.addEventListener('dragend', this.#dragend.bind(this));
+  }
+
+  push(cards, first = false) {
+    if (!first) {
+      if (Array.isArray(cards)) {
+        cards.forEach((card) => (card.reverso = false));
+        this.#numVisible += cards.length;
+      } else {
+        cards.reverso = false;
+        this.#numVisible++;
+      }
+    }
+    super.push(cards);
+  }
+
+  pop(qty = 1) {
+    this.#numVisible -= qty;
+    if (this.#numVisible <= 0) this.#numVisible = 1;
+    return super.pop(qty);
   }
 
   #oneLevel(cartas, container, next = false) {
     const carta = cartas.shift();
-    const isVisible = cartas.length <= this.#index;
+    console.log(
+      'slot',
+      this.slot,
+      'next',
+      next,
+      'numV',
+      this.#numVisible,
+      'length',
+      cartas.length
+    );
+
+    const isVisible = cartas.length <= this.#numVisible;
     carta.reverso = !isVisible;
     const subPila = document.createElement('div');
     subPila.classList.add('stack');
@@ -46,24 +80,26 @@ export class Tablon extends Celda {
     container.appendChild(subPila);
   }
   update() {
+    const cont = this.container;
+    cont.firstChild?.remove();
     const cartas = this.cartas.toReversed();
     if (cartas.length) {
-      this.container.style.height =
+      cont.style.height =
         ((cartas.length || 1) - 1) * this.#shortCardHeight + this.#cardHeight;
-      this.container.classList.remove(HUECO);
-      this.#oneLevel(cartas, this.container);
+      cont.classList.remove(HUECO);
+      this.#oneLevel(cartas, cont);
     } else {
-      this.container.classList.add(HUECO);
-      this.container.draggable = false;
+      cont.classList.add(HUECO);
+      cont.draggable = false;
     }
   }
 
   clear() {
     super.clear();
-    this.#index = 0;
+    this.#numVisible = 1;
   }
   get visible() {
-    this.cartas.filter((carta, index) => index < this.#index);
+    this.cartas.filter((carta, index) => index < this.#numVisible);
   }
   #raise(ev) {
     if (ev.buttons === 4) {
@@ -71,6 +107,7 @@ export class Tablon extends Celda {
       this.raise();
     }
   }
+
   async raise() {
     if (!this.top) return false;
     const destino = tablero.bases.canMoveIntoAny(this.top);
@@ -78,14 +115,29 @@ export class Tablon extends Celda {
     return !!destino;
   }
 
-  #dragStart(ev) {
+  #dragStart() {
     this.el.classList.add('dragging');
     tablero.dragStart(this, this.top);
   }
 
-  #dragover () {
-    if (this.canMoveInto(tabler.dragCarta)){
-    ev.preventDefault();
+  #dragover(ev) {
+    if (this.canMoveInto(tablero.dragCarta)) {
+      ev.preventDefault();
+    }
+  }
+
+  #drop(ev) {
+    if (this.canMoveInto(tablero.dragCarta)) {
+      Tablero.fire(Tablero.JUGADA_BEFORE);
+      this.push(tablero.dragCelda.pop());
+      Tablero.fire(Tablero.JUGADA_AFTER);
+      ev.preventDefault();
+    }
+  }
+
+  #dragend() {
+    this.el.classList.remove('dragging');
+    tablero.clearDropTargets();
   }
 
   canMoveInto(carta) {
@@ -97,7 +149,6 @@ export class Tablon extends Celda {
     }
   }
 }
-
 export class Tablones extends Array {
   constructor() {
     super();

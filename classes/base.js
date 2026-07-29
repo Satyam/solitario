@@ -1,6 +1,6 @@
 import { TIPOS_CELDA } from './celda.js';
 import { PilaSimple } from './pilaSimple.js';
-
+import { Tablero } from './tablero.js';
 export const NUM_BASES = 4;
 
 export class Base extends PilaSimple {
@@ -9,7 +9,10 @@ export class Base extends PilaSimple {
     this.el.classList.add('droppable');
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
     this.el.addEventListener('dragover', this.#dragover.bind(this));
+    this.el.addEventListener('drop', this.#drop.bind(this));
+    this.el.addEventListener('dragend', this.#dragend.bind(this));
   }
+
   push(cards) {
     if (Array.isArray(cards)) {
       cards.forEach((card) => (card.reverso = false));
@@ -27,14 +30,30 @@ export class Base extends PilaSimple {
       return carta.valor === 'A';
     }
   }
-  #dragover() {
+
+  #dragStart() {
+    this.el.classList.add('dragging');
+    tablero.dragStart(this, this.top);
+  }
+
+  #dragover(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       ev.preventDefault();
     }
   }
-  #dragStart(ev) {
-    this.el.classList.add('dragging');
-    tablero.dragStart(this, this.top);
+
+  #drop(ev) {
+    if (this.canMoveInto(tablero.dragCarta)) {
+      Tablero.fire(Tablero.JUGADA_BEFORE);
+      this.push(tablero.dragCelda.pop());
+      Tablero.fire(Tablero.JUGADA_AFTER);
+      ev.preventDefault();
+    }
+  }
+
+  #dragend() {
+    this.el.classList.remove('dragging');
+    tablero.clearDropTargets();
   }
 }
 
