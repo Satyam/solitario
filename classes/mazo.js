@@ -21,6 +21,8 @@ export class Mazo extends PilaSimple {
       const carta = this.pop();
       carta.reverso = false;
       tablero.vista.push(carta);
+    } else {
+      this.push(tablero.vista.back());
     }
   }
 }

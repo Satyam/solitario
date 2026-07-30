@@ -18,6 +18,12 @@ export class Vista extends PilaSimple {
     super.push(cartas);
   }
 
+  back() {
+    const cartas = this.cartas.toReversed();
+    this.clear();
+    return cartas;
+  }
+
   update() {
     super.update();
     if (this.top) this.container.draggable = true;
