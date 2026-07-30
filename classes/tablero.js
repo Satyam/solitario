@@ -16,7 +16,7 @@ export class Tablero extends EventTarget {
 
   #dragCelda;
   #dragCarta;
-  #cartaIndex = 0;
+  #dragQty = 1;
 
   #game;
 
@@ -62,10 +62,10 @@ export class Tablero extends EventTarget {
     return this.#tablones;
   }
 
-  dragStart(celda, carta, cartaIndex = 0) {
+  dragStart(celda, carta, dragQty = 1) {
     this.#dragCelda = celda;
     this.#dragCarta = carta;
-    this.#cartaIndex = cartaIndex;
+    this.#dragQty = dragQty;
     this.#bases.forEach((base) => {
       base.el.classList.toggle('droppable-active', base.canMoveInto(carta));
     });
@@ -80,7 +80,7 @@ export class Tablero extends EventTarget {
       .forEach((el) => el.classList.remove('droppable-active'));
     this.#dragCelda = null;
     this.#dragCarta = null;
-    this.#cartaIndex = 0;
+    this.#dragQty = 1;
   }
 
   get dragCelda() {
@@ -91,8 +91,8 @@ export class Tablero extends EventTarget {
     return this.#dragCarta;
   }
 
-  get cartaIndex() {
-    return this.#cartaIndex;
+  get dragQty() {
+    return this.#dragQty;
   }
 
   static fire(EV) {

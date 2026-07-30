@@ -13,13 +13,18 @@ export class Base extends PilaSimple {
     this.el.addEventListener('dragend', this.#dragEnd.bind(this));
   }
 
-  push(cards) {
-    if (Array.isArray(cards)) {
-      cards.forEach((card) => (card.reverso = false));
+  push(cartas) {
+    if (Array.isArray(cartas)) {
+      cartas.forEach((carta) => (carta.reverso = false));
     } else {
-      cards.reverso = false;
+      cartas.reverso = false;
     }
-    super.push(cards);
+    super.push(cartas);
+  }
+
+  update() {
+    super.update();
+    if (this.top) this.container.draggable = true;
   }
 
   canMoveInto(carta) {
@@ -45,7 +50,7 @@ export class Base extends PilaSimple {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop(tablero.cartaIndex + 1));
+      this.push(tablero.dragCelda.pop(tablero.dragQty));
       Tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }

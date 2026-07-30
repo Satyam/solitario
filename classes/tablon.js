@@ -55,17 +55,6 @@ export class Tablon extends Celda {
 
   #oneLevel(cartas, container, next = false) {
     const carta = cartas.shift();
-    // console.log(
-    //   'slot',
-    //   this.slot,
-    //   'next',
-    //   next,
-    //   'numV',
-    //   this.#numVisible,
-    //   'length',
-    //   cartas.length
-    // );
-
     const isVisible = cartas.length < this.#numVisible;
     carta.reverso = !isVisible;
     const subPila = document.createElement('div');
@@ -80,6 +69,7 @@ export class Tablon extends Celda {
     }
     container.appendChild(subPila);
   }
+
   update() {
     const cont = this.container;
     cont.firstChild?.remove();
@@ -118,7 +108,11 @@ export class Tablon extends Celda {
 
   #dragStart(ev) {
     this.el.classList.add('dragging');
-    tablero.dragStart(this, this.top, ev.target.dataset.cartaIndex);
+    tablero.dragStart(
+      this,
+      this.cartas[ev.target.dataset.cartaIndex],
+      parseInt(ev.target.dataset.cartaIndex, 10) + 1
+    );
   }
 
   #dragOver(ev) {
@@ -130,7 +124,7 @@ export class Tablon extends Celda {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop(tablero.cartaIndex + 1));
+      this.push(tablero.dragCelda.pop(tablero.dragQty));
       Tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }
