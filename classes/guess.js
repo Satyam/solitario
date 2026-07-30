@@ -49,7 +49,6 @@ export class Guess {
   }
 
   #setOnDemand() {
-    console.log('onDemand');
     this.#permanent = false;
     this.#hideHint();
 
@@ -58,7 +57,6 @@ export class Guess {
   }
 
   #setPermanent() {
-    console.log('permanent');
     this.#permanent = true;
     this.#hintBtn.classList.add('buttonPressed');
     this.#hintBtn.firstElementChild.src = 'assets/icons/quiz_white_24dp.svg';
@@ -66,7 +64,6 @@ export class Guess {
   }
 
   #hideHint() {
-    console.log('hide');
     if (this.#permanent) return;
     this.#el.classList.add('notVisible');
   }
