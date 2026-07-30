@@ -6,7 +6,6 @@ export class Vista extends PilaSimple {
     super(TIPOS_CELDA.VISTA);
     this.el.addEventListener('mousedown', this.#raise.bind(this));
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
-    this.el.addEventListener('dragend', this.#dragEnd.bind(this));
   }
 
   push(cartas) {
@@ -46,10 +45,5 @@ export class Vista extends PilaSimple {
   #dragStart() {
     this.el.classList.add('dragging');
     tablero.dragStart(this, this.top);
-  }
-
-  #dragEnd() {
-    this.el.classList.remove('dragging');
-    tablero.clearDropTargets();
   }
 }

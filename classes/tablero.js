@@ -39,6 +39,7 @@ export class Tablero extends EventTarget {
     // onEV(EV.NEWGAME_AFTER, renderAll);
     // onEV(EV.UNDO_AFTER, renderAll);
     // onEV(EV.REDO_AFTER, renderAll);
+    this.el.addEventListener('dragend', this.clearDropTargets.bind(this));
   }
   startGame() {
     this.#game = new Game();
@@ -75,6 +76,9 @@ export class Tablero extends EventTarget {
   }
 
   clearDropTargets() {
+    document
+      .querySelectorAll('.dragging')
+      .forEach((el) => el.classList.remove('dragging'));
     document
       .querySelectorAll('.droppable-active')
       .forEach((el) => el.classList.remove('droppable-active'));

@@ -31,7 +31,6 @@ export class Tablon extends Celda {
     this.el.addEventListener('dragstart', this.#dragStart.bind(this));
     this.el.addEventListener('dragover', this.#dragOver.bind(this));
     this.el.addEventListener('drop', this.#dragDrop.bind(this));
-    this.el.addEventListener('dragend', this.#dragEnd.bind(this));
   }
 
   push(cards, first = false) {
@@ -125,14 +124,11 @@ export class Tablon extends Celda {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
       this.push(tablero.dragCelda.pop(tablero.dragQty));
+      this.el.classList.remove('dragging');
+      tablero.clearDropTargets();
       Tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }
-  }
-
-  #dragEnd() {
-    this.el.classList.remove('dragging');
-    tablero.clearDropTargets();
   }
 
   canMoveInto(carta) {
