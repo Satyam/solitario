@@ -74,13 +74,13 @@ export class Tablon extends Celda {
     cont.firstChild?.remove();
     const cartas = this.cartas.toReversed();
     if (cartas.length) {
-      cont.style.height =
-        ((cartas.length || 1) - 1) * this.#shortCardHeight + this.#cardHeight;
+      cont.style.height = `${((cartas.length || 1) - 1) * this.#shortCardHeight + this.#cardHeight}px`;
       cont.classList.remove(HUECO);
       this.#oneLevel(cartas, cont);
     } else {
       cont.classList.add(HUECO);
       cont.draggable = false;
+      cont.style.height = `${this.#cardHeight}px`;
     }
   }
 
