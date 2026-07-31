@@ -11,7 +11,10 @@ export class Game {
       .getElementById('raise')
       .addEventListener('click', this.#raiseAll.bind(this));
 
-    Tablero.on(Tablero.GAMEOVER_BEFORE, this.#endAnimation.bind(this));
+    Tablero.on(
+      Tablero.GAMEOVER_BEFORE,
+      tablero.bases.endAnimation.bind(tablero.bases)
+    );
     Tablero.on(Tablero.JUGADA_AFTER, this.#checkGameover.bind(this));
     Tablero.on(Tablero.NEWGAME_BEFORE, this.#startNewGame.bind(this));
     Tablero.on(Tablero.NEWGAME_AFTER, this.#checkGameover.bind(this));
@@ -28,8 +31,11 @@ export class Game {
     }
   }
 
-  #endAnimation() {}
-  #checkGameover() {}
+  #checkGameover() {
+    const gameover = tablero.bases.every((base) => base.cartas.length === 13);
+    document.querySelector('.gameover').hidden = !gameover;
+    if (gameover) Tablero.fire(Tablero.GAMEOVER_BEFORE);
+  }
 
   #startNewGame() {
     tablero.mazo.clear();

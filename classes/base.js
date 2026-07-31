@@ -56,6 +56,34 @@ export class Base extends PilaSimple {
       ev.preventDefault();
     }
   }
+
+  endAnimation() {
+    return new Promise((resolve) => {
+      const top = this.top;
+      if (!top) {
+        resolve(true);
+        return;
+      }
+      const anim = top.el.animate(
+        [
+          {
+            transform: 'rotate(0) translate(0, 0)',
+            opacity: 1,
+          },
+          {
+            transform: 'rotate(180deg) translate(-200px, 400px)',
+            opacity: 0,
+          },
+        ],
+        { duration: Math.random() * 3000 + 1000 }
+      );
+
+      anim.addEventListener('finish', () => {
+        this.pop();
+        this.endAnimation();
+      });
+    });
+  }
 }
 
 export class Bases extends Array {
@@ -71,5 +99,11 @@ export class Bases extends Array {
   canMoveIntoAny(carta) {
     if (typeof carta === 'undefined') return false;
     return this.find((base) => base.canMoveInto(carta));
+  }
+
+  async endAnimation() {
+    return Promise.all(this.map((base) => base.endAnimation())).then(() => {
+      Tablero.fire(Tablero.GAMEOVER_AFTER);
+    });
   }
 }
