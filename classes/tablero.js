@@ -76,12 +76,9 @@ export class Tablero extends EventTarget {
   }
 
   clearDropTargets() {
-    document
-      .querySelectorAll('.dragging')
-      .forEach((el) => el.classList.remove('dragging'));
-    document
-      .querySelectorAll('.droppable-active')
-      .forEach((el) => el.classList.remove('droppable-active'));
+    this.#el
+      .querySelectorAll('.dragging, .droppable-active')
+      .forEach((el) => el.classList.remove('dragging', 'droppable-active'));
     this.#dragCelda = null;
     this.#dragCarta = null;
     this.#dragQty = 1;
