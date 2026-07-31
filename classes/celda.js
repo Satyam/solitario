@@ -82,7 +82,6 @@ export class Celda extends Cartas {
         },
         {
           duration,
-          easing: 'ease-in-out',
         }
       );
       anim.addEventListener('finish', () => {
