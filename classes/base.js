@@ -57,14 +57,20 @@ export class Base extends PilaSimple {
     }
   }
 
-  endAnimation() {
-    return new Promise((resolve) => {
-      const top = this.top;
-      if (!top) {
-        resolve(true);
-        return;
-      }
-      const anim = top.el.animate(
+  async endAnimation() {
+    const topEl = this.top?.el;
+    if (!topEl) {
+      return;
+    }
+    topEl.classList.remove('behind');
+    topEl.classList.add('top');
+    if (this.cartas.length > 1) {
+      const next = this.cartas[1];
+      next.el.classList.add('behind');
+      this.container.appendChild(next.el);
+    }
+    await new Promise((resolve) => {
+      const anim = topEl.animate(
         [
           {
             transform: 'rotate(0) translate(0, 0)',
@@ -75,14 +81,15 @@ export class Base extends PilaSimple {
             opacity: 0,
           },
         ],
-        { duration: Math.random() * 3000 + 1000 }
+        { duration: Math.random() * 3000 + 1000, delay: 10 }
       );
 
       anim.addEventListener('finish', () => {
-        this.pop();
-        this.endAnimation();
+        resolve(true);
       });
     });
+    this.pop();
+    return this.endAnimation();
   }
 }
 
@@ -102,8 +109,7 @@ export class Bases extends Array {
   }
 
   async endAnimation() {
-    return Promise.all(this.map((base) => base.endAnimation())).then(() => {
-      Tablero.fire(Tablero.GAMEOVER_AFTER);
-    });
+    await Promise.all(this.map((base) => base.endAnimation()));
+    Tablero.fire(Tablero.GAMEOVER_AFTER);
   }
 }

@@ -20,11 +20,6 @@ body {
   height: var(--cardHeight);
 }
 
-.top {
-  position: relative;
-  top: calc(var(--cardHeight) * -1);
-}
-
 .singleRow {
   height: var(--cardHeight);
 }
@@ -153,4 +148,15 @@ tr.desde td {
 .hueco {
   border: thin solid lightgreen;
   background-color: green;
+}
+
+.top {
+  /* position: relative;
+  top: calc(var(--cardHeight) * -1); */
+  z-index: 10;
+}
+.behind {
+  position: relative;
+  top: calc(var(--cardHeight) * -1);
+  z-index: 5;
 }

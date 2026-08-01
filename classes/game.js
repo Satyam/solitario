@@ -33,6 +33,10 @@ export class Game {
 
   #checkGameover() {
     const gameover = tablero.bases.every((base) => base.cartas.length === 13);
+    // To make it easy to test the end animation
+    // const gameover =
+    //   tablero.bases[0].cartas.length === 13 &&
+    //   tablero.bases[1].cartas.length === 13;
     document.querySelector('.gameover').hidden = !gameover;
     if (gameover) Tablero.fire(Tablero.GAMEOVER_BEFORE);
   }
@@ -44,6 +48,8 @@ export class Game {
     tablero.tablones.clear();
 
     const baraja = new Cartas(true).shuffle();
+    // To make it easy to test the end animation
+    // const baraja = new Cartas(true);
 
     // put some of the tablones
     tablero.tablones.forEach((tablon, slot) =>
