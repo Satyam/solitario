@@ -1,6 +1,7 @@
 import { Celda, TIPOS_CELDA } from './celda.js';
 import { HUECO } from './baraja.js';
 import { Tablero } from './tablero.js';
+import { Carta } from './baraja.js';
 
 export const NUM_TABLONES = 7;
 
@@ -139,6 +140,17 @@ export class Tablon extends Celda {
       return carta.valor === 'K';
     }
   }
+  get state() {
+    return {
+      cartas: this.cartas.map((carta) => carta.name),
+      numVisible: this.#numVisible,
+    };
+  }
+  set state(s) {
+    this.clear();
+    this.#numVisible = s.numVisible;
+    this.push(s.cartas.map((name) => new Carta(s[0], s[1])));
+  }
 }
 export class Tablones extends Array {
   constructor() {
@@ -149,5 +161,11 @@ export class Tablones extends Array {
   }
   clear() {
     this.forEach((tablon) => tablon.clear());
+  }
+  get state() {
+    return this.map((b) => b.state);
+  }
+  set state(s) {
+    this.forEach((b, slot) => (b.state = s[slot]));
   }
 }

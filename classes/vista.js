@@ -1,5 +1,6 @@
 import { TIPOS_CELDA } from './celda.js';
 import { PilaSimple } from './pilaSimple.js';
+import { Carta } from './baraja.js';
 
 export class Vista extends PilaSimple {
   constructor() {
@@ -45,5 +46,14 @@ export class Vista extends PilaSimple {
   #dragStart() {
     this.el.classList.add('dragging');
     tablero.dragStart(this, this.top);
+  }
+  get state() {
+    return {
+      cartas: this.cartas.map((carta) => carta.name),
+    };
+  }
+  set state(s) {
+    this.clear();
+    this.push(s.cartas.map((name) => new Carta(s[0], s[1])));
   }
 }

@@ -1,6 +1,8 @@
 import { TIPOS_CELDA } from './celda.js';
 import { PilaSimple } from './pilaSimple.js';
 import { Tablero } from './tablero.js';
+import { Carta } from './baraja.js';
+
 export const NUM_BASES = 4;
 
 export class Base extends PilaSimple {
@@ -91,6 +93,16 @@ export class Base extends PilaSimple {
     this.pop();
     return this.endAnimation();
   }
+
+  get state() {
+    return {
+      cartas: this.cartas.map((carta) => carta.name),
+    };
+  }
+  set state(s) {
+    this.clear();
+    this.push(s.cartas.map((name) => new Carta(s[0], s[1])));
+  }
 }
 
 export class Bases extends Array {
@@ -111,5 +123,12 @@ export class Bases extends Array {
   async endAnimation() {
     await Promise.all(this.map((base) => base.endAnimation()));
     Tablero.fire(Tablero.GAMEOVER_AFTER);
+  }
+
+  get state() {
+    return this.map((b) => b.state);
+  }
+  set state(s) {
+    this.forEach((b, slot) => (b.state = s[slot]));
   }
 }

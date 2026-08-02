@@ -4,7 +4,7 @@ import { Base, Bases } from './base.js';
 import { Tablon, Tablones } from './tablon.js';
 import { Guess } from './guess.js';
 import { Game } from './game.js';
-
+import { Undo } from './undoStack.js';
 export class Tablero extends EventTarget {
   #el;
 
@@ -19,6 +19,8 @@ export class Tablero extends EventTarget {
   #dragQty = 1;
 
   #game;
+
+  #undoStack;
 
   constructor(el) {
     super();
@@ -40,6 +42,8 @@ export class Tablero extends EventTarget {
     // onEV(EV.UNDO_AFTER, renderAll);
     // onEV(EV.REDO_AFTER, renderAll);
     this.el.addEventListener('dragend', this.clearDropTargets.bind(this));
+
+    this.#undoStack = new Undo();
   }
   startGame() {
     this.#game = new Game();
