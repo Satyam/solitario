@@ -141,17 +141,22 @@ export class Tablon extends Celda {
     }
   }
   get state() {
-    return {
-      cartas: this.cartas.map((carta) => carta.name),
-      numVisible: this.#numVisible,
-    };
+    return `t${this.slot}:${this.#numVisible}-${this.cartas.map((carta) => `${carta.palo}${carta.index}`).join(',')}`;
   }
-  set state(s) {
+
+  set state(data) {
     this.clear();
-    this.#numVisible = s.numVisible;
-    this.push(s.cartas.map((name) => new Carta(s[0], s[1])));
+    const [numV, cartas] = data.split('-');
+    this.#numVisible = parseInt(numV, 10);
+    this.push(
+      cartas
+        .split(',')
+        .map((name) => new Carta(name[0], parseInt(name.substring(1)))),
+      true
+    );
   }
 }
+
 export class Tablones extends Array {
   constructor() {
     super();
@@ -163,7 +168,7 @@ export class Tablones extends Array {
     this.forEach((tablon) => tablon.clear());
   }
   get state() {
-    return this.map((b) => b.state);
+    return this.map((b) => b.state).join('|');
   }
   set state(s) {
     this.forEach((b, slot) => (b.state = s[slot]));

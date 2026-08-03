@@ -5,7 +5,8 @@ import { Tablon, Tablones } from './tablon.js';
 import { Guess } from './guess.js';
 import { Game } from './game.js';
 import { Undo } from './undoStack.js';
-export class Tablero extends EventTarget {
+
+export class Tablero {
   #el;
 
   #mazo;
@@ -23,7 +24,6 @@ export class Tablero extends EventTarget {
   #undoStack;
 
   constructor(el) {
-    super();
     this.#el = el;
     this.#mazo = new Mazo();
     el.appendChild(this.#mazo.el);

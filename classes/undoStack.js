@@ -28,22 +28,34 @@ export class Undo extends Array {
   #pushState() {
     this.#previous += 1;
     this.length = this.#previous;
-    this[this.#previous] = JSON.stringify({
-      mazo: tablero.mazo.state,
-      vista: tablero.vista.state,
-      bases: tablero.bases.state,
-      tablones: tablero.tablones.state,
-    });
+    this[this.#previous] = [
+      tablero.mazo.state,
+      tablero.vista.state,
+      tablero.bases.state,
+      tablero.tablones.state,
+    ].join('|');
     this.#setButtons();
-    console.log(this.length, this.#previous, JSON.parse(this[this.#previous]));
+    console.log(this.length, this.#previous, this[this.#previous]);
   }
 
   #restoreState(index) {
-    const state = JSON.parse(this[index]);
-    tablero.mazo.state = state.mazo;
-    tablero.vista.state = state.vista;
-    tablero.bases.state = state.bases;
-    tablero.tablones.state = state.tablones;
+    this[index].split('|').forEach((block) => {
+      const [[pila, slot], data] = block.split(':');
+      switch (pila) {
+        case 'm':
+          tablero.mazo.state = data;
+          break;
+        case 'v':
+          tablero.vista.state = data;
+          break;
+        case 'b':
+          tablero.bases[slot].state = data;
+          break;
+        case 't':
+          tablero.tablones[slot].state = data;
+          break;
+      }
+    });
   }
 
   #undo() {
