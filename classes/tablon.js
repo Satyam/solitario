@@ -146,14 +146,16 @@ export class Tablon extends Celda {
 
   set state(data) {
     this.clear();
-    const [numV, cartas] = data.split('-');
-    this.#numVisible = parseInt(numV, 10);
-    this.push(
-      cartas
-        .split(',')
-        .map((name) => new Carta(name[0], parseInt(name.substring(1)))),
-      true
-    );
+    if (data.length) {
+      const [numV, cartas] = data.split('-');
+      this.#numVisible = parseInt(numV, 10);
+      this.push(
+        cartas
+          .split(',')
+          .map((name) => new Carta(name[0], parseInt(name.substring(1)))),
+        true
+      );
+    }
   }
 }
 

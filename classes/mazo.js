@@ -35,10 +35,12 @@ export class Mazo extends PilaSimple {
 
   set state(data) {
     this.clear();
-    this.push(
-      data
-        .split(',')
-        .map((name) => new Carta(name[0], parseInt(name.substring(1))))
-    );
+    if (data.length) {
+      this.push(
+        data
+          .split(',')
+          .map((name) => new Carta(name[0], parseInt(name.substring(1))))
+      );
+    }
   }
 }

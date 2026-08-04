@@ -27,7 +27,7 @@ export class Undo extends Array {
 
   #pushState() {
     this.#previous += 1;
-    this.length = this.#previous;
+    if (this.#previous > this.length) this.length = this.#previous;
     this[this.#previous] = [
       tablero.mazo.state,
       tablero.vista.state,
@@ -35,7 +35,7 @@ export class Undo extends Array {
       tablero.tablones.state,
     ].join('|');
     this.#setButtons();
-    console.log(this.length, this.#previous, this[this.#previous]);
+    console.log('push p', this.#previous, 'l', this.length);
   }
 
   #restoreState(index) {
@@ -64,18 +64,20 @@ export class Undo extends Array {
     this.#previous -= 1;
     this.#setButtons();
     Tablero.fire(Tablero.UNDO_AFTER);
+    console.log('undo p', this.#previous, 'l', this.length);
   }
 
   #redo() {
-    if (this.#previous >= this.length - 2) return;
+    if (this.#previous > this.length - 2) return;
     this.#previous += 1;
     this.#restoreState(this.#previous);
     this.#setButtons();
     Tablero.fire(Tablero.REDO_AFTER);
+    console.log('redo p', this.#previous, 'l', this.length);
   }
 
   #setButtons() {
     this.#undoBtn.disabled = this.#previous < 0;
-    this.#redoBtn.disabled = this.#previous >= this.length - 2;
+    this.#redoBtn.disabled = this.#previous > this.length - 2;
   }
 }
