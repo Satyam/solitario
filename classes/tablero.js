@@ -100,8 +100,12 @@ export class Tablero {
     return this.#dragQty;
   }
 
-  static fire(EV) {
-    document.dispatchEvent(new Event(EV));
+  static fire(EV, data) {
+    if (data) {
+      document.dispatchEvent(new CustomEvent(EV, { detail: data }));
+    } else {
+      document.dispatchEvent(new Event(EV));
+    }
   }
 
   static on(EV, callback, self) {
