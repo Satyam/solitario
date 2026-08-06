@@ -21,7 +21,7 @@ export class Tablero {
 
   #game;
 
-  #undoStack;
+  #undo;
 
   constructor(el) {
     this.#el = el;
@@ -43,7 +43,7 @@ export class Tablero {
     // onEV(EV.REDO_AFTER, renderAll);
     this.el.addEventListener('dragend', this.clearDropTargets.bind(this));
 
-    this.#undoStack = new Undo();
+    this.#undo = new Undo();
   }
   startGame() {
     this.#game = new Game();
@@ -65,6 +65,10 @@ export class Tablero {
   }
   get tablones() {
     return this.#tablones;
+  }
+
+  pushState() {
+    return this.#undo.pushState(...arguments);
   }
 
   dragStart(celda, carta, dragQty = 1) {

@@ -82,6 +82,9 @@ export class Carta {
   get charPalo() {
     return charPalos[this.#palo];
   }
+  get clave() {
+    return `${this.#palo}${this.#index}`;
+  }
 
   get reverso() {
     return this.#reverso;

@@ -41,6 +41,10 @@ export class Celda extends Cartas {
   get container() {
     return this.#container;
   }
+  get clave() {
+    return `${this.#type[0]}${this.#slot}`;
+  }
+
   update() {
     // To be implemented by subclasses
   }
@@ -63,7 +67,9 @@ export class Celda extends Cartas {
   async top2Base(base) {
     Tablero.fire(Tablero.JUGADA_BEFORE);
     await this.#animateMove(base);
-    base.push(this.pop());
+    const carta = this.pop();
+    base.push(carta);
+    tablero.pushState(this.clave, base.clave, carta.clave);
     Tablero.fire(Tablero.JUGADA_AFTER);
   }
 

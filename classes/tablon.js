@@ -117,7 +117,15 @@ export class Tablon extends Celda {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop(tablero.dragQty));
+      const cartas = tablero.dragCelda.pop(tablero.dragQty);
+      this.push(cartas);
+      tablero.pushState(
+        tablero.dragCelda.clave,
+        this.clave,
+        Array.isArray(cartas)
+          ? cartas.map((carta) => carta.clave).join(',')
+          : cartas.clave
+      );
       this.el.classList.remove('dragging');
       tablero.clearDropTargets();
       Tablero.fire(Tablero.JUGADA_AFTER);

@@ -24,8 +24,15 @@ export class Mazo extends PilaSimple {
       const carta = this.pop();
       carta.reverso = false;
       tablero.vista.push(carta);
+      tablero.pushState(this.clave, tablero.vista.clave, carta.clave);
     } else {
-      this.push(tablero.vista.back());
+      const cartas = tablero.vista.back();
+      this.push(cartas);
+      tablero.pushState(
+        this.clave,
+        tablero.vista.clave,
+        cartas.map((carta) => carta.clave).join(',')
+      );
     }
     Tablero.fire(Tablero.JUGADA_AFTER);
   }

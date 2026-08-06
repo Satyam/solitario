@@ -38,6 +38,10 @@ export class Undo extends Array {
     console.log('push p', this.#previous, 'l', this.length);
   }
 
+  pushState(from, to, data) {
+    console.log('*', from, to, data);
+  }
+
   #restoreState(index) {
     this[index].split('|').forEach((block) => {
       const [[pila, slot], data] = block.split(':');

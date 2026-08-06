@@ -51,7 +51,15 @@ export class Base extends PilaSimple {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       Tablero.fire(Tablero.JUGADA_BEFORE);
-      this.push(tablero.dragCelda.pop(tablero.dragQty));
+      const cartas = tablero.dragCelda.pop(tablero.dragQty);
+      tablero.pushState(
+        tablero.dragCelda.clave,
+        this.clave,
+        Array.isArray(cartas)
+          ? cartas.map((carta) => carta.clave).join(',')
+          : cartas.clave
+      );
+      this.push(cartas);
       this.el.classList.remove('dragging');
       tablero.clearDropTargets();
       Tablero.fire(Tablero.JUGADA_AFTER);
