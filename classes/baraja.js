@@ -67,6 +67,9 @@ export class Carta {
   get el() {
     return (this.#el ??= this.#createEl());
   }
+  get hasEl() {
+    return !!this.#el;
+  }
   get palo() {
     return this.#palo;
   }
@@ -98,21 +101,10 @@ export class Carta {
   }
 }
 
+// I don't want to extend Array with Cartas because most methods won't ever apply
+// and I don't want to make false assumptions on similarly named methods.
 export class Cartas {
   #cartas = [];
-
-  constructor(full = false) {
-    if (full) {
-      this.#cartas = palos
-        .map((palo) =>
-          Array.from(
-            { length: valores.length },
-            (_, index) => new Carta(palo, index)
-          )
-        )
-        .flat();
-    }
-  }
 
   push(cards) {
     if (Array.isArray(cards)) {
@@ -131,18 +123,60 @@ export class Cartas {
   }
 
   clear() {
-    this.#cartas.forEach((card) => {
-      card.el.remove();
-    });
+    tablero.baraja.push(this.#cartas);
     this.#cartas.length = 0;
   }
 
   get cartas() {
     return this.#cartas;
   }
+}
 
-  shuffle() {
-    this.#cartas.sort(() => Math.random() - 0.5);
-    return this;
+export class Baraja {
+  #cartas = {};
+
+  constructor() {
+    for (const palo of palos) {
+      for (let index = 0; index < valores.length; index++) {
+        const carta = new Carta(palo, index);
+        this.#cartas[carta.clave] = carta;
+      }
+    }
+  }
+
+  pullCarta(clave) {
+    console.log('pullCarta', clave, this.length);
+    const carta = this.#cartas[clave];
+    delete this.#cartas[carta.clave];
+    console.log('---', this.length);
+    return carta;
+  }
+
+  pullCartas(claves) {
+    return claves.map((clave) => this.pullCarta(clave));
+  }
+
+  pullRandom(qty) {
+    console.log('pullRandom', qty, this.length);
+    const claves = Object.keys(this.#cartas).sort(() => Math.random() - 0.5);
+    console.log('pullRandom', qty, this.length, claves);
+    return this.pullCartas(qty ? claves.slice(0, qty) : claves);
+  }
+
+  push(cartas) {
+    console.log('push', this.length, cartas.length);
+    const p = (carta) => {
+      this.#cartas[carta.clave] = carta;
+      if (carta.hasEl) carta.el.parentElement?.removeChild(carta.el);
+    };
+    if (Array.isArray(cartas)) {
+      cartas.forEach(p);
+    } else {
+      p(cartas);
+    }
+    console.log('--', this.length);
+  }
+  get length() {
+    return Object.keys(this.#cartas).length;
   }
 }

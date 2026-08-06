@@ -50,17 +50,13 @@ export class Game {
     tablero.bases.clear();
     tablero.tablones.clear();
 
-    const baraja = new Cartas(true).shuffle();
-    // To make it easy to test the end animation
-    // const baraja = new Cartas(true);
-
     // put some of the tablones
-    tablero.tablones.forEach((tablon, slot) =>
-      tablon.push(baraja.pop(slot + 1), true)
-    );
+    tablero.tablones.forEach((tablon, slot) => {
+      tablon.push(tablero.baraja.pullRandom(slot + 1), true);
+    });
 
     // Place the remaining cards in the mazo.
-    tablero.mazo.push(baraja.cartas);
+    tablero.mazo.push(tablero.baraja.pullRandom());
     tablero.fire(Tablero.NEWGAME_AFTER);
   }
 }

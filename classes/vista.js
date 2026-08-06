@@ -54,11 +54,7 @@ export class Vista extends PilaSimple {
   set state(data) {
     this.clear();
     if (data.length) {
-      this.push(
-        data
-          .split(',')
-          .map((name) => new Carta(name[0], parseInt(name.substring(1))))
-      );
+      this.push(tablero.baraja.pullCartas(data.split(',')));
     }
   }
 }

@@ -150,12 +150,7 @@ export class Tablon extends Celda {
     if (data.length) {
       const [numV, cartas] = data.split('-');
       this.#numVisible = parseInt(numV, 10);
-      this.push(
-        cartas
-          .split(',')
-          .map((name) => new Carta(name[0], parseInt(name.substring(1)))),
-        true
-      );
+      this.push(tablero.baraja.pullCartas(cartas.split(',')));
     }
   }
 }

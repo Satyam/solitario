@@ -5,6 +5,7 @@ import { Tablon, Tablones } from './tablon.js';
 import { Guess } from './guess.js';
 import { Game } from './game.js';
 import { Undo } from './undoStack.js';
+import { Baraja } from './baraja.js';
 
 export class Tablero extends EventTarget {
   #el;
@@ -21,11 +22,16 @@ export class Tablero extends EventTarget {
 
   #game;
 
+  #baraja;
+
   #undo;
 
   constructor(el) {
     super();
     this.#el = el;
+
+    this.#baraja = new Baraja();
+
     this.#mazo = new Mazo();
     el.appendChild(this.#mazo.el);
     this.#vista = new Vista();
@@ -66,6 +72,10 @@ export class Tablero extends EventTarget {
   }
   get tablones() {
     return this.#tablones;
+  }
+
+  get baraja() {
+    return this.#baraja;
   }
 
   pushState() {
