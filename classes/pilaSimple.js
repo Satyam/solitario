@@ -6,15 +6,6 @@ export class PilaSimple extends Celda {
   constructor(tipo, slot) {
     super(tipo, slot);
     this.container.classList.add('singleRow');
-    if (this.top) {
-      this.container.classList.remove(HUECO);
-      this.container.draggable = true;
-      this.#cartaTop = this.top;
-      super.container.appendChild(this.#cartaTop.el);
-    } else {
-      this.container.classList.add(HUECO);
-      this.container.draggable = false;
-    }
   }
 
   update() {

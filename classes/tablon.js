@@ -15,13 +15,6 @@ export class Tablon extends Celda {
     this.container.draggable = true;
     this.el.classList.add('droppable');
 
-    if (this.top) {
-      this.container.classList.remove(HUECO);
-      this.update();
-    } else {
-      this.container.classList.add(HUECO);
-      this.container.draggable = false;
-    }
     const s = getComputedStyle(document.documentElement);
     this.#cardHeight = parseInt(s.getPropertyValue('--cardHeight'), 10);
     this.#shortCardHeight = parseInt(
