@@ -10,13 +10,17 @@ export class Undo extends Array {
   constructor(size) {
     super();
     this.#size = size;
-    Tablero.on(Tablero.NEWGAME_BEFORE, this.#resetUndo.bind(this));
-    Tablero.on(Tablero.JUGADA_BEFORE, this.#pushState.bind(this));
     this.#undoBtn = document.getElementById('undo');
     this.#redoBtn = document.getElementById('redo');
     this.#undoBtn.addEventListener('click', this.#undo.bind(this));
     this.#redoBtn.addEventListener('click', this.#redo.bind(this));
     this.#setButtons();
+    setTimeout(this.#initListeners.bind(this));
+  }
+
+  #initListeners() {
+    tablero.on(Tablero.NEWGAME_BEFORE, this.#resetUndo.bind(this));
+    tablero.on(Tablero.JUGADA_BEFORE, this.#pushState.bind(this));
   }
 
   #resetUndo() {
@@ -67,7 +71,7 @@ export class Undo extends Array {
     this.#restoreState(this.#previous);
     this.#previous -= 1;
     this.#setButtons();
-    Tablero.fire(Tablero.UNDO_AFTER);
+    tablero.fire(Tablero.UNDO_AFTER);
     console.log('undo p', this.#previous, 'l', this.length);
   }
 
@@ -76,7 +80,7 @@ export class Undo extends Array {
     this.#previous += 1;
     this.#restoreState(this.#previous);
     this.#setButtons();
-    Tablero.fire(Tablero.REDO_AFTER);
+    tablero.fire(Tablero.REDO_AFTER);
     console.log('redo p', this.#previous, 'l', this.length);
   }
 

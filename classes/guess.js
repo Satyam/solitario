@@ -18,8 +18,12 @@ export class Guess {
     this.#hintBtn.addEventListener('click', this.#handleClick.bind(this));
 
     this.#setOnDemand();
-    Tablero.on(Tablero.JUGADA_AFTER, this.#hideOrGuess.bind(this));
-    Tablero.on(Tablero.NEWGAME_AFTER, this.#hideOrGuess.bind(this));
+    setTimeout(this.#initListeners.bind(this));
+  }
+
+  #initListeners() {
+    tablero.on(Tablero.JUGADA_AFTER, this.#hideOrGuess.bind(this));
+    tablero.on(Tablero.NEWGAME_AFTER, this.#hideOrGuess.bind(this));
   }
 
   get el() {

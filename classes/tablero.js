@@ -6,7 +6,7 @@ import { Guess } from './guess.js';
 import { Game } from './game.js';
 import { Undo } from './undoStack.js';
 
-export class Tablero {
+export class Tablero extends EventTarget {
   #el;
 
   #mazo;
@@ -24,6 +24,7 @@ export class Tablero {
   #undo;
 
   constructor(el) {
+    super();
     this.#el = el;
     this.#mazo = new Mazo();
     el.appendChild(this.#mazo.el);
@@ -104,20 +105,20 @@ export class Tablero {
     return this.#dragQty;
   }
 
-  static fire(EV, data) {
+  fire(EV, data) {
     if (data) {
-      document.dispatchEvent(new CustomEvent(EV, { detail: data }));
+      this.dispatchEvent(new CustomEvent(EV, { detail: data }));
     } else {
-      document.dispatchEvent(new Event(EV));
+      this.dispatchEvent(new Event(EV));
     }
   }
 
-  static on(EV, callback, self) {
-    document.addEventListener(EV, callback);
+  on(EV, callback, self) {
+    this.addEventListener(EV, callback);
   }
 
-  static off(EV, callback) {
-    document.removeEventListener(EV, callback);
+  off(EV, callback) {
+    this.removeEventListener(EV, callback);
   }
   static GAMEOVER_BEFORE = 'before_game_over';
   static GAMEOVER_AFTER = 'after_game_over';

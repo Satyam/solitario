@@ -65,12 +65,12 @@ export class Celda extends Cartas {
   }
 
   async top2Base(base) {
-    Tablero.fire(Tablero.JUGADA_BEFORE);
+    tablero.fire(Tablero.JUGADA_BEFORE);
     await this.#animateMove(base);
     const carta = this.pop();
     base.push(carta);
     tablero.pushState(this.clave, base.clave, carta.clave);
-    Tablero.fire(Tablero.JUGADA_AFTER);
+    tablero.fire(Tablero.JUGADA_AFTER);
   }
 
   async #animateMove(destCarta, duration = 300) {

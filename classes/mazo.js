@@ -19,7 +19,7 @@ export class Mazo extends PilaSimple {
   }
 
   #sacarCarta() {
-    Tablero.fire(Tablero.JUGADA_BEFORE);
+    tablero.fire(Tablero.JUGADA_BEFORE);
     if (this.top) {
       const carta = this.pop();
       carta.reverso = false;
@@ -34,7 +34,7 @@ export class Mazo extends PilaSimple {
         cartas.map((carta) => carta.clave).join(',')
       );
     }
-    Tablero.fire(Tablero.JUGADA_AFTER);
+    tablero.fire(Tablero.JUGADA_AFTER);
   }
   get state() {
     return `m:${this.cartas.map((carta) => `${carta.palo}${carta.index}`).join(',')}`;

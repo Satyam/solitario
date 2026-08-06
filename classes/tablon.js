@@ -116,7 +116,7 @@ export class Tablon extends Celda {
 
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
-      Tablero.fire(Tablero.JUGADA_BEFORE);
+      tablero.fire(Tablero.JUGADA_BEFORE);
       const cartas = tablero.dragCelda.pop(tablero.dragQty);
       this.push(cartas);
       tablero.pushState(
@@ -128,7 +128,7 @@ export class Tablon extends Celda {
       );
       this.el.classList.remove('dragging');
       tablero.clearDropTargets();
-      Tablero.fire(Tablero.JUGADA_AFTER);
+      tablero.fire(Tablero.JUGADA_AFTER);
       ev.preventDefault();
     }
   }

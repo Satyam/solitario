@@ -5,20 +5,23 @@ export class Game {
   constructor() {
     // Buttons
     document.getElementById('newGame').addEventListener('click', () => {
-      Tablero.fire(Tablero.NEWGAME_BEFORE);
+      tablero.fire(Tablero.NEWGAME_BEFORE);
     });
     document
       .getElementById('raise')
       .addEventListener('click', this.#raiseAll.bind(this));
+    setTimeout(this.#initListeners.bind(this));
+  }
 
-    Tablero.on(
+  #initListeners() {
+    tablero.on(
       Tablero.GAMEOVER_BEFORE,
       tablero.bases.endAnimation.bind(tablero.bases)
     );
-    Tablero.on(Tablero.JUGADA_AFTER, this.#checkGameover.bind(this));
-    Tablero.on(Tablero.NEWGAME_BEFORE, this.#startNewGame.bind(this));
-    Tablero.on(Tablero.NEWGAME_AFTER, this.#checkGameover.bind(this));
-    Tablero.fire(Tablero.NEWGAME_BEFORE);
+    tablero.on(Tablero.JUGADA_AFTER, this.#checkGameover.bind(this));
+    tablero.on(Tablero.NEWGAME_BEFORE, this.#startNewGame.bind(this));
+    tablero.on(Tablero.NEWGAME_AFTER, this.#checkGameover.bind(this));
+    tablero.fire(Tablero.NEWGAME_BEFORE);
   }
 
   async #raiseAll() {
@@ -38,7 +41,7 @@ export class Game {
     //   tablero.bases[0].cartas.length === 13 &&
     //   tablero.bases[1].cartas.length === 13;
     document.querySelector('.gameover').hidden = !gameover;
-    if (gameover) Tablero.fire(Tablero.GAMEOVER_BEFORE);
+    if (gameover) tablero.fire(Tablero.GAMEOVER_BEFORE);
   }
 
   #startNewGame() {
@@ -58,6 +61,6 @@ export class Game {
 
     // Place the remaining cards in the mazo.
     tablero.mazo.push(baraja.cartas);
-    Tablero.fire(Tablero.NEWGAME_AFTER);
+    tablero.fire(Tablero.NEWGAME_AFTER);
   }
 }
