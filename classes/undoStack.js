@@ -20,7 +20,6 @@ export class Undo extends Array {
 
   #initListeners() {
     tablero.on(Tablero.NEWGAME_BEFORE, this.#resetUndo.bind(this));
-    tablero.on(Tablero.JUGADA_BEFORE, this.#pushState.bind(this));
   }
 
   #resetUndo() {
@@ -29,41 +28,17 @@ export class Undo extends Array {
     this.#setButtons();
   }
 
-  #pushState() {
+  pushState(/* from , to, cartas, ...extra*/) {
     this.#previous += 1;
     if (this.#previous > this.length) this.length = this.#previous;
-    this[this.#previous] = [
-      tablero.mazo.state,
-      tablero.vista.state,
-      tablero.bases.state,
-      tablero.tablones.state,
-    ].join('|');
+    this[this.#previous] = Array.from(arguments).join('|');
     this.#setButtons();
-    console.log('push p', this.#previous, 'l', this.length);
-  }
-
-  pushState(from, to, data) {
-    console.log('*', from, to, data);
   }
 
   #restoreState(index) {
-    this[index].split('|').forEach((block) => {
-      const [[pila, slot], data] = block.split(':');
-      switch (pila) {
-        case 'm':
-          tablero.mazo.state = data;
-          break;
-        case 'v':
-          tablero.vista.state = data;
-          break;
-        case 'b':
-          tablero.bases[slot].state = data;
-          break;
-        case 't':
-          tablero.tablones[slot].state = data;
-          break;
-      }
-    });
+    const [from, to, cartas, ...extra] = this[index].split('|');
+    tablero[to[0]](to[1]).decline(cartas.split(','), ...extra);
+    tablero[from[0]](from[1]).restore(cartas.split(','), ...extra);
   }
 
   #undo() {

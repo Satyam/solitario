@@ -85,6 +85,11 @@ export class Tablon extends Celda {
   get visible() {
     this.cartas.filter((carta, index) => index < this.#numVisible);
   }
+
+  get extra() {
+    return this.#numVisible;
+  }
+
   #raise(ev) {
     if (ev.buttons === 4) {
       ev.preventDefault();
@@ -117,6 +122,8 @@ export class Tablon extends Celda {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       tablero.fire(Tablero.JUGADA_BEFORE);
+      const extraFrom = tablero.dragCelda.extra;
+      const extraTo = this.extra;
       const cartas = tablero.dragCelda.pop(tablero.dragQty);
       this.push(cartas);
       tablero.pushState(
@@ -124,7 +131,10 @@ export class Tablon extends Celda {
         this.clave,
         Array.isArray(cartas)
           ? cartas.map((carta) => carta.clave).join(',')
-          : cartas.clave
+          : cartas.clave,
+        tablero.dragCelda.numVisible ?? '',
+        extraFrom,
+        extraTo
       );
       this.el.classList.remove('dragging');
       tablero.clearDropTargets();
@@ -141,17 +151,17 @@ export class Tablon extends Celda {
       return carta.valor === 'K';
     }
   }
-  get state() {
-    return `t${this.slot}:${this.#numVisible}-${this.cartas.map((carta) => `${carta.palo}${carta.index}`).join(',')}`;
+
+  decline(cartas, extraFrom, extraTo) {
+    console.log('decline', this.type, this.slot, cartas, extraFrom, extraTo);
+    tablero.baraja.push(this.pop(cartas.length));
+    this.#numVisible = extraTo;
   }
 
-  set state(data) {
-    this.clear();
-    if (data.length) {
-      const [numV, cartas] = data.split('-');
-      this.#numVisible = parseInt(numV, 10);
-      this.push(tablero.baraja.pullCartas(cartas.split(',')));
-    }
+  restore(cartas, extraFrom, extraTo) {
+    console.log('restore', this.type, this.slot, cartas, extraFrom, extraTo);
+    this.#numVisible = parseInt(extraFrom, 10) - 1;
+    this.push(tablero.baraja.pullCartas(cartas));
   }
 }
 
@@ -164,11 +174,5 @@ export class Tablones extends Array {
   }
   clear() {
     this.forEach((tablon) => tablon.clear());
-  }
-  get state() {
-    return this.map((b) => b.state).join('|');
-  }
-  set state(s) {
-    this.forEach((b, slot) => (b.state = s[slot]));
   }
 }

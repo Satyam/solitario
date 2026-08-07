@@ -67,9 +67,10 @@ export class Celda extends Cartas {
   async top2Base(base) {
     tablero.fire(Tablero.JUGADA_BEFORE);
     await this.#animateMove(base);
+    const extraFrom = this.extra;
     const carta = this.pop();
     base.push(carta);
-    tablero.pushState(this.clave, base.clave, carta.clave);
+    tablero.pushState(this.clave, base.clave, carta.clave, extraFrom);
     tablero.fire(Tablero.JUGADA_AFTER);
   }
 
@@ -94,5 +95,17 @@ export class Celda extends Cartas {
         resolve();
       });
     });
+  }
+
+  get extra() {
+    return null;
+  }
+  decline(cartas, ...extra) {
+    console.log('decline', this.type, this.slot, cartas, ...extra);
+    tablero.baraja.push(this.pop(cartas.length));
+  }
+  restore(cartas, ...extra) {
+    console.log('restore', this.type, this.slot, cartas, ...extra);
+    this.push(tablero.baraja.pullCartas(cartas));
   }
 }

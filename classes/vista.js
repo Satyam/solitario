@@ -47,14 +47,4 @@ export class Vista extends PilaSimple {
     this.el.classList.add('dragging');
     tablero.dragStart(this, this.top);
   }
-  get state() {
-    return `v:${this.cartas.map((carta) => `${carta.palo}${carta.index}`).join(',')}`;
-  }
-
-  set state(data) {
-    this.clear();
-    if (data.length) {
-      this.push(tablero.baraja.pullCartas(data.split(',')));
-    }
-  }
 }

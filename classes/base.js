@@ -51,13 +51,15 @@ export class Base extends PilaSimple {
   #dragDrop(ev) {
     if (this.canMoveInto(tablero.dragCarta)) {
       tablero.fire(Tablero.JUGADA_BEFORE);
+      const extraFrom = tablero.dragCelda.extra;
       const cartas = tablero.dragCelda.pop(tablero.dragQty);
       tablero.pushState(
         tablero.dragCelda.clave,
         this.clave,
         Array.isArray(cartas)
           ? cartas.map((carta) => carta.clave).join(',')
-          : cartas.clave
+          : cartas.clave,
+        extraFrom
       );
       this.push(cartas);
       this.el.classList.remove('dragging');
@@ -101,16 +103,6 @@ export class Base extends PilaSimple {
     this.pop();
     return this.endAnimation();
   }
-
-  get state() {
-    return `b${this.slot}:${this.cartas.map((carta) => `${carta.palo}${carta.index}`).join(',')}`;
-  }
-  set state(data) {
-    this.clear();
-    if (data.length) {
-      this.push(tablero.baraja.pullCartas(data.split(',')));
-    }
-  }
 }
 
 export class Bases extends Array {
@@ -131,12 +123,5 @@ export class Bases extends Array {
   async endAnimation() {
     await Promise.all(this.map((base) => base.endAnimation()));
     tablero.fire(Tablero.GAMEOVER_AFTER);
-  }
-
-  get state() {
-    return this.map((b) => b.state).join('|');
-  }
-  set state(s) {
-    this.forEach((b, slot) => (b.state = s[slot]));
   }
 }

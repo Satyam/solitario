@@ -123,8 +123,10 @@ export class Cartas {
   }
 
   clear() {
-    tablero.baraja.push(this.#cartas);
-    this.#cartas.length = 0;
+    if (this.#cartas.length) {
+      tablero.baraja.push(this.#cartas);
+      this.#cartas.length = 0;
+    }
   }
 
   get cartas() {
@@ -145,10 +147,8 @@ export class Baraja {
   }
 
   pullCarta(clave) {
-    console.log('pullCarta', clave, this.length);
     const carta = this.#cartas[clave];
     delete this.#cartas[carta.clave];
-    console.log('---', this.length);
     return carta;
   }
 
@@ -157,14 +157,11 @@ export class Baraja {
   }
 
   pullRandom(qty) {
-    console.log('pullRandom', qty, this.length);
     const claves = Object.keys(this.#cartas).sort(() => Math.random() - 0.5);
-    console.log('pullRandom', qty, this.length, claves);
     return this.pullCartas(qty ? claves.slice(0, qty) : claves);
   }
 
   push(cartas) {
-    console.log('push', this.length, cartas.length);
     const p = (carta) => {
       this.#cartas[carta.clave] = carta;
       if (carta.hasEl) carta.el.parentElement?.removeChild(carta.el);
@@ -174,8 +171,8 @@ export class Baraja {
     } else {
       p(cartas);
     }
-    console.log('--', this.length);
   }
+
   get length() {
     return Object.keys(this.#cartas).length;
   }
