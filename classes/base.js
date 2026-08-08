@@ -100,7 +100,7 @@ export class Base extends PilaSimple {
         resolve(true);
       });
     });
-    this.pop();
+    tablero.baraja.push(this.pop());
     return this.endAnimation();
   }
 }

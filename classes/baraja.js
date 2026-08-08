@@ -166,7 +166,10 @@ export class Baraja {
   push(cartas) {
     const p = (carta) => {
       this.#cartas[carta.name] = carta;
-      if (carta.hasEl) carta.el.parentElement?.removeChild(carta.el);
+      if (carta.hasEl) {
+        carta.el.classname = 'card';
+        carta.el.parentElement?.removeChild(carta.el);
+      }
     };
     if (Array.isArray(cartas)) {
       cartas.forEach(p);
