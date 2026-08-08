@@ -85,9 +85,6 @@ export class Carta {
   get charPalo() {
     return charPalos[this.#palo];
   }
-  get clave() {
-    return `${this.#palo}${this.#index}`;
-  }
 
   get reverso() {
     return this.#reverso;
@@ -141,29 +138,34 @@ export class Baraja {
     for (const palo of palos) {
       for (let index = 0; index < valores.length; index++) {
         const carta = new Carta(palo, index);
-        this.#cartas[carta.clave] = carta;
+        this.#cartas[carta.name] = carta;
       }
     }
   }
 
-  pullCarta(clave) {
-    const carta = this.#cartas[clave];
-    delete this.#cartas[carta.clave];
-    return carta;
+  pullCarta(name) {
+    const carta = this.#cartas[name];
+    if (carta) {
+      delete this.#cartas[name];
+      return carta;
+    }
+    return null;
   }
 
-  pullCartas(claves) {
-    return claves.map((clave) => this.pullCarta(clave));
+  pullCartas(names) {
+    return Array.isArray(names)
+      ? names.map((name) => this.pullCarta(name))
+      : [this.pullCarta(names)];
   }
 
   pullRandom(qty) {
-    const claves = Object.keys(this.#cartas).sort(() => Math.random() - 0.5);
-    return this.pullCartas(qty ? claves.slice(0, qty) : claves);
+    const names = Object.keys(this.#cartas).sort(() => Math.random() - 0.5);
+    return this.pullCartas(qty ? names.slice(0, qty) : names);
   }
 
   push(cartas) {
     const p = (carta) => {
-      this.#cartas[carta.clave] = carta;
+      this.#cartas[carta.name] = carta;
       if (carta.hasEl) carta.el.parentElement?.removeChild(carta.el);
     };
     if (Array.isArray(cartas)) {

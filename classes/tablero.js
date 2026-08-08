@@ -61,26 +61,14 @@ export class Tablero extends EventTarget {
   get mazo() {
     return this.#mazo;
   }
-  m() {
-    return this.#mazo;
-  }
   get vista() {
-    return this.#vista;
-  }
-  v() {
     return this.#vista;
   }
   get bases() {
     return this.#bases;
   }
-  b(slot) {
-    return this.#bases[slot];
-  }
   get tablones() {
     return this.#tablones;
-  }
-  t(slot) {
-    return this.#tablones[slot];
   }
   get guess() {
     return this.#guess;
@@ -88,6 +76,19 @@ export class Tablero extends EventTarget {
 
   get baraja() {
     return this.#baraja;
+  }
+
+  getCelda(clave) {
+    switch (clave[0]) {
+      case 'm':
+        return this.#mazo;
+      case 'v':
+        return this.#vista;
+      case 'b':
+        return this.#bases[clave[1]];
+      case 't':
+        return this.#tablones[clave[1]];
+    }
   }
 
   pushState() {

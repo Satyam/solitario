@@ -28,35 +28,33 @@ export class Undo extends Array {
     this.#setButtons();
   }
 
-  pushState(/* from , to, cartas, ...extra*/) {
+  pushState(/* from , to, cartas, extraFrom, extraTo*/) {
     this.#previous += 1;
     if (this.#previous > this.length) this.length = this.#previous;
     this[this.#previous] = Array.from(arguments).join('|');
     this.#setButtons();
   }
 
-  #restoreState(index) {
-    const [from, to, cartas, ...extra] = this[index].split('|');
-    tablero[to[0]](to[1]).decline(cartas.split(','), ...extra);
-    tablero[from[0]](from[1]).restore(cartas.split(','), ...extra);
-  }
-
   #undo() {
     if (this.#previous < 0) return;
-    this.#restoreState(this.#previous);
+    const [from, to, cartas, extraFrom, extraTo] =
+      this[this.#previous].split('|');
+    tablero.getCelda(to).decline(cartas.split(','), extraTo);
+    tablero.getCelda(from).restore(cartas.split(','), extraFrom);
     this.#previous -= 1;
     this.#setButtons();
     tablero.fire(Tablero.UNDO_AFTER);
-    console.log('undo p', this.#previous, 'l', this.length);
   }
 
   #redo() {
     if (this.#previous > this.length - 2) return;
     this.#previous += 1;
-    this.#restoreState(this.#previous);
+    const [from, to, cartas, extraFrom, extraTo] =
+      this[this.#previous].split('|');
+    tablero.getCelda(from).decline(cartas.split(','), extraFrom);
+    tablero.getCelda(to).restore(cartas.split(','), extraTo);
     this.#setButtons();
     tablero.fire(Tablero.REDO_AFTER);
-    console.log('redo p', this.#previous, 'l', this.length);
   }
 
   #setButtons() {

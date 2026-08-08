@@ -57,8 +57,8 @@ export class Base extends PilaSimple {
         tablero.dragCelda.clave,
         this.clave,
         Array.isArray(cartas)
-          ? cartas.map((carta) => carta.clave).join(',')
-          : cartas.clave,
+          ? cartas.map((carta) => carta.name).join(',')
+          : cartas.name,
         extraFrom
       );
       this.push(cartas);

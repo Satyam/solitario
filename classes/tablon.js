@@ -130,9 +130,8 @@ export class Tablon extends Celda {
         tablero.dragCelda.clave,
         this.clave,
         Array.isArray(cartas)
-          ? cartas.map((carta) => carta.clave).join(',')
-          : cartas.clave,
-        tablero.dragCelda.numVisible ?? '',
+          ? cartas.map((carta) => carta.name).join(',')
+          : cartas.name,
         extraFrom,
         extraTo
       );
@@ -153,15 +152,13 @@ export class Tablon extends Celda {
   }
 
   decline(cartas, extraFrom, extraTo) {
-    console.log('decline', this.type, this.slot, cartas, extraFrom, extraTo);
     tablero.baraja.push(this.pop(cartas.length));
     this.#numVisible = extraTo;
   }
 
   restore(cartas, extraFrom, extraTo) {
-    console.log('restore', this.type, this.slot, cartas, extraFrom, extraTo);
-    this.#numVisible = parseInt(extraFrom, 10) - 1;
-    this.push(tablero.baraja.pullCartas(cartas));
+    this.#numVisible = parseInt(extraFrom, 10);
+    super.push(tablero.baraja.pullCartas(cartas));
   }
 }
 
