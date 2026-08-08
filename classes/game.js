@@ -45,6 +45,9 @@ export class Game {
   }
 
   #startNewGame() {
+    document.getAnimations().forEach((animation) => {
+      animation.cancel();
+    });
     tablero.mazo.clear();
     tablero.vista.clear();
     tablero.bases.clear();

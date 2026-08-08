@@ -81,27 +81,34 @@ export class Base extends PilaSimple {
       next.el.classList.add('behind');
       this.container.appendChild(next.el);
     }
-    await new Promise((resolve) => {
-      const anim = topEl.animate(
-        [
-          {
-            transform: 'rotate(0) translate(0, 0)',
-            opacity: 1,
-          },
-          {
-            transform: 'rotate(180deg) translate(-200px, 400px)',
-            opacity: 0,
-          },
-        ],
-        { duration: Math.random() * 3000 + 1000, delay: 10 }
-      );
+    if (
+      await new Promise((resolve) => {
+        const anim = topEl.animate(
+          [
+            {
+              transform: 'rotate(0) translate(0, 0)',
+              opacity: 1,
+            },
+            {
+              transform: 'rotate(180deg) translate(-200px, 400px)',
+              opacity: 0,
+            },
+          ],
+          { duration: Math.random() * 3000 + 1000, delay: 10 }
+        );
 
-      anim.addEventListener('finish', () => {
-        resolve(true);
-      });
-    });
-    tablero.baraja.push(this.pop());
-    return this.endAnimation();
+        anim.addEventListener('finish', () => {
+          resolve(true);
+        });
+        anim.addEventListener('cancel', () => {
+          resolve(false);
+        });
+      })
+    ) {
+      tablero.baraja.push(this.pop());
+      return this.endAnimation();
+    }
+    return false;
   }
 }
 
