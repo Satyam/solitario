@@ -36,7 +36,7 @@ export class Game {
 
   #checkGameover() {
     const gameover = tablero.bases.every((base) => base.cartas.length === 13);
-    // To make it easy to test the end animation
+    // To make it easy to test the endAnimation
     // const gameover =
     //   tablero.bases[0].cartas.length === 13 &&
     //   tablero.bases[1].cartas.length === 13;
@@ -52,6 +52,14 @@ export class Game {
     tablero.vista.clear();
     tablero.bases.clear();
     tablero.tablones.clear();
+
+    if (tablero.baraja.length < 52) {
+      console.error('cartas no recuperadas');
+      debugger;
+    }
+    document.querySelectorAll('.flyOver,.stayBehind').forEach((el) => {
+      el.classList.remove('flyOver', 'stayBehind');
+    });
 
     // put some of the tablones
     tablero.tablones.forEach((tablon, slot) => {
