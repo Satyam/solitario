@@ -55,6 +55,8 @@ export class Game {
 
     // put some of the tablones
     tablero.tablones.forEach((tablon, slot) => {
+      // the following to test the endAnimation
+      // tablon.push(tablero.baraja.$pullSome(slot + 1), true);
       tablon.push(tablero.baraja.pullRandom(slot + 1), true);
     });
 

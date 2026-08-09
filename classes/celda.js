@@ -78,6 +78,7 @@ export class Celda extends Cartas {
   async #animateMove(destCarta, duration = 300) {
     const topEl = this.top.el;
     if (!topEl) return true;
+    topEl.classList.add('flyOver');
     return new Promise((resolve) => {
       const srcPos = topEl.getBoundingClientRect();
       const destPos = destCarta.el.getBoundingClientRect();
@@ -93,6 +94,7 @@ export class Celda extends Cartas {
         }
       );
       anim.addEventListener('finish', () => {
+        topEl.classList.remove('flyOver');
         resolve();
       });
     });

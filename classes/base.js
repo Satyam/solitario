@@ -74,11 +74,11 @@ export class Base extends PilaSimple {
     if (!topEl) {
       return;
     }
-    topEl.classList.remove('behind');
-    topEl.classList.add('top');
+    topEl.classList.remove('stayBehind');
+    topEl.classList.add('flyOver');
     if (this.cartas.length > 1) {
       const next = this.cartas[1];
-      next.el.classList.add('behind');
+      next.el.classList.add('stayBehind');
       this.container.appendChild(next.el);
     }
     if (

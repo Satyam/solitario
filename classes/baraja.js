@@ -143,6 +143,11 @@ export class Baraja {
     }
   }
 
+  // Used when testing the endAnimation, to get the game over fast
+  // $pullSome(qty) {
+  //   return this.pullCartas(Object.keys(this.#cartas).slice(0, qty));
+  // }
+
   pullCarta(name) {
     const carta = this.#cartas[name];
     if (carta) {
@@ -174,7 +179,7 @@ export class Baraja {
     if (Array.isArray(cartas)) {
       cartas.forEach(p);
     } else {
-      p(cartas);
+      if (cartas) p(cartas);
     }
   }
 
