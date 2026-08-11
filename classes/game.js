@@ -57,9 +57,6 @@ export class Game {
       console.error('cartas no recuperadas');
       debugger;
     }
-    document.querySelectorAll('.flyOver,.stayBehind').forEach((el) => {
-      el.classList.remove('flyOver', 'stayBehind');
-    });
 
     // put some of the tablones
     tablero.tablones.forEach((tablon, slot) => {
@@ -71,5 +68,8 @@ export class Game {
     // Place the remaining cards in the mazo.
     tablero.mazo.push(tablero.baraja.pullRandom());
     tablero.fire(Tablero.NEWGAME_AFTER);
+    document.querySelectorAll('.flyOver,.stayBehind').forEach((el) => {
+      el.classList.remove('flyOver', 'stayBehind');
+    });
   }
 }
