@@ -151,13 +151,13 @@ export class Tablon extends Celda {
     }
   }
 
-  decline(cartas, extraFrom, extraTo) {
+  decline(cartas, extra) {
     tablero.baraja.push(this.pop(cartas.length));
-    this.#numVisible = extraTo;
+    this.#numVisible = extra;
   }
 
-  restore(cartas, extraFrom, extraTo) {
-    this.#numVisible = parseInt(extraFrom, 10);
+  restore(cartas, extra) {
+    this.#numVisible = parseInt(extra, 10);
     super.push(tablero.baraja.pullCartas(cartas));
   }
 }

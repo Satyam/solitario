@@ -39,8 +39,9 @@ export class Undo extends Array {
     if (this.#previous < 0) return;
     const [from, to, cartas, extraFrom, extraTo] =
       this[this.#previous].split('|');
-    tablero.getCelda(to).decline(cartas.split(','), extraTo);
-    tablero.getCelda(from).restore(cartas.split(','), extraFrom);
+    const cs = cartas.split(',');
+    tablero.getCelda(to).decline(cs, extraTo);
+    tablero.getCelda(from).restore(cs, extraFrom);
     this.#previous -= 1;
     this.#setButtons();
     tablero.fire(Tablero.UNDO_AFTER);
@@ -51,8 +52,9 @@ export class Undo extends Array {
     this.#previous += 1;
     const [from, to, cartas, extraFrom, extraTo] =
       this[this.#previous].split('|');
-    tablero.getCelda(from).decline(cartas.split(','), extraFrom);
-    tablero.getCelda(to).restore(cartas.split(','), extraTo);
+    const cs = cartas.split(',');
+    tablero.getCelda(from).decline(cs, extraFrom);
+    tablero.getCelda(to).restore(cs, parseInt(extraTo, 10) + cs.length);
     this.#setButtons();
     tablero.fire(Tablero.REDO_AFTER);
   }

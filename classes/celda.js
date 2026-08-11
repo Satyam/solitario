@@ -103,10 +103,10 @@ export class Celda extends Cartas {
   get extra() {
     return null;
   }
-  decline(cartas, ...extra) {
+  decline(cartas) {
     tablero.baraja.push(this.pop(cartas.length));
   }
-  restore(cartas, ...extra) {
+  restore(cartas) {
     this.push(tablero.baraja.pullCartas(cartas));
   }
 }
