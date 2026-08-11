@@ -172,7 +172,7 @@ export class Baraja {
     const p = (carta) => {
       this.#cartas[carta.name] = carta;
       if (carta.hasEl) {
-        carta.el.classname = 'card';
+        carta.el.setAttribute('class', 'card');
         carta.el.parentElement?.removeChild(carta.el);
       }
     };
