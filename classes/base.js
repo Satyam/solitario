@@ -90,8 +90,8 @@ export class Base extends PilaSimple {
               opacity: 1,
             },
             {
-              transform: 'rotate(180deg) translate(-200px, 400px)',
-              opacity: 0,
+              transform: 'rotate(120deg) translate(-200px, 400px)',
+              opacity: 0.3,
             },
           ],
           { duration: Math.random() * 3000 + 1000, delay: 10 }
