@@ -6,6 +6,7 @@ import { Guess } from './guess.js';
 import { Game } from './game.js';
 import { Undo } from './undoStack.js';
 import { Baraja } from './baraja.js';
+import { initStats } from './stats.js';
 
 export class Tablero extends EventTarget {
   #el;
@@ -54,6 +55,7 @@ export class Tablero extends EventTarget {
   }
   startGame() {
     this.#game = new Game();
+    initStats();
   }
   get el() {
     return this.#el;
@@ -151,4 +153,5 @@ export class Tablero extends EventTarget {
   static NEWGAME_AFTER = 'after_new_game';
   static UNDO_AFTER = 'after_undo';
   static REDO_AFTER = 'after_redo';
+  static NEW_RONDA = 'new_ronda';
 }

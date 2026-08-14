@@ -26,6 +26,7 @@ export class Mazo extends PilaSimple {
       tablero.vista.push(carta);
       tablero.pushState(this.clave, tablero.vista.clave, carta.name);
     } else {
+      tablero.fire(Tablero.NEW_RONDA);
       const cartas = tablero.vista.back();
       this.push(cartas);
       tablero.pushState(
