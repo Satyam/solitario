@@ -68,6 +68,20 @@ for (const file of files) {
         new RegExp(`<symbol\\s+id="[VS]${palo}${carta}".*?(<\\/symbol>)`, 'gs'),
         ''
       )
+      .replaceAll(
+        new RegExp(
+          ś`<defs><rect id="X${palo}${carta}" width="164.8" height="260.8" x="-82.4" y="-130.4"></rect></defs>`,
+          'gs'
+        ),
+        ''
+      )
+      .replaceAll(
+        new RegExp(
+          `href="#X${palo}${carta}"\\s+stroke="#44F"\\s+fill="none"`,
+          'gs'
+        ),
+        'href="#figure_frame" x="-120" y="-168" '
+      )
   );
 }
 
