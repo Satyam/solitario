@@ -67,37 +67,12 @@ export class Celda extends Cartas {
 
   async top2Base(base) {
     tablero.fire(Tablero.JUGADA_BEFORE);
-    await this.#animateMove(base);
+    await tablero.animateMove(this.top.el, base.el);
     const extraFrom = this.extra;
     const carta = this.pop();
     base.push(carta);
     tablero.pushState(this.clave, base.clave, carta.name, extraFrom);
     tablero.fire(Tablero.JUGADA_AFTER);
-  }
-
-  async #animateMove(destCarta, duration = 300) {
-    const topEl = this.top.el;
-    if (!topEl) return true;
-    topEl.classList.add('flyOver');
-    return new Promise((resolve) => {
-      const srcPos = topEl.getBoundingClientRect();
-      const destPos = destCarta.el.getBoundingClientRect();
-      const anim = topEl.animate(
-        {
-          transform: `translate(
-          ${destPos.left - srcPos.left}px,
-          ${destPos.top - srcPos.top}px
-        )`,
-        },
-        {
-          duration,
-        }
-      );
-      anim.addEventListener('finish', () => {
-        topEl.classList.remove('flyOver');
-        resolve();
-      });
-    });
   }
 
   get extra() {

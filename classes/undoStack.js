@@ -32,16 +32,28 @@ export class Undo extends Array {
     this.#previous += 1;
     if (this.#previous > this.length) this.length = this.#previous;
     this[this.#previous] = Array.from(arguments).join('|');
+    console.log('pushState', Array.from(arguments).join('|'));
     this.#setButtons();
   }
 
-  #undo() {
+  async #undo() {
     if (this.#previous < 0) return;
     const [from, to, cartas, extraFrom, extraTo] =
       this[this.#previous].split('|');
     const cs = cartas.split(',');
-    tablero.getCelda(to).decline(cs, extraTo);
-    tablero.getCelda(from).restore(cs, extraFrom);
+    const toCelda = tablero.getCelda(to);
+    const fromCelda = tablero.getCelda(from);
+    const toEl =
+      to[0] === 't'
+        ? toCelda.cartas[cs.length - 1].el.parentElement
+        : toCelda.top.el;
+    const fromEl = fromCelda.top?.el ?? fromCelda.el;
+    //   from[0] === 't'
+    //     ? fromCelda.cartas[cs.length - 1].el.parentElement
+    //     : fromCelda.top.el;
+    await tablero.animateMove(toEl, fromEl);
+    toCelda.decline(cs, extraTo);
+    fromCelda.restore(cs, extraFrom);
     this.#previous -= 1;
     this.#setButtons();
     tablero.fire(Tablero.UNDO_AFTER);

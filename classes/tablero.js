@@ -97,6 +97,30 @@ export class Tablero extends EventTarget {
     return this.#undo.pushState(...arguments);
   }
 
+  async animateMove(srcEl, destEl, duration = 300) {
+    if (!srcEl) return true;
+    srcEl.classList.add('flyOver');
+    return new Promise((resolve) => {
+      const srcPos = srcEl.getBoundingClientRect();
+      const destPos = destEl.getBoundingClientRect();
+      const anim = srcEl.animate(
+        {
+          transform: `translate(
+          ${destPos.left - srcPos.left}px,
+          ${destPos.top - srcPos.top}px
+        )`,
+        },
+        {
+          duration,
+        }
+      );
+      anim.addEventListener('finish', () => {
+        srcEl.classList.remove('flyOver');
+        resolve();
+      });
+    });
+  }
+
   dragStart(celda, carta, dragQty = 1) {
     this.#dragCelda = celda;
     this.#dragCarta = carta;
