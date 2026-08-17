@@ -11,6 +11,7 @@ import { extname, join } from 'node:path';
 
 const CARDS_FOLDER = './cardSrc';
 const CARDS_SVG = 'cards.svg';
+const CARDS_MIN = 'cards-min.svg';
 const CARDS_HTML = 'cards.html';
 const BASE_SVG = 'base.svg';
 
@@ -70,7 +71,7 @@ for (const file of files) {
       )
       .replaceAll(
         new RegExp(
-          ś`<defs><rect id="X${palo}${carta}" width="164.8" height="260.8" x="-82.4" y="-130.4"></rect></defs>`,
+          `<defs><rect id="X${palo}${carta}" width="164.8" height="260.8" x="-82.4" y="-130.4"></rect></defs>`,
           'gs'
         ),
         ''
@@ -80,15 +81,13 @@ for (const file of files) {
           `href="#X${palo}${carta}"\\s+stroke="#44F"\\s+fill="none"`,
           'gs'
         ),
-        'href="#figure_frame" x="-120" y="-168" '
+        'href="#court_frame" x="-120" y="-168" '
       )
   );
 }
 
 await svgFile.appendFile('</svg>');
 await svgFile.close();
-
-const svg = await readFile(CARDS_SVG, 'utf8');
 
 await writeFile(
   CARDS_HTML,
@@ -100,15 +99,14 @@ await writeFile(
     <title>Solitario</title>
   </head>
   <body>
-    ${svg.replace('<?xml version="1.0" encoding="UTF-8" standalone="no"?>', '')}
     <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 800 3000" style="background-color: darkgreen;">
-      <use href="#card_hueco" width="100" height="140" x="240" y="10"/>
-      <use href="#card_back" width="100" height="140" x="360" y="50"/>
+      <use href="${CARDS_MIN}#card_hueco" width="100" height="140" x="240" y="10"/>
+      <use href="${CARDS_MIN}#card_back" width="100" height="140" x="360" y="50"/>
 
   ${files
     .map(
       (file, index) =>
-        `<use href="#card_${file.replace(
+        `<use href="${CARDS_MIN}#card_${file.replace(
           '.svg',
           ''
         )}" width="100" height="140" x="${(index % 4) * 120}" y="${

@@ -11,7 +11,7 @@
   <symbol id="card_frame" viewBox="0 0  250 350">
     <rect width="248" height="348" x="0" y="0" rx="12" ry="12" fill="white" stroke="black"/>
   </symbol>
-  <symbol id="figure_frame" viewBox="0 0 240 336">
+  <symbol id="court_frame" viewBox="0 0 240 336">
     <rect width="164.8" height="260.8" x="37.6" y="37.6" stroke="#44F" fill="none"/>
   </symbol>
   <symbol id="SC" viewBox="-600 -600 1200 1200" preserveAspectRatio="xMinYMid">
