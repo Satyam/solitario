@@ -1,0 +1,20 @@
+{
+  "name": "classes",
+  "version": "1.0.0",
+  "description": "Solitaire using JS Classes and no JQuery",
+  "license": "MIT",
+  "author": "Daniel Barreiro <satyam@satyam.com.ar> (Satyam)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "serve": "serve dist"
+  },
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "rollup": "^4.62.4",
+    "rollup-plugin-clear": "^2.0.7",
+    "rollup-plugin-copy": "^3.5.0"
+  }
+}
