@@ -89,6 +89,11 @@ export class Carta {
   get reverso() {
     return this.#reverso;
   }
+
+  get container() {
+    return this.#el?.parentElement;
+  }
+
   set reverso(r) {
     this.#reverso = r;
     this.#use?.setAttribute(
@@ -128,6 +133,9 @@ export class Cartas {
 
   get cartas() {
     return this.#cartas;
+  }
+  getCarta(name) {
+    return this.#cartas.find((carta) => carta.name === name);
   }
 }
 

@@ -43,14 +43,10 @@ export class Undo extends Array {
     const cs = cartas.split(',');
     const toCelda = tablero.getCelda(to);
     const fromCelda = tablero.getCelda(from);
-    const toEl =
-      to[0] === 't'
-        ? toCelda.cartas[cs.length - 1].el.parentElement
-        : toCelda.top.el;
+    const toEl = toCelda.getCarta(cs[cs.length - 1]).container;
+
+    // If the fromCelda has no cards, get the container itself.
     const fromEl = fromCelda.top?.el ?? fromCelda.el;
-    //   from[0] === 't'
-    //     ? fromCelda.cartas[cs.length - 1].el.parentElement
-    //     : fromCelda.top.el;
     await tablero.animateMove(toEl, fromEl);
     toCelda.decline(cs, extraTo);
     fromCelda.restore(cs, extraFrom);
@@ -59,14 +55,21 @@ export class Undo extends Array {
     tablero.fire(Tablero.UNDO_AFTER);
   }
 
-  #redo() {
+  async #redo() {
     if (this.#previous > this.length - 2) return;
     this.#previous += 1;
     const [from, to, cartas, extraFrom, extraTo] =
       this[this.#previous].split('|');
     const cs = cartas.split(',');
-    tablero.getCelda(from).decline(cs, extraFrom);
-    tablero.getCelda(to).restore(cs, parseInt(extraTo, 10) + cs.length);
+    const toCelda = tablero.getCelda(to);
+    const fromCelda = tablero.getCelda(from);
+    const fromEl = fromCelda.getCarta(cs[cs.length - 1]).container;
+
+    // If the toCelda has no cards, get the container itself.
+    const toEl = toCelda.top?.el ?? toCelda.el;
+    await tablero.animateMove(fromEl, toEl);
+    fromCelda.decline(cs, extraFrom);
+    toCelda.restore(cs, parseInt(extraTo, 10) + cs.length);
     this.#setButtons();
     tablero.fire(Tablero.REDO_AFTER);
   }
