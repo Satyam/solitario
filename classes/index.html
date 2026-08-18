@@ -23,6 +23,16 @@
       href="assets/favicon/favicon-16x16.png"
     />
     <link rel="manifest" href="assets/favicon/site.webmanifest" />
+    <script>
+      fetch('assets/cards.svg')
+        .then((r) => r.text())
+        .then((svg) => {
+          const div = document.createElement('div');
+          div.innerHTML = svg;
+          div.style.display = 'none';
+          document.body.prepend(div);
+        });
+    </script>
   </head>
   <body>
     <div class="App">

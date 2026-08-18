@@ -31,6 +31,9 @@ sol-jq/public/*
 sol-jq/assets/*
 no-jq/assets/*
 classes/assets/*
+classes/dist/*
+classes/node_modules
 web/*
 cards/cardSrc/*
 cards/cards.html
+

@@ -1,5 +1,5 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const SVG_CARD_PREFIX = 'assets/cards.svg#card_';
+const SVG_CARD_PREFIX = '#card_';
 
 // Types and constants related to cards.
 export const COLOR = {
