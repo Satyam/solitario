@@ -38,62 +38,20 @@
     <div class="App">
       <header class="nav">
         <div id="toolbox" class="leftNav">
-          <button id="newGame" title="Partida nueva">
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/autorenew_black_24dp.svg"
-            />
-          </button>
-          <button id="undo" title="Deshacer jugada">
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/undo_black_24dp.svg"
-            />
-          </button>
-          <button id="redo" title="Rehacer jugada">
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/redo_black_24dp.svg"
-            />
-          </button>
-          <button id="raise" title="Subir todo lo que se pueda">
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/trending_up_black_24dp.svg"
-            />
-          </button>
+          <button id="newGame" title="Partida nueva"></button>
+          <button id="undo" title="Deshacer jugada"></button>
+          <button id="redo" title="Rehacer jugada"></button>
+          <button id="raise" title="Subir todo lo que se pueda"></button>
           <button
             id="hint"
             title="Sugerencias (doble click para dejarlas fija)"
-          >
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/quiz_black_24dp.svg"
-            />
-          </button>
+          ></button>
           <button
             command="show-modal"
             commandfor="helpDialog"
             id="helpOpener"
             title="Ayuda"
-          >
-            <img
-              width="24"
-              height="24"
-              draggable="false"
-              src="assets/icons/help_outline_black_24dp.svg"
-            />
-          </button>
+          ></button>
         </div>
         <div class="centerNav">
           <div class="heading">Solitario Klondike</div>
@@ -136,33 +94,27 @@
       </ul>
       <h3>Botones en la barra de herramientas</h3>
       <ul>
-        <li
-          style="list-style-image: url('assets/icons/autorenew_black_24dp.svg')"
-        >
+        <li class="helpNewGame">
           <b>Partida nueva</b> Inicia una nueva partida, cancelando la partida
           en curso.
         </li>
-        <li style="list-style-image: url('assets/icons/undo_black_24dp.svg')">
+        <li class="helpUndo">
           <b>Deshacer jugada</b> vuelve atrás la movida más reciente. Se pueden
           deshacer jugadas hasta el inicio del juego. El botón aparecer grisado
           al inicio al no haber ninguna jugada que se pueda deshacer.
         </li>
-        <li style="list-style-image: url('assets/icons/redo_black_24dp.svg')">
+        <li class="helpRedo">
           <b>Rehacer jugada</b> Rehace la jugada deshecha más recientemente. El
           botón aparece grisado cuando no haya jugadas que rehacer.
         </li>
-        <li
-          style="
-            list-style-image: url('assets/icons/trending_up_black_24dp.svg');
-          "
-        >
+        <li class="helpRaise">
           <b>Subir todo lo que se pueda</b> Eleva a las pilas de resultados
           todas las cartas que sean posibles. Se detiene cuando no encuentra
           cartas que sean válidas para subir. Muy útil al final de la partida
           cuando ya está resuelta y sólo falta la formalidad de subir las
           cartas.
         </li>
-        <li style="list-style-image: url('assets/icons/quiz_black_24dp.svg')">
+        <li class="helpHint">
           <b>Sugerencias</b> Muestra una lista de sugerencias de jugadas
           posibles, en orden de preferencia. Esta facilidad es experimental y al
           momento no es exahustiva. Ver
@@ -171,13 +123,7 @@
           siempre a la vista. Esta opción es fundamentalmente para uso en
           desarrollo. Un simple clic la oculta.)
         </li>
-        <li
-          style="
-            list-style-image: url('assets/icons/help_outline_black_24dp.svg');
-          "
-        >
-          <b>Ayuda</b> Esta ayuda.
-        </li>
+        <li class="helpHelp"><b>Ayuda</b> Esta ayuda.</li>
       </ul>
       <h3>Estadísticas</h3>
       Arriba a la derecha se muestran algunas estadísticas del juego en curso.

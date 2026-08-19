@@ -57,13 +57,11 @@ export class Guess {
     this.#hideHint();
 
     this.#hintBtn.classList.remove('buttonPressed');
-    this.#hintBtn.firstElementChild.src = 'assets/icons/quiz_black_24dp.svg';
   }
 
   #setPermanent() {
     this.#permanent = true;
     this.#hintBtn.classList.add('buttonPressed');
-    this.#hintBtn.firstElementChild.src = 'assets/icons/quiz_white_24dp.svg';
     this.#guessNext();
   }
 
