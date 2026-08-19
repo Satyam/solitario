@@ -82,7 +82,7 @@ body {
   font-weight: bold;
 }
 
-button {
+.leftNav button {
   width: 40px;
   height: 32px;
   border-radius: 25%;
@@ -92,7 +92,7 @@ button {
   background-repeat: no-repeat;
 }
 
-button:disabled {
+.leftNav button:disabled {
   opacity: 70%;
 }
 
