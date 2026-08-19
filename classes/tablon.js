@@ -83,9 +83,12 @@ export class Tablon extends Celda {
     this.#numVisible = 1;
   }
   get visible() {
-    this.cartas.filter((carta, index) => index < this.#numVisible);
+    return this.cartas.filter((carta, index) => index < this.#numVisible);
   }
 
+  get numVisible() {
+    return this.#numVisible;
+  }
   get extra() {
     return this.#numVisible;
   }

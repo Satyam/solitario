@@ -32,7 +32,6 @@ export class Undo extends Array {
     this.#previous += 1;
     if (this.#previous > this.length) this.length = this.#previous;
     this[this.#previous] = Array.from(arguments).join('|');
-    console.log('pushState', Array.from(arguments).join('|'));
     this.#setButtons();
   }
 
