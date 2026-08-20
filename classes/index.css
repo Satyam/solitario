@@ -146,6 +146,10 @@ tr.desde td {
   overflow-x: hidden;
   height: var(--cardHeight);
 }
+.guess table {
+  width: 100%;
+  padding: 0 2px;
+}
 .noHint {
   text-align: center;
 }

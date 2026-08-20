@@ -1,6 +1,6 @@
 // import { baraja, charPalos, COLOR } from './baraja.js';
 // // import { canDropInSomeHueco, canDropInSomePila, onEV, offEV } from './utils.js';
-// import { TIPOS_CELDA } from './celda.js';
+import { TIPOS_CELDA } from './celda.js';
 
 import { Tablero } from './tablero.js';
 
@@ -24,6 +24,8 @@ export class Guess {
   #initListeners() {
     tablero.on(Tablero.JUGADA_AFTER, this.#hideOrGuess.bind(this));
     tablero.on(Tablero.NEWGAME_AFTER, this.#hideOrGuess.bind(this));
+    tablero.on(Tablero.UNDO_AFTER, this.#hideOrGuess.bind(this));
+    tablero.on(Tablero.REDO_AFTER, this.#hideOrGuess.bind(this));
   }
 
   get el() {
@@ -70,186 +72,154 @@ export class Guess {
     this.#el.classList.add('notVisible');
   }
 
-  checkAnyKingAround() {
-    const cartaVista = baraja[tablero.vista.top];
+  #checkAnyKingAround() {
+    const cartaVista = tablero.vista.top;
     return (
       (cartaVista && cartaVista.valor === 'K') ||
-      tablero.pilas.some((pila, slot) => {
-        const length = pila.cards.length;
-        if (length) {
-          // **** TODO: Can't figure it out yet!!!!
-          const firstShown = pila.visible[0];
-          for (let index = 0; index < length - (firstShown || 1); index++) {
-            const carta = baraja[hueco[index]];
-            if (carta && carta.valor === 'K') return true;
-          }
-        }
-        return false;
+      tablero.tablones.some((tablon, slot) => {
+        const visible = tablon.visible;
+        return visible.some(
+          (carta) =>
+            carta.valor === 'K' && visible.length < tablon.cartas.length
+        );
       })
     );
   }
 
-  guessFirstPilaToBase() {
-    const cardsToCheck = [];
-    tablero.pilas.forEach((pila, slot) => {
-      if (pila.top) {
-        cardsToCheck.push({
-          fromPos: TIPOS_CELDA.PILA,
-          fromCardId: pila.top,
-          fromSlot: slot,
-          firstShown: pila.visible[0],
-          isLast: pila.cards.length === 1,
-        });
+  #tablonToBase() {
+    const moves = [];
+    next: for (const tablon of tablero.tablones) {
+      const fromCard = tablon.top;
+      if (!fromCard) continue;
+      // If there is a single card which is not an ace or two,
+      // don't raise it unless thre is a king hanging around which can
+      // take the space it frees.
+      if (
+        tablon.cartas.length === 1 &&
+        fromCard.index > 1 &&
+        !this.#checkAnyKingAround()
+      ) {
+        continue;
       }
-    });
-    cardsToCheck.sort((a, b) => b.firstShown - a.firstShown);
-    cardsToCheck.forEach((move) => {
-      const fromCardId = move.fromCardId;
-      if (move.isLast) {
-        const fromCarta = baraja[fromCardId];
-        // except for aces and twos, others only are worth it if there is a king to fill the hueco
-        if (fromCarta.index > 1 && !checkAnyKingAround()) return false;
-      }
-      const toSlot = canDropInSomePila(fromCardId);
-      if (toSlot !== false) {
-        move.toPos = TIPOS_CELDA.PILA;
-        move.toSlot = toSlot;
-        move.toCardId = datos.pilas[toSlot][0];
-      }
-    });
-    return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
-  }
-
-  guessVistaToPila() {
-    const cardId = datos.vista[0];
-    if (cardId) {
-      const toSlot = canDropInSomePila(cardId);
-      if (toSlot !== false) {
-        return [
-          {
-            fromCardId: cardId,
-            fromPos: TIPOS_CELDA.VISTA,
-            fromSlot: 0,
-            firstShown: 0,
-            toPos: TIPOS_CELDA.PILA,
-            toSlot,
-            toCardId: datos.pilas[toSlot][0],
-          },
-        ];
+      for (const base of tablero.bases) {
+        const toCard = base.top;
+        if (base.canMoveInto(fromCard)) {
+          moves.push({
+            fromType: tablon.type,
+            fromCard,
+            fromSlot: tablon.slot,
+            toType: base.type,
+            toCard,
+            toSlot: base.slot,
+          });
+          continue next;
+        }
       }
     }
-    return [];
+    return moves;
   }
 
-  guessVistaToHueco() {
-    const cardId = datos.vista[0];
-    if (cardId) {
-      const toSlot = canDropInSomeHueco(cardId);
-      if (toSlot !== false) {
-        return [
-          {
-            fromCardId: cardId,
-            fromPos: TIPOS_CELDA.VISTA,
+  #vistaToAny(which) {
+    const moves = [];
+    const card = tablero.vista.top;
+    if (card) {
+      for (const dest of which) {
+        if (dest.canMoveInto(card)) {
+          moves.push({
+            fromCard: card,
+            fromType: tablero.vista.type,
             fromSlot: 0,
-            firstShown: 0,
-            toPos: TIPOS_CELDA.HUECO,
-            toSlot,
-            toCardId: datos.huecos[toSlot][0],
-          },
-        ];
+            toType: dest.type,
+            toSlot: dest.slot,
+            toCard: dest.top,
+          });
+          if (dest.type === 'base') break;
+          else continue;
+        }
       }
     }
-    return [];
+    return moves;
   }
 
-  guessHuecoToHueco() {
-    const cardsToCheck = [];
-    datos.huecos.forEach((hueco, slot) => {
-      const firstShown = datos.firstShown[slot];
-      const fromIndex = hueco.length - firstShown - 1;
-      if (hueco[firstShown]) {
-        cardsToCheck.push({
-          fromPos: TIPOS_CELDA.HUECO,
-          fromCardId: hueco[fromIndex],
-          fromSlot: slot,
-          firstShown,
-          isLast: hueco.length === fromIndex + 1,
-        });
-      }
-    });
-    // sort in decreasing order by firstShown so it lists the longest stack to uncover first
-    cardsToCheck.sort((a, b) => b.firstShown - a.firstShown);
-    cardsToCheck.forEach((move) => {
-      const fromCardId = move.fromCardId;
-      if (move.isLast) {
-        const fromCarta = baraja[fromCardId];
-        // except for aces and twos, others only are worth it if there is a king to fill the hueco
+  #tablonToTablon() {
+    const moves = [];
+    next: for (const fromTablon of tablero.tablones) {
+      for (const fromCard of fromTablon.visible) {
+        if (!fromCard) continue;
         if (
-          fromCarta.valor === 'K' ||
-          (fromCarta.index > 1 && !checkAnyKingAround())
-        )
-          return false;
-      }
-      const toSlot = canDropInSomeHueco(fromCardId);
-      if (toSlot !== false) {
-        move.toPos = TIPOS_CELDA.HUECO;
-        move.toSlot = toSlot;
-        move.toCardId = datos.huecos[toSlot][0];
-      }
-    });
-    return cardsToCheck.filter((move) => typeof move.toPos !== 'undefined');
-  }
-
-  formatGuess(guess) {
-    function formatPos(pos, slot) {
-      switch (pos) {
-        case TIPOS_CELDA.HUECO:
-          return `<td>hueco</td><td align="center">${slot + 1}</td>`;
-        case TIPOS_CELDA.VISTA:
-          return '<td colspan="2">vista</td>';
-        case TIPOS_CELDA.PILA:
-          return `<td>pila</td><td align="center">${slot + 1}</td>`;
+          fromTablon.cartas.length === fromTablon.numVisible &&
+          fromCard.index > 0 &&
+          !this.#checkAnyKingAround()
+        ) {
+          continue;
+        }
+        for (const toTablon of tablero.tablones) {
+          if (toTablon === fromTablon) continue;
+          if (toTablon.canMoveInto(fromCard)) {
+            moves.push({
+              fromCard,
+              fromType: fromTablon.type,
+              fromSlot: fromTablon.slot,
+              toType: toTablon.type,
+              toSlot: toTablon.slot,
+              toCard: toTablon.top,
+            });
+            continue next;
+          }
+        }
       }
     }
-
-    function formatCardId(cardId) {
-      if (cardId) {
-        const carta = baraja[cardId];
-        const valor = carta.valor.replace('T', '10');
-        const palo = charPalos[carta.palo];
-        return (
-          valor +
-          (carta.color === COLOR.ROJO
-            ? `<span style="color: red;">${palo}</span>`
-            : palo)
-        );
-      }
-      return 'vacío';
-    }
-    return `<tr class="desde"><td>De:</td>${formatPos(
-      guess.fromPos,
-      guess.fromSlot
-    )}<td align="right">${formatCardId(guess.fromCardId)}</td></tr>  
-  <tr class="hasta"><td>A:</td>${formatPos(
-    guess.toPos,
-    guess.toSlot
-  )}<td align="right">${formatCardId(guess.toCardId)}</td></tr>`;
+    return moves;
   }
 
   #guessNext() {
-    console.log('guess next');
-    return; // Bypass!!
-    const guesses = guessFirstPilaToBase().concat(
-      guessHuecoToHueco(),
-      guessVistaToPila(),
-      guessVistaToHueco()
+    function formatType(type, slot) {
+      switch (type) {
+        case TIPOS_CELDA.BASE:
+          return `<td>Base</td><td align="center">${slot + 1}</td>`;
+        case TIPOS_CELDA.VISTA:
+          return '<td colspan="2">Vista</td>';
+        case TIPOS_CELDA.TABLON:
+          return `<td>Tablón</td><td align="center">${slot + 1}</td>`;
+      }
+    }
+
+    const colorCSS = {
+      negro: 'black',
+      rojo: 'red',
+    };
+    function formatCarta(carta) {
+      if (carta) {
+        const valor = carta.valor.replace('T', '10');
+        const palo = carta.charPalo;
+        return `${valor}<span style="color: ${colorCSS[carta.color]};">${palo}</span>`;
+      }
+      return 'vacío';
+    }
+
+    function formatGuess(guess) {
+      return `<tr class="desde"><td>De:</td>${formatType(
+        guess.fromType,
+        guess.fromSlot
+      )}<td align="center">${formatCarta(guess.fromCard)}</td></tr>  
+  <tr class="hasta"><td>A:</td>${formatType(
+    guess.toType,
+    guess.toSlot
+  )}<td align="center">${formatCarta(guess.toCard)}</td></tr>`;
+    }
+
+    const guesses = this.#tablonToBase().concat(
+      this.#tablonToTablon(),
+      this.#vistaToAny(tablero.tablones),
+      this.#vistaToAny(tablero.bases)
     );
 
     this.#el.classList.remove('notVisible');
+    console.dir(guesses);
     this.#el.innerHTML = guesses.length
       ? `<table>
-  <tr><th></th><th>Donde</th><th>Columna</th><th>Carta</th></tr>
-  ${guesses.map(formatGuess).join('\n')}</table>`
+    <tr><th></th><th>Donde</th><th>Col.</th><th>Carta</th></tr>
+    ${guesses.map(formatGuess).join('\n')}</table>`
       : '<p class="noHint">No hay sugerencias</p>';
   }
 }
