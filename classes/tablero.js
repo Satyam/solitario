@@ -7,6 +7,7 @@ import { Game } from './game.js';
 import { Undo } from './undoStack.js';
 import { Baraja } from './baraja.js';
 import { initStats } from './stats.js';
+import { TIPOS_CELDA } from './celda.js';
 
 export class Tablero extends EventTarget {
   #el;
@@ -82,13 +83,13 @@ export class Tablero extends EventTarget {
 
   getCelda(clave) {
     switch (clave[0]) {
-      case 'm':
+      case TIPOS_CELDA.MAZO[0]:
         return this.#mazo;
-      case 'v':
+      case TIPOS_CELDA.VISTA[0]:
         return this.#vista;
-      case 'b':
+      case TIPOS_CELDA.BASE[0]:
         return this.#bases[clave[1]];
-      case 't':
+      case TIPOS_CELDA.TABLON[0]:
         return this.#tablones[clave[1]];
     }
   }

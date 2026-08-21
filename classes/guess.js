@@ -226,7 +226,6 @@ export class Guess {
         : 0
     );
     this.#el.classList.remove('notVisible');
-    console.dir(guesses);
     this.#el.innerHTML = guesses.length
       ? `<table>
     <tr><th></th><th>Donde</th><th>Col.</th><th>Carta</th></tr>
