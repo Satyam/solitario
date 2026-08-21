@@ -1,10 +1,11 @@
 <!doctype html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <title>Solitario</title>
     <link rel="stylesheet" href="./index.css" />
     <link rel="license" href="assets/favicon/about.txt" />
+    <link rel="preconnect" href="./index.js" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -22,7 +23,11 @@
       sizes="16x16"
       href="assets/favicon/favicon-16x16.png"
     />
-    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+    <link
+      rel="manifest"
+      fetchpriority="low"
+      href="assets/favicon/site.webmanifest"
+    />
     <script>
       fetch('assets/cards.svg')
         .then((r) => r.text())
@@ -147,7 +152,7 @@
           rehacer
         </li>
       </ul>
-      <h3><a name="sugerencias"></a>Interpretación de las sugerencias</h3>
+      <h3 id="sugerencias">Interpretación de las sugerencias</h3>
       <p>
         Cada sugerencia se muestra en dos filas indicando en la primera el
         origen del movimiento <b>De</b> e inmediatamente abajo el destino

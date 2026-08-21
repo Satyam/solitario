@@ -5,7 +5,6 @@ import clear from 'rollup-plugin-clear';
 import { join } from 'path';
 
 const DIST = './dist';
-const ASSETS = 'assets';
 export default {
   input: 'index.js',
   output: {
@@ -18,7 +17,16 @@ export default {
     }),
     resolve(),
     copy({
-      targets: [{ src: ['index.css', 'index.html', ASSETS], dest: DIST }],
+      targets: [
+        {
+          src: ['index.css', 'index.html'],
+          dest: DIST,
+        },
+        {
+          src: ['assets/favicon/', 'assets/cards.svg'],
+          dest: DIST + '/assets',
+        },
+      ],
     }),
   ],
 };
