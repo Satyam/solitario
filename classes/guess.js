@@ -105,12 +105,10 @@ export class Guess {
         const toCard = base.top;
         if (base.canMoveInto(fromCard)) {
           moves.push({
-            fromType: tablon.type,
+            fromCelda: tablon,
             fromCard,
-            fromSlot: tablon.slot,
-            toType: base.type,
+            toCelda: base,
             toCard,
-            toSlot: base.slot,
           });
           continue next;
         }
@@ -119,22 +117,38 @@ export class Guess {
     return moves;
   }
 
-  #vistaToAny(which) {
+  #vistaToTablones() {
     const moves = [];
     const card = tablero.vista.top;
-    if (card) {
-      for (const dest of which) {
+    if (card && card.index > 0) {
+      for (const dest of tablero.tablones) {
         if (dest.canMoveInto(card)) {
           moves.push({
             fromCard: card,
-            fromType: tablero.vista.type,
-            fromSlot: 0,
-            toType: dest.type,
-            toSlot: dest.slot,
+            fromCelda: tablero.vista,
+            toCelda: dest,
             toCard: dest.top,
           });
-          if (dest.type === 'base') break;
-          else continue;
+          continue;
+        }
+      }
+    }
+    return moves;
+  }
+
+  #vistaToBases() {
+    const moves = [];
+    const card = tablero.vista.top;
+    if (card) {
+      for (const dest of tablero.bases) {
+        if (dest.canMoveInto(card)) {
+          moves.push({
+            fromCard: card,
+            fromCelda: tablero.vista,
+            toCelda: dest,
+            toCard: dest.top,
+          });
+          break;
         }
       }
     }
@@ -144,28 +158,25 @@ export class Guess {
   #tablonToTablon() {
     const moves = [];
     next: for (const fromTablon of tablero.tablones) {
-      for (const fromCard of fromTablon.visible) {
-        if (!fromCard) continue;
-        if (
-          fromTablon.cartas.length === fromTablon.numVisible &&
-          fromCard.index > 0 &&
-          !this.#checkAnyKingAround()
-        ) {
-          continue;
-        }
-        for (const toTablon of tablero.tablones) {
-          if (toTablon === fromTablon) continue;
-          if (toTablon.canMoveInto(fromCard)) {
-            moves.push({
-              fromCard,
-              fromType: fromTablon.type,
-              fromSlot: fromTablon.slot,
-              toType: toTablon.type,
-              toSlot: toTablon.slot,
-              toCard: toTablon.top,
-            });
-            continue next;
-          }
+      const fromCard = fromTablon.cartas[fromTablon.numVisible - 1];
+      if (!fromCard || fromCard.index === 0) continue;
+      if (
+        fromTablon.cartas.length === fromTablon.numVisible &&
+        fromCard.index > 0 &&
+        !this.#checkAnyKingAround()
+      ) {
+        continue;
+      }
+      for (const toTablon of tablero.tablones) {
+        if (toTablon === fromTablon) continue;
+        if (toTablon.canMoveInto(fromCard)) {
+          moves.push({
+            fromCard,
+            fromCelda: fromTablon,
+            toCelda: toTablon,
+            toCard: toTablon.top,
+          });
+          continue next;
         }
       }
     }
@@ -173,15 +184,10 @@ export class Guess {
   }
 
   #guessNext() {
-    function formatType(type, slot) {
-      switch (type) {
-        case TIPOS_CELDA.BASE:
-          return `<td>Base</td><td align="center">${slot + 1}</td>`;
-        case TIPOS_CELDA.VISTA:
-          return '<td colspan="2">Vista</td>';
-        case TIPOS_CELDA.TABLON:
-          return `<td>Tablón</td><td align="center">${slot + 1}</td>`;
-      }
+    function formatCelda(celda) {
+      return celda.type === TIPOS_CELDA.VISTA
+        ? '<td colspan="2">Vista</td>'
+        : `<td>${celda.type}</td><td align="center">${celda.slot + 1}</td>`;
     }
 
     const colorCSS = {
@@ -198,22 +204,27 @@ export class Guess {
     }
 
     function formatGuess(guess) {
-      return `<tr class="desde"><td>De:</td>${formatType(
-        guess.fromType,
-        guess.fromSlot
+      return `<tr class="desde"><td>De:</td>${formatCelda(
+        guess.fromCelda
       )}<td align="center">${formatCarta(guess.fromCard)}</td></tr>  
-  <tr class="hasta"><td>A:</td>${formatType(
-    guess.toType,
-    guess.toSlot
+  <tr class="hasta"><td>A:</td>${formatCelda(
+    guess.toCelda
   )}<td align="center">${formatCarta(guess.toCard)}</td></tr>`;
     }
 
     const guesses = this.#tablonToBase().concat(
       this.#tablonToTablon(),
-      this.#vistaToAny(tablero.tablones),
-      this.#vistaToAny(tablero.bases)
+      this.#vistaToTablones(),
+      this.#vistaToBases()
     );
 
+    guesses.sort(({ fromCelda: celdaA }, { fromCelda: celdaB }) =>
+      celdaA.type === TIPOS_CELDA.TABLON && celdaB.type === TIPOS_CELDA.TABLON
+        ? celdaB.cartas.length -
+          celdaB.numVisible -
+          (celdaA.cartas.length - celdaA.numVisible)
+        : 0
+    );
     this.#el.classList.remove('notVisible');
     console.dir(guesses);
     this.#el.innerHTML = guesses.length
