@@ -3,10 +3,10 @@ import { Tablero } from './tablero.js';
 
 // It is important that the first letter of these string literals be unique.
 export const TIPOS_CELDA = {
-  MAZO: 'mazo',
-  VISTA: 'vista',
-  TABLON: 'tablon',
-  BASE: 'base',
+  MAZO: 'Mazo',
+  VISTA: 'Vista',
+  TABLON: 'Tablón',
+  BASE: 'Base',
 };
 
 export class Celda extends Cartas {
