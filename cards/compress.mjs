@@ -11,7 +11,8 @@ import { extname, join } from 'node:path';
 
 const CARDS_FOLDER = './cardSrc';
 const CARDS_SVG = 'cards.svg';
-const CARDS_MIN = 'cards-min.svg';
+const CARDS_MIN = 'cards.svg';
+// const CARDS_MIN = 'cards-min.svg';
 const CARDS_HTML = 'cards.html';
 const BASE_SVG = 'base.svg';
 
@@ -59,11 +60,11 @@ for (const file of files) {
 
       .replaceAll(
         new RegExp(`href="#S${palo}${carta}"`, 'g'),
-        `href="#S${palo}"`
+        `href="#card_S${palo}"`
       )
       .replaceAll(
         new RegExp(`href="#V${palo}${carta}"`, 'g'),
-        `href="#V${carta}" stroke="${color}"`
+        `href="#card_V${carta}" stroke="${color}"`
       )
       .replaceAll(
         new RegExp(`<symbol\\s+id="[VS]${palo}${carta}".*?(<\\/symbol>)`, 'gs'),
@@ -81,7 +82,7 @@ for (const file of files) {
           `href="#X${palo}${carta}"\\s+stroke="#44F"\\s+fill="none"`,
           'gs'
         ),
-        'href="#court_frame" x="-120" y="-168" '
+        'href="#card_court_frame" x="-120" y="-168" '
       )
   );
 }
